@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { optionsHandler, jsonResponse, errorResponse } from "@/lib/cors";
+import { authenticate } from "@/lib/api-auth";
 import { callAI, parseJSON } from "@/lib/ai-gateway";
 
 export const Route = createFileRoute("/api/ai/search")({
@@ -8,6 +9,9 @@ export const Route = createFileRoute("/api/ai/search")({
       OPTIONS: optionsHandler,
       POST: async ({ request }) => {
         try {
+          const ctx = await authenticate(request);
+          if (ctx instanceof Response) return ctx;
+
           const { query, lat, lng } = await request.json().catch(() => ({}));
           if (!query || typeof query !== "string") {
             return errorResponse("query requerido", 400);
