@@ -31,6 +31,7 @@ export function Header() {
   const navigate = useNavigate();
   const [user, setUser] = useState<SupaUser | null>(null);
   const [role, setRole] = useState<string | null>(null);
+  const [fullName, setFullName] = useState<string | null>(null);
   const [q, setQ] = useState("");
   const [scrolled, setScrolled] = useState(false);
 
@@ -42,20 +43,32 @@ export function Header() {
   }, []);
 
   useEffect(() => {
+    const loadProfile = async (u: SupaUser) => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("role, full_name")
+        .eq("id", u.id)
+        .maybeSingle();
+      const p = data as { role?: string; full_name?: string } | null;
+      setRole(p?.role ?? "cliente");
+      setFullName(p?.full_name ?? u.email ?? null);
+    };
+
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        supabase
-          .from("profiles")
-          .select("role")
-          .eq("id", session.user.id)
-          .maybeSingle()
-          .then(({ data }) => setRole((data as { role?: string } | null)?.role ?? "cliente"));
+      const u = session?.user ?? null;
+      setUser(u);
+      if (u) {
+        void loadProfile(u);
       } else {
         setRole(null);
+        setFullName(null);
       }
     });
-    supabase.auth.getSession().then(({ data }) => setUser(data.session?.user ?? null));
+    supabase.auth.getSession().then(({ data }) => {
+      const u = data.session?.user ?? null;
+      setUser(u);
+      if (u) void loadProfile(u);
+    });
     return () => sub.subscription.unsubscribe();
   }, []);
 
@@ -71,6 +84,7 @@ export function Header() {
 
   const isAdmin = role === "admin" || role === "super_admin";
   const isComercio = role === "comercio";
+  const displayName = fullName?.split(" ")[0] ?? "Cuenta";
 
   return (
     <header
@@ -119,12 +133,16 @@ export function Header() {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon" className="rounded-full">
-                  <User className="h-4 w-4" />
+                <Button variant="outline" size="sm" className="rounded-full">
+                  <User className="h-4 w-4 sm:mr-2" />
+                  <span className="hidden max-w-[120px] truncate sm:inline">{displayName}</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel className="truncate">{user.email}</DropdownMenuLabel>
+                <DropdownMenuLabel className="truncate">
+                  <div className="font-semibold">{fullName ?? "Mi cuenta"}</div>
+                  <div className="truncate text-xs font-normal text-muted-foreground">{user.email}</div>
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {isComercio && (
                   <DropdownMenuItem asChild>

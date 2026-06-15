@@ -1,8 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { LayoutDashboard } from "lucide-react";
 import { PagePlaceholder } from "@/components/site/PagePlaceholder";
+import { requireRole } from "@/lib/auth";
 
 export const Route = createFileRoute("/dashboard")({
+  ssr: false,
+  beforeLoad: async ({ location }) => {
+    await requireRole(["comercio", "admin", "super_admin"], location.href);
+  },
   head: () => ({
     meta: [{ title: "Panel Comercio — QuillacentrO" }],
   }),
