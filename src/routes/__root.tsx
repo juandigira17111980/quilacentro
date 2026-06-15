@@ -77,10 +77,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "cerca — Marketplace de tu barrio" },
-      { name: "description", content: "Descubrí comercios y productos cerca tuyo. El marketplace local que conecta tu barrio." },
-      { property: "og:title", content: "cerca — Marketplace de tu barrio" },
-      { property: "og:description", content: "Descubrí comercios y productos cerca tuyo." },
+      { title: "QuillacentrO — Marketplace del Centro de Barranquilla" },
+      { name: "description", content: "Encontrá productos y los comercios físicos del Centro de Barranquilla que los venden. Precios, distancias y contacto directo." },
+      { property: "og:title", content: "QuillacentrO — Marketplace del Centro" },
+      { property: "og:description", content: "Comercios físicos del Centro de Barranquilla, en un solo lugar." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -89,7 +89,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Urbanist:wght@500;600;700;800&family=Epilogue:wght@400;500;600;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap",
       },
       { rel: "stylesheet", href: appCss },
     ],

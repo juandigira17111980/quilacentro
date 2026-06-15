@@ -9,8 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SearchRouteImport } from './routes/search'
+import { Route as MapRouteImport } from './routes/map'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as StoreSlugRouteImport } from './routes/store.$slug'
+import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as ApiStoresRouteImport } from './routes/api/stores'
 import { Route as ApiSearchRouteImport } from './routes/api/search'
 import { Route as ApiPromotionsRouteImport } from './routes/api/promotions'
@@ -40,14 +46,44 @@ import { Route as ApiStoreProductsIdRouteImport } from './routes/api/store.produ
 import { Route as ApiClientFavoritesIdRouteImport } from './routes/api/client.favorites.$id'
 import { Route as ApiAdminStoresIdStatusRouteImport } from './routes/api/admin.stores.$id.status'
 
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MapRoute = MapRouteImport.update({
+  id: '/map',
+  path: '/map',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StoreSlugRoute = StoreSlugRouteImport.update({
+  id: '/store/$slug',
+  path: '/store/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductIdRoute = ProductIdRouteImport.update({
+  id: '/product/$id',
+  path: '/product/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiStoresRoute = ApiStoresRouteImport.update({
@@ -193,11 +229,17 @@ const ApiAdminStoresIdStatusRoute = ApiAdminStoresIdStatusRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/dashboard': typeof DashboardRoute
+  '/map': typeof MapRoute
+  '/search': typeof SearchRoute
   '/api/categories': typeof ApiCategoriesRoute
   '/api/promotions': typeof ApiPromotionsRoute
   '/api/search': typeof ApiSearchRoute
   '/api/stores': typeof ApiStoresRouteWithChildren
+  '/product/$id': typeof ProductIdRoute
+  '/store/$slug': typeof StoreSlugRoute
   '/api/admin/categories': typeof ApiAdminCategoriesRoute
   '/api/admin/dashboard': typeof ApiAdminDashboardRoute
   '/api/admin/reports': typeof ApiAdminReportsRoute
@@ -225,11 +267,17 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/dashboard': typeof DashboardRoute
+  '/map': typeof MapRoute
+  '/search': typeof SearchRoute
   '/api/categories': typeof ApiCategoriesRoute
   '/api/promotions': typeof ApiPromotionsRoute
   '/api/search': typeof ApiSearchRoute
   '/api/stores': typeof ApiStoresRouteWithChildren
+  '/product/$id': typeof ProductIdRoute
+  '/store/$slug': typeof StoreSlugRoute
   '/api/admin/categories': typeof ApiAdminCategoriesRoute
   '/api/admin/dashboard': typeof ApiAdminDashboardRoute
   '/api/admin/reports': typeof ApiAdminReportsRoute
@@ -258,11 +306,17 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/dashboard': typeof DashboardRoute
+  '/map': typeof MapRoute
+  '/search': typeof SearchRoute
   '/api/categories': typeof ApiCategoriesRoute
   '/api/promotions': typeof ApiPromotionsRoute
   '/api/search': typeof ApiSearchRoute
   '/api/stores': typeof ApiStoresRouteWithChildren
+  '/product/$id': typeof ProductIdRoute
+  '/store/$slug': typeof StoreSlugRoute
   '/api/admin/categories': typeof ApiAdminCategoriesRoute
   '/api/admin/dashboard': typeof ApiAdminDashboardRoute
   '/api/admin/reports': typeof ApiAdminReportsRoute
@@ -292,11 +346,17 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/auth'
+    | '/dashboard'
+    | '/map'
+    | '/search'
     | '/api/categories'
     | '/api/promotions'
     | '/api/search'
     | '/api/stores'
+    | '/product/$id'
+    | '/store/$slug'
     | '/api/admin/categories'
     | '/api/admin/dashboard'
     | '/api/admin/reports'
@@ -324,11 +384,17 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin'
     | '/auth'
+    | '/dashboard'
+    | '/map'
+    | '/search'
     | '/api/categories'
     | '/api/promotions'
     | '/api/search'
     | '/api/stores'
+    | '/product/$id'
+    | '/store/$slug'
     | '/api/admin/categories'
     | '/api/admin/dashboard'
     | '/api/admin/reports'
@@ -356,11 +422,17 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/auth'
+    | '/dashboard'
+    | '/map'
+    | '/search'
     | '/api/categories'
     | '/api/promotions'
     | '/api/search'
     | '/api/stores'
+    | '/product/$id'
+    | '/store/$slug'
     | '/api/admin/categories'
     | '/api/admin/dashboard'
     | '/api/admin/reports'
@@ -389,11 +461,17 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
   AuthRoute: typeof AuthRoute
+  DashboardRoute: typeof DashboardRoute
+  MapRoute: typeof MapRoute
+  SearchRoute: typeof SearchRoute
   ApiCategoriesRoute: typeof ApiCategoriesRoute
   ApiPromotionsRoute: typeof ApiPromotionsRoute
   ApiSearchRoute: typeof ApiSearchRoute
   ApiStoresRoute: typeof ApiStoresRouteWithChildren
+  ProductIdRoute: typeof ProductIdRoute
+  StoreSlugRoute: typeof StoreSlugRoute
   ApiAdminCategoriesRoute: typeof ApiAdminCategoriesRoute
   ApiAdminDashboardRoute: typeof ApiAdminDashboardRoute
   ApiAdminReportsRoute: typeof ApiAdminReportsRoute
@@ -416,6 +494,27 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/map': {
+      id: '/map'
+      path: '/map'
+      fullPath: '/map'
+      preLoaderRoute: typeof MapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -423,11 +522,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/store/$slug': {
+      id: '/store/$slug'
+      path: '/store/$slug'
+      fullPath: '/store/$slug'
+      preLoaderRoute: typeof StoreSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/product/$id': {
+      id: '/product/$id'
+      path: '/product/$id'
+      fullPath: '/product/$id'
+      preLoaderRoute: typeof ProductIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/stores': {
@@ -700,11 +820,17 @@ const ApiStoreQueriesRouteWithChildren = ApiStoreQueriesRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
   AuthRoute: AuthRoute,
+  DashboardRoute: DashboardRoute,
+  MapRoute: MapRoute,
+  SearchRoute: SearchRoute,
   ApiCategoriesRoute: ApiCategoriesRoute,
   ApiPromotionsRoute: ApiPromotionsRoute,
   ApiSearchRoute: ApiSearchRoute,
   ApiStoresRoute: ApiStoresRouteWithChildren,
+  ProductIdRoute: ProductIdRoute,
+  StoreSlugRoute: StoreSlugRoute,
   ApiAdminCategoriesRoute: ApiAdminCategoriesRoute,
   ApiAdminDashboardRoute: ApiAdminDashboardRoute,
   ApiAdminReportsRoute: ApiAdminReportsRoute,
