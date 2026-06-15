@@ -1,0 +1,13 @@
+{
+  "name": "QuillacentrO — Marketplace del Centro de Barranquilla",
+  "short_name": "QuillacentrO",
+  "description": "Encontrá productos y comercios físicos del Centro de Barranquilla.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b1e3f",
+  "theme_color": "#0b1e3f",
+  "lang": "es-CO",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
