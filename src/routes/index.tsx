@@ -1,11 +1,23 @@
-import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { createFileRoute, Link, useNavigate, useSearch } from "@tanstack/react-router";
+import { useEffect, useState, type FormEvent } from "react";
 import { z } from "zod";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { ArrowRight, MapPin, Search, Store } from "lucide-react";
 import { AppShell } from "@/components/site/AppShell";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, MapPin, Search, Store } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ProductCard, ProductCardSkeleton } from "@/components/cards/ProductCard";
+import { StoreCard, StoreCardSkeleton } from "@/components/cards/StoreCard";
+import { PromoCard } from "@/components/cards/PromoCard";
+import { CategoryGrid } from "@/components/cards/CategoryGrid";
+import {
+  categoriasQuery,
+  productosDestacadosQuery,
+  promocionesDestacadasQuery,
+  comerciosDestacadosQuery,
+} from "@/lib/queries";
 
 const homeSearch = z.object({
   denied: fallback(z.string(), "").default(""),
@@ -23,64 +35,117 @@ export const Route = createFileRoute("/")({
     ],
   }),
   validateSearch: zodValidator(homeSearch),
+  loader: ({ context }) => {
+    void context.queryClient.prefetchQuery(categoriasQuery);
+    void context.queryClient.prefetchQuery(productosDestacadosQuery);
+    void context.queryClient.prefetchQuery(promocionesDestacadasQuery);
+    void context.queryClient.prefetchQuery(comerciosDestacadosQuery);
+  },
   component: HomePage,
 });
 
 function HomePage() {
   const { denied } = useSearch({ from: "/" });
+  const navigate = useNavigate();
+  const [q, setQ] = useState("");
 
   useEffect(() => {
     if (denied) toast.error("No tenés permiso para acceder a esa sección.");
   }, [denied]);
 
+  const onSearch = (e: FormEvent) => {
+    e.preventDefault();
+    navigate({
+      to: "/search",
+      search: { q, categoria: undefined, precioMin: undefined, precioMax: undefined, conPromo: false, disponibles: true, tab: "productos" },
+    });
+  };
+
   return (
     <AppShell>
-      <section className="relative overflow-hidden border-b">
-        <div className="absolute inset-0 bg-[radial-gradient(60%_60%_at_50%_0%,_var(--color-primary-soft)_0%,_transparent_70%)]" />
+      {/* HERO */}
+      <section className="relative overflow-hidden border-b bg-primary text-primary-foreground">
+        <div className="absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_0%,_rgba(255,255,255,0.18)_0%,_transparent_70%)]" />
         <div className="container relative mx-auto px-4 py-20 md:py-28">
           <div className="mx-auto max-w-3xl text-center">
-            <span className="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
-              <MapPin className="h-3 w-3 text-accent" /> Centro de Barranquilla
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium">
+              <MapPin className="h-3 w-3" /> Centro de Barranquilla
             </span>
             <h1 className="mt-5 text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl">
-              El Centro, en tu bolsillo.
+              Encuentra todo lo que buscas en el Centro de Barranquilla
             </h1>
-            <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground md:text-lg">
-              Encontrá lo que buscás y descubrí los comercios físicos que lo venden — precios, distancia y contacto directo.
+            <p className="mx-auto mt-4 max-w-2xl text-base opacity-90 md:text-lg">
+              Compara precios, descubre promociones y ubica las tiendas más cercanas.
             </p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <Button asChild size="lg" className="rounded-full bg-accent text-accent-foreground hover:bg-accent/90">
-                <Link to="/search">
-                  <Search className="mr-2 h-4 w-4" /> Buscar productos
-                </Link>
+            <form
+              onSubmit={onSearch}
+              className="mx-auto mt-8 flex max-w-2xl items-center gap-2 rounded-full bg-white p-1.5 shadow-[var(--shadow-elevated)]"
+            >
+              <div className="flex flex-1 items-center gap-2 px-4">
+                <Search className="h-5 w-5 text-muted-foreground" />
+                <Input
+                  value={q}
+                  onChange={(e) => setQ(e.target.value)}
+                  placeholder="¿Qué producto estás buscando?"
+                  className="h-12 border-0 bg-transparent text-base text-foreground shadow-none focus-visible:ring-0"
+                />
+              </div>
+              <Button type="submit" size="lg" className="h-12 rounded-full bg-accent px-6 text-accent-foreground hover:bg-accent/90">
+                Buscar
               </Button>
-              <Button asChild size="lg" variant="outline" className="rounded-full">
-                <Link to="/map">
-                  <MapPin className="mr-2 h-4 w-4" /> Ver mapa
-                </Link>
-              </Button>
-            </div>
+            </form>
           </div>
         </div>
       </section>
 
-      <section className="container mx-auto grid gap-4 px-4 py-16 md:grid-cols-3">
-        {[
-          { icon: Search, title: "Buscá lo que necesitás", desc: "Productos, marcas y categorías del Centro." },
-          { icon: MapPin, title: "Mirá dónde está", desc: "Mapa con distancia desde donde estás." },
-          { icon: Store, title: "Hablá con el comercio", desc: "WhatsApp, llamada o visita directa." },
-        ].map(({ icon: Icon, title, desc }) => (
-          <div key={title} className="rounded-2xl border bg-card p-6 shadow-[var(--shadow-soft)]">
-            <span className="grid h-10 w-10 place-items-center rounded-xl bg-primary-soft text-primary">
-              <Icon className="h-5 w-5" />
-            </span>
-            <h3 className="mt-4 text-lg font-semibold">{title}</h3>
-            <p className="mt-1 text-sm text-muted-foreground">{desc}</p>
-          </div>
-        ))}
+      {/* CATEGORÍAS */}
+      <section className="container mx-auto px-4 py-14">
+        <SectionHeader title="Explorá por categoría" />
+        <CategoriasSection />
       </section>
 
-      <section className="container mx-auto px-4 pb-20">
+      {/* PROMOCIONES */}
+      <section className="border-y bg-muted/40">
+        <div className="container mx-auto px-4 py-14">
+          <SectionHeader title="Promociones destacadas" subtitle="Aprovechá las ofertas vigentes en los comercios del Centro." />
+          <PromocionesSection />
+        </div>
+      </section>
+
+      {/* PRODUCTOS DESTACADOS */}
+      <section className="container mx-auto px-4 py-14">
+        <SectionHeader
+          title="Productos destacados"
+          action={
+            <Button asChild variant="ghost" size="sm">
+              <Link to="/search" search={{ q: "", categoria: undefined, precioMin: undefined, precioMax: undefined, conPromo: false, disponibles: true, tab: "productos" }}>
+                Ver todos <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
+            </Button>
+          }
+        />
+        <ProductosSection />
+      </section>
+
+      {/* COMERCIOS */}
+      <section className="border-t bg-muted/40">
+        <div className="container mx-auto px-4 py-14">
+          <SectionHeader
+            title="Comercios mejor calificados"
+            action={
+              <Button asChild variant="ghost" size="sm">
+                <Link to="/search" search={{ q: "", categoria: undefined, precioMin: undefined, precioMax: undefined, conPromo: false, disponibles: true, tab: "comercios" }}>
+                  Ver todos <ArrowRight className="ml-1 h-4 w-4" />
+                </Link>
+              </Button>
+            }
+          />
+          <ComerciosSection />
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="container mx-auto px-4 py-16">
         <div className="flex flex-col items-start justify-between gap-6 rounded-3xl bg-primary p-8 text-primary-foreground md:flex-row md:items-center md:p-12">
           <div>
             <h2 className="text-2xl font-bold md:text-3xl">¿Tenés un comercio en el Centro?</h2>
@@ -98,3 +163,74 @@ function HomePage() {
     </AppShell>
   );
 }
+
+function SectionHeader({ title, subtitle, action }: { title: string; subtitle?: string; action?: React.ReactNode }) {
+  return (
+    <div className="mb-6 flex items-end justify-between gap-4">
+      <div>
+        <h2 className="text-2xl font-bold tracking-tight md:text-3xl">{title}</h2>
+        {subtitle && <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>}
+      </div>
+      {action}
+    </div>
+  );
+}
+
+function CategoriasSection() {
+  const { data } = useSuspenseQuery(categoriasQuery);
+  return <CategoryGrid categorias={data} />;
+}
+
+function PromocionesSection() {
+  const { data } = useSuspenseQuery(promocionesDestacadasQuery);
+  if (data.length === 0) {
+    return <p className="text-sm text-muted-foreground">No hay promociones destacadas por ahora.</p>;
+  }
+  return (
+    <div className="-mx-4 flex gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:thin]">
+      {data.map((p) => (
+        <PromoCard key={p.id} p={p} />
+      ))}
+    </div>
+  );
+}
+
+function ProductosSection() {
+  const { data } = useSuspenseQuery(productosDestacadosQuery);
+  if (data.length === 0) {
+    return <EmptyHint icon={<Store className="h-5 w-5" />} text="Aún no hay productos destacados." />;
+  }
+  return (
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+      {data.map((p) => (
+        <ProductCard key={p.id} p={p} />
+      ))}
+    </div>
+  );
+}
+
+function ComerciosSection() {
+  const { data } = useSuspenseQuery(comerciosDestacadosQuery);
+  if (data.length === 0) {
+    return <EmptyHint icon={<Store className="h-5 w-5" />} text="Aún no hay comercios para mostrar." />;
+  }
+  return (
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {data.map((c) => (
+        <StoreCard key={c.id} c={c} />
+      ))}
+    </div>
+  );
+}
+
+function EmptyHint({ icon, text }: { icon: React.ReactNode; text: string }) {
+  return (
+    <div className="flex items-center gap-3 rounded-2xl border bg-card p-6 text-sm text-muted-foreground">
+      <span className="grid h-9 w-9 place-items-center rounded-xl bg-muted">{icon}</span>
+      {text}
+    </div>
+  );
+}
+
+// Skeletons referenced for completeness (used by Search route).
+export { ProductCardSkeleton, StoreCardSkeleton };
