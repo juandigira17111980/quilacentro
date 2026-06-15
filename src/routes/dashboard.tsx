@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { requireRole } from "@/lib/auth";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
@@ -21,14 +21,6 @@ function DashboardShell() {
       <Header />
       <DashboardLayout />
       <Footer />
-      {/* Outlet rendered inside DashboardLayout */}
-      <OutletKeeper />
     </div>
   );
-}
-
-// DashboardLayout already mounts <Outlet />; this null component just satisfies
-// the route tree expecting Outlet usage in the route component file.
-function OutletKeeper() {
-  return <Outlet />;
 }
