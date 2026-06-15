@@ -29,7 +29,7 @@ export function DashboardLayout() {
             return (
               <Link
                 key={to}
-                to={to}
+                to={to as never}
                 className={cn(
                   "flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                   active
