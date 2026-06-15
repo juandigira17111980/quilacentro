@@ -20,6 +20,7 @@ import {
   productosByComercioQuery,
   promocionesByComercioQuery,
   resenasByComercioQuery,
+  myReviewQuery,
   categoriasQuery,
 } from "@/lib/queries";
 
