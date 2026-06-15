@@ -289,7 +289,6 @@ export type Resena = {
   rating: number;
   comentario: string | null;
   created_at: string;
-  cliente_id: string;
   profiles?: { full_name: string | null; avatar_url: string | null } | null;
 };
 
@@ -299,12 +298,30 @@ export function resenasByComercioQuery(comercioId: string) {
     queryFn: async (): Promise<Resena[]> => {
       const { data, error } = await supabase
         .from("calificaciones")
-        .select("id, rating, comentario, created_at, cliente_id, profiles(full_name, avatar_url)")
+        .select("id, rating, comentario, created_at, profiles(full_name, avatar_url)")
         .eq("comercio_id", comercioId)
         .order("created_at", { ascending: false })
         .limit(50);
       if (error) throw error;
       return (data ?? []) as unknown as Resena[];
+    },
+  });
+}
+
+export function myReviewQuery(comercioId: string, userId: string | null | undefined) {
+  return queryOptions({
+    queryKey: ["my-review", comercioId, userId],
+    enabled: !!userId,
+    queryFn: async () => {
+      if (!userId) return null;
+      const { data, error } = await supabase
+        .from("calificaciones")
+        .select("id, rating, comentario, created_at")
+        .eq("comercio_id", comercioId)
+        .eq("cliente_id", userId)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
     },
   });
 }
