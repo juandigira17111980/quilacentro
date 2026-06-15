@@ -15,6 +15,7 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as StoreSlugRouteImport } from './routes/store.$slug'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as ApiStoresRouteImport } from './routes/api/stores'
@@ -75,6 +76,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardRoute,
 } as any)
 const StoreSlugRoute = StoreSlugRouteImport.update({
   id: '/store/$slug',
@@ -231,7 +237,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
-  '/dashboard': typeof DashboardRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/map': typeof MapRoute
   '/search': typeof SearchRoute
   '/api/categories': typeof ApiCategoriesRoute
@@ -240,6 +246,7 @@ export interface FileRoutesByFullPath {
   '/api/stores': typeof ApiStoresRouteWithChildren
   '/product/$id': typeof ProductIdRoute
   '/store/$slug': typeof StoreSlugRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/api/admin/categories': typeof ApiAdminCategoriesRoute
   '/api/admin/dashboard': typeof ApiAdminDashboardRoute
   '/api/admin/reports': typeof ApiAdminReportsRoute
@@ -269,7 +276,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
-  '/dashboard': typeof DashboardRoute
   '/map': typeof MapRoute
   '/search': typeof SearchRoute
   '/api/categories': typeof ApiCategoriesRoute
@@ -278,6 +284,7 @@ export interface FileRoutesByTo {
   '/api/stores': typeof ApiStoresRouteWithChildren
   '/product/$id': typeof ProductIdRoute
   '/store/$slug': typeof StoreSlugRoute
+  '/dashboard': typeof DashboardIndexRoute
   '/api/admin/categories': typeof ApiAdminCategoriesRoute
   '/api/admin/dashboard': typeof ApiAdminDashboardRoute
   '/api/admin/reports': typeof ApiAdminReportsRoute
@@ -308,7 +315,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
-  '/dashboard': typeof DashboardRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/map': typeof MapRoute
   '/search': typeof SearchRoute
   '/api/categories': typeof ApiCategoriesRoute
@@ -317,6 +324,7 @@ export interface FileRoutesById {
   '/api/stores': typeof ApiStoresRouteWithChildren
   '/product/$id': typeof ProductIdRoute
   '/store/$slug': typeof StoreSlugRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/api/admin/categories': typeof ApiAdminCategoriesRoute
   '/api/admin/dashboard': typeof ApiAdminDashboardRoute
   '/api/admin/reports': typeof ApiAdminReportsRoute
@@ -357,6 +365,7 @@ export interface FileRouteTypes {
     | '/api/stores'
     | '/product/$id'
     | '/store/$slug'
+    | '/dashboard/'
     | '/api/admin/categories'
     | '/api/admin/dashboard'
     | '/api/admin/reports'
@@ -386,7 +395,6 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/auth'
-    | '/dashboard'
     | '/map'
     | '/search'
     | '/api/categories'
@@ -395,6 +403,7 @@ export interface FileRouteTypes {
     | '/api/stores'
     | '/product/$id'
     | '/store/$slug'
+    | '/dashboard'
     | '/api/admin/categories'
     | '/api/admin/dashboard'
     | '/api/admin/reports'
@@ -433,6 +442,7 @@ export interface FileRouteTypes {
     | '/api/stores'
     | '/product/$id'
     | '/store/$slug'
+    | '/dashboard/'
     | '/api/admin/categories'
     | '/api/admin/dashboard'
     | '/api/admin/reports'
@@ -463,7 +473,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   AuthRoute: typeof AuthRoute
-  DashboardRoute: typeof DashboardRoute
+  DashboardRoute: typeof DashboardRouteWithChildren
   MapRoute: typeof MapRoute
   SearchRoute: typeof SearchRoute
   ApiCategoriesRoute: typeof ApiCategoriesRoute
@@ -535,6 +545,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRoute
     }
     '/store/$slug': {
       id: '/store/$slug'
@@ -749,6 +766,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface DashboardRouteChildren {
+  DashboardIndexRoute: typeof DashboardIndexRoute
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardIndexRoute: DashboardIndexRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
+
 interface ApiStoresRouteChildren {
   ApiStoresSlugRoute: typeof ApiStoresSlugRoute
 }
@@ -822,7 +851,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   AuthRoute: AuthRoute,
-  DashboardRoute: DashboardRoute,
+  DashboardRoute: DashboardRouteWithChildren,
   MapRoute: MapRoute,
   SearchRoute: SearchRoute,
   ApiCategoriesRoute: ApiCategoriesRoute,
