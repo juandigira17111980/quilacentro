@@ -33,6 +33,8 @@ const searchSchema = z.object({
   tab: fallback(z.enum(["productos", "comercios"]), "productos").default("productos"),
 });
 
+type SearchParams = z.infer<typeof searchSchema>;
+
 export const Route = createFileRoute("/search")({
   head: () => ({
     meta: [
@@ -55,7 +57,7 @@ function SearchPage() {
   useEffect(() => {
     const t = setTimeout(() => {
       if (qLocal !== search.q) {
-        navigate({ search: (prev) => ({ ...prev, q: qLocal }), replace: true });
+        navigate({ search: (prev: SearchParams) => ({ ...prev, q: qLocal }), replace: true });
       }
     }, 300);
     return () => clearTimeout(t);
@@ -71,7 +73,7 @@ function SearchPage() {
   };
 
   const setFilter = <K extends keyof typeof search>(key: K, value: (typeof search)[K] | undefined) =>
-    navigate({ search: (prev) => ({ ...prev, [key]: value }), replace: true });
+    navigate({ search: (prev: SearchParams) => ({ ...prev, [key]: value }), replace: true });
 
   const clearFilters = () =>
     navigate({
@@ -142,7 +144,7 @@ function SearchPage() {
           <section>
             <Tabs
               value={search.tab}
-              onValueChange={(v) => navigate({ search: (prev) => ({ ...prev, tab: v as "productos" | "comercios" }), replace: true })}
+              onValueChange={(v) => navigate({ search: (prev: SearchParams) => ({ ...prev, tab: v as "productos" | "comercios" }), replace: true })}
             >
               <TabsList>
                 <TabsTrigger value="productos">Productos</TabsTrigger>
