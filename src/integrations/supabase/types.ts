@@ -365,25 +365,37 @@ export type Database = {
           activo: boolean
           created_at: string
           descripcion: string | null
+          destacados_mes: number
           id: number
+          max_productos: number
           nombre: string
-          precio_mensual: number
+          permite_ia: boolean
+          permite_stats: boolean
+          precio_mes: number
         }
         Insert: {
           activo?: boolean
           created_at?: string
           descripcion?: string | null
+          destacados_mes?: number
           id?: number
+          max_productos?: number
           nombre: string
-          precio_mensual?: number
+          permite_ia?: boolean
+          permite_stats?: boolean
+          precio_mes?: number
         }
         Update: {
           activo?: boolean
           created_at?: string
           descripcion?: string | null
+          destacados_mes?: number
           id?: number
+          max_productos?: number
           nombre?: string
-          precio_mensual?: number
+          permite_ia?: boolean
+          permite_stats?: boolean
+          precio_mes?: number
         }
         Relationships: []
       }
@@ -576,6 +588,60 @@ export type Database = {
             columns: ["producto_id"]
             isOneToOne: false
             referencedRelation: "productos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      publicidad: {
+        Row: {
+          activa: boolean
+          comercio_id: string
+          created_at: string
+          fecha_fin: string
+          fecha_inicio: string
+          id: string
+          imagen_url: string | null
+          tipo: string
+          url_destino: string | null
+          zona_id: number | null
+        }
+        Insert: {
+          activa?: boolean
+          comercio_id: string
+          created_at?: string
+          fecha_fin: string
+          fecha_inicio: string
+          id?: string
+          imagen_url?: string | null
+          tipo: string
+          url_destino?: string | null
+          zona_id?: number | null
+        }
+        Update: {
+          activa?: boolean
+          comercio_id?: string
+          created_at?: string
+          fecha_fin?: string
+          fecha_inicio?: string
+          id?: string
+          imagen_url?: string | null
+          tipo?: string
+          url_destino?: string | null
+          zona_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "publicidad_comercio_id_fkey"
+            columns: ["comercio_id"]
+            isOneToOne: false
+            referencedRelation: "comercios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "publicidad_zona_id_fkey"
+            columns: ["zona_id"]
+            isOneToOne: false
+            referencedRelation: "zonas"
             referencedColumns: ["id"]
           },
         ]
