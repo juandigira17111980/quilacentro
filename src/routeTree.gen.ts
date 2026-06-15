@@ -38,10 +38,6 @@ import { Route as ApiStorePromotionsIdRouteImport } from './routes/api/store.pro
 import { Route as ApiStoreProductsIdRouteImport } from './routes/api/store.products.$id'
 import { Route as ApiClientFavoritesIdRouteImport } from './routes/api/client.favorites.$id'
 import { Route as ApiAdminStoresIdStatusRouteImport } from './routes/api/admin.stores.$id.status'
-import { Route as ApiAiSearchRouteImport } from './routes/api/ai.search'
-import { Route as ApiAiProductDescriptionRouteImport } from './routes/api/ai.product-description'
-import { Route as ApiAiPriceSuggestionRouteImport } from './routes/api/ai.price-suggestion'
-import { Route as ApiAiPromotionCopyRouteImport } from './routes/api/ai.promotion-copy'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -187,26 +183,6 @@ const ApiAdminStoresIdStatusRoute = ApiAdminStoresIdStatusRouteImport.update({
   id: '/$id/status',
   path: '/$id/status',
   getParentRoute: () => ApiAdminStoresRoute,
-} as any)
-const ApiAiSearchRoute = ApiAiSearchRouteImport.update({
-  id: '/api/ai/search',
-  path: '/api/ai/search',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAiProductDescriptionRoute = ApiAiProductDescriptionRouteImport.update({
-  id: '/api/ai/product-description',
-  path: '/api/ai/product-description',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAiPriceSuggestionRoute = ApiAiPriceSuggestionRouteImport.update({
-  id: '/api/ai/price-suggestion',
-  path: '/api/ai/price-suggestion',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAiPromotionCopyRoute = ApiAiPromotionCopyRouteImport.update({
-  id: '/api/ai/promotion-copy',
-  path: '/api/ai/promotion-copy',
-  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -423,10 +399,6 @@ export interface RootRouteChildren {
   ApiStorePromotionsRoute: typeof ApiStorePromotionsRouteWithChildren
   ApiStoreQueriesRoute: typeof ApiStoreQueriesRouteWithChildren
   ApiStoreStatsRoute: typeof ApiStoreStatsRoute
-  ApiAiSearchRoute: typeof ApiAiSearchRoute
-  ApiAiProductDescriptionRoute: typeof ApiAiProductDescriptionRoute
-  ApiAiPriceSuggestionRoute: typeof ApiAiPriceSuggestionRoute
-  ApiAiPromotionCopyRoute: typeof ApiAiPromotionCopyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -634,34 +606,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAdminStoresIdStatusRouteImport
       parentRoute: typeof ApiAdminStoresRoute
     }
-    '/api/ai/search': {
-      id: '/api/ai/search'
-      path: '/api/ai/search'
-      fullPath: '/api/ai/search'
-      preLoaderRoute: typeof ApiAiSearchRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/ai/product-description': {
-      id: '/api/ai/product-description'
-      path: '/api/ai/product-description'
-      fullPath: '/api/ai/product-description'
-      preLoaderRoute: typeof ApiAiProductDescriptionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/ai/price-suggestion': {
-      id: '/api/ai/price-suggestion'
-      path: '/api/ai/price-suggestion'
-      fullPath: '/api/ai/price-suggestion'
-      preLoaderRoute: typeof ApiAiPriceSuggestionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/ai/promotion-copy': {
-      id: '/api/ai/promotion-copy'
-      path: '/api/ai/promotion-copy'
-      fullPath: '/api/ai/promotion-copy'
-      preLoaderRoute: typeof ApiAiPromotionCopyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -758,10 +702,6 @@ const rootRouteChildren: RootRouteChildren = {
   ApiStorePromotionsRoute: ApiStorePromotionsRouteWithChildren,
   ApiStoreQueriesRoute: ApiStoreQueriesRouteWithChildren,
   ApiStoreStatsRoute: ApiStoreStatsRoute,
-  ApiAiSearchRoute: ApiAiSearchRoute,
-  ApiAiProductDescriptionRoute: ApiAiProductDescriptionRoute,
-  ApiAiPriceSuggestionRoute: ApiAiPriceSuggestionRoute,
-  ApiAiPromotionCopyRoute: ApiAiPromotionCopyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
