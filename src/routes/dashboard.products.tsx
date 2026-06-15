@@ -418,3 +418,81 @@ function ProductFormDialog({
     </Dialog>
   );
 }
+
+async function callAIEndpoint<T>(path: string, body: Record<string, unknown>): Promise<T> {
+  const { data: { session } } = await supabase.auth.getSession();
+  const token = session?.access_token;
+  if (!token) throw new Error("Debés iniciar sesión");
+  const res = await fetch(path, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json?.error || "Error en la IA");
+  return json as T;
+}
+
+function AIDescriptionButton({
+  nombre, marca, comercioId, onGenerated,
+}: { nombre: string; marca: string; comercioId: string; onGenerated: (t: string) => void }) {
+  const [loading, setLoading] = useState(false);
+  return (
+    <Button
+      type="button"
+      variant="ghost"
+      size="sm"
+      disabled={loading || !nombre.trim()}
+      onClick={async () => {
+        setLoading(true);
+        try {
+          const r = await callAIEndpoint<{ descripcion: string }>("/api/ai/product-description", {
+            nombre, marca: marca || undefined, comercio_id: comercioId, tono: "profesional y persuasivo",
+          });
+          onGenerated(r.descripcion);
+          toast.success("Descripción generada con IA");
+        } catch (e) {
+          toast.error(e instanceof Error ? e.message : "Error generando descripción");
+        } finally { setLoading(false); }
+      }}
+    >
+      {loading ? <Loader2 className="mr-1 h-3 w-3 animate-spin" /> : <Sparkles className="mr-1 h-3 w-3" />}
+      Generar con IA
+    </Button>
+  );
+}
+
+function AIPriceButton({
+  nombre, marca, categoriaId, comercioId, onSuggested,
+}: { nombre: string; marca: string; categoriaId: number | null; comercioId: string; onSuggested: (v: number) => void }) {
+  const [loading, setLoading] = useState(false);
+  return (
+    <Button
+      type="button"
+      variant="ghost"
+      size="sm"
+      disabled={loading || !nombre.trim()}
+      onClick={async () => {
+        setLoading(true);
+        try {
+          const r = await callAIEndpoint<{ sugerencia: { precio_sugerido: number; justificacion: string } }>(
+            "/api/ai/price-suggestion",
+            { nombre, marca: marca || undefined, categoria_id: categoriaId, comercio_id: comercioId },
+          );
+          onSuggested(Math.round(r.sugerencia.precio_sugerido));
+          toast.success(`Sugerido: $${Math.round(r.sugerencia.precio_sugerido).toLocaleString("es-CO")}`, {
+            description: r.sugerencia.justificacion,
+          });
+        } catch (e) {
+          toast.error(e instanceof Error ? e.message : "Error sugiriendo precio");
+        } finally { setLoading(false); }
+      }}
+    >
+      {loading ? <Loader2 className="mr-1 h-3 w-3 animate-spin" /> : <Sparkles className="mr-1 h-3 w-3" />}
+      Sugerir
+    </Button>
+  );
+}
