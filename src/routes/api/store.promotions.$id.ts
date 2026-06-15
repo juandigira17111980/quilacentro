@@ -42,7 +42,7 @@ export const Route = createFileRoute("/api/store/promotions/$id")({
 
           const { data, error } = await supabaseAdmin
             .from("promociones")
-            .update(updates)
+            .update(updates as never)
             .eq("id", params.id)
             .select()
             .single();
