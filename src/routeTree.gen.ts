@@ -24,6 +24,10 @@ import { Route as ApiProductsIdRouteImport } from './routes/api/products.$id'
 import { Route as ApiClientReviewsRouteImport } from './routes/api/client.reviews'
 import { Route as ApiClientQueriesRouteImport } from './routes/api/client.queries'
 import { Route as ApiClientFavoritesRouteImport } from './routes/api/client.favorites'
+import { Route as ApiAiSearchRouteImport } from './routes/api/ai.search'
+import { Route as ApiAiPromotionCopyRouteImport } from './routes/api/ai.promotion-copy'
+import { Route as ApiAiProductDescriptionRouteImport } from './routes/api/ai.product-description'
+import { Route as ApiAiPriceSuggestionRouteImport } from './routes/api/ai.price-suggestion'
 import { Route as ApiAdminUsersRouteImport } from './routes/api/admin.users'
 import { Route as ApiAdminStoresRouteImport } from './routes/api/admin.stores'
 import { Route as ApiAdminReportsRouteImport } from './routes/api/admin.reports'
@@ -34,6 +38,10 @@ import { Route as ApiStorePromotionsIdRouteImport } from './routes/api/store.pro
 import { Route as ApiStoreProductsIdRouteImport } from './routes/api/store.products.$id'
 import { Route as ApiClientFavoritesIdRouteImport } from './routes/api/client.favorites.$id'
 import { Route as ApiAdminStoresIdStatusRouteImport } from './routes/api/admin.stores.$id.status'
+import { Route as ApiAiSearchRouteImport } from './routes/api/ai.search'
+import { Route as ApiAiProductDescriptionRouteImport } from './routes/api/ai.product-description'
+import { Route as ApiAiPriceSuggestionRouteImport } from './routes/api/ai.price-suggestion'
+import { Route as ApiAiPromotionCopyRouteImport } from './routes/api/ai.promotion-copy'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -110,6 +118,26 @@ const ApiClientFavoritesRoute = ApiClientFavoritesRouteImport.update({
   path: '/api/client/favorites',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAiSearchRoute = ApiAiSearchRouteImport.update({
+  id: '/api/ai/search',
+  path: '/api/ai/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAiPromotionCopyRoute = ApiAiPromotionCopyRouteImport.update({
+  id: '/api/ai/promotion-copy',
+  path: '/api/ai/promotion-copy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAiProductDescriptionRoute = ApiAiProductDescriptionRouteImport.update({
+  id: '/api/ai/product-description',
+  path: '/api/ai/product-description',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAiPriceSuggestionRoute = ApiAiPriceSuggestionRouteImport.update({
+  id: '/api/ai/price-suggestion',
+  path: '/api/ai/price-suggestion',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAdminUsersRoute = ApiAdminUsersRouteImport.update({
   id: '/api/admin/users',
   path: '/api/admin/users',
@@ -160,6 +188,26 @@ const ApiAdminStoresIdStatusRoute = ApiAdminStoresIdStatusRouteImport.update({
   path: '/$id/status',
   getParentRoute: () => ApiAdminStoresRoute,
 } as any)
+const ApiAiSearchRoute = ApiAiSearchRouteImport.update({
+  id: '/api/ai/search',
+  path: '/api/ai/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAiProductDescriptionRoute = ApiAiProductDescriptionRouteImport.update({
+  id: '/api/ai/product-description',
+  path: '/api/ai/product-description',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAiPriceSuggestionRoute = ApiAiPriceSuggestionRouteImport.update({
+  id: '/api/ai/price-suggestion',
+  path: '/api/ai/price-suggestion',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAiPromotionCopyRoute = ApiAiPromotionCopyRouteImport.update({
+  id: '/api/ai/promotion-copy',
+  path: '/api/ai/promotion-copy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -172,6 +220,10 @@ export interface FileRoutesByFullPath {
   '/api/admin/reports': typeof ApiAdminReportsRoute
   '/api/admin/stores': typeof ApiAdminStoresRouteWithChildren
   '/api/admin/users': typeof ApiAdminUsersRoute
+  '/api/ai/price-suggestion': typeof ApiAiPriceSuggestionRoute
+  '/api/ai/product-description': typeof ApiAiProductDescriptionRoute
+  '/api/ai/promotion-copy': typeof ApiAiPromotionCopyRoute
+  '/api/ai/search': typeof ApiAiSearchRoute
   '/api/client/favorites': typeof ApiClientFavoritesRouteWithChildren
   '/api/client/queries': typeof ApiClientQueriesRoute
   '/api/client/reviews': typeof ApiClientReviewsRoute
@@ -199,6 +251,10 @@ export interface FileRoutesByTo {
   '/api/admin/reports': typeof ApiAdminReportsRoute
   '/api/admin/stores': typeof ApiAdminStoresRouteWithChildren
   '/api/admin/users': typeof ApiAdminUsersRoute
+  '/api/ai/price-suggestion': typeof ApiAiPriceSuggestionRoute
+  '/api/ai/product-description': typeof ApiAiProductDescriptionRoute
+  '/api/ai/promotion-copy': typeof ApiAiPromotionCopyRoute
+  '/api/ai/search': typeof ApiAiSearchRoute
   '/api/client/favorites': typeof ApiClientFavoritesRouteWithChildren
   '/api/client/queries': typeof ApiClientQueriesRoute
   '/api/client/reviews': typeof ApiClientReviewsRoute
@@ -227,6 +283,10 @@ export interface FileRoutesById {
   '/api/admin/reports': typeof ApiAdminReportsRoute
   '/api/admin/stores': typeof ApiAdminStoresRouteWithChildren
   '/api/admin/users': typeof ApiAdminUsersRoute
+  '/api/ai/price-suggestion': typeof ApiAiPriceSuggestionRoute
+  '/api/ai/product-description': typeof ApiAiProductDescriptionRoute
+  '/api/ai/promotion-copy': typeof ApiAiPromotionCopyRoute
+  '/api/ai/search': typeof ApiAiSearchRoute
   '/api/client/favorites': typeof ApiClientFavoritesRouteWithChildren
   '/api/client/queries': typeof ApiClientQueriesRoute
   '/api/client/reviews': typeof ApiClientReviewsRoute
@@ -256,6 +316,10 @@ export interface FileRouteTypes {
     | '/api/admin/reports'
     | '/api/admin/stores'
     | '/api/admin/users'
+    | '/api/ai/price-suggestion'
+    | '/api/ai/product-description'
+    | '/api/ai/promotion-copy'
+    | '/api/ai/search'
     | '/api/client/favorites'
     | '/api/client/queries'
     | '/api/client/reviews'
@@ -283,6 +347,10 @@ export interface FileRouteTypes {
     | '/api/admin/reports'
     | '/api/admin/stores'
     | '/api/admin/users'
+    | '/api/ai/price-suggestion'
+    | '/api/ai/product-description'
+    | '/api/ai/promotion-copy'
+    | '/api/ai/search'
     | '/api/client/favorites'
     | '/api/client/queries'
     | '/api/client/reviews'
@@ -310,6 +378,10 @@ export interface FileRouteTypes {
     | '/api/admin/reports'
     | '/api/admin/stores'
     | '/api/admin/users'
+    | '/api/ai/price-suggestion'
+    | '/api/ai/product-description'
+    | '/api/ai/promotion-copy'
+    | '/api/ai/search'
     | '/api/client/favorites'
     | '/api/client/queries'
     | '/api/client/reviews'
@@ -338,6 +410,10 @@ export interface RootRouteChildren {
   ApiAdminReportsRoute: typeof ApiAdminReportsRoute
   ApiAdminStoresRoute: typeof ApiAdminStoresRouteWithChildren
   ApiAdminUsersRoute: typeof ApiAdminUsersRoute
+  ApiAiPriceSuggestionRoute: typeof ApiAiPriceSuggestionRoute
+  ApiAiProductDescriptionRoute: typeof ApiAiProductDescriptionRoute
+  ApiAiPromotionCopyRoute: typeof ApiAiPromotionCopyRoute
+  ApiAiSearchRoute: typeof ApiAiSearchRoute
   ApiClientFavoritesRoute: typeof ApiClientFavoritesRouteWithChildren
   ApiClientQueriesRoute: typeof ApiClientQueriesRoute
   ApiClientReviewsRoute: typeof ApiClientReviewsRoute
@@ -347,6 +423,10 @@ export interface RootRouteChildren {
   ApiStorePromotionsRoute: typeof ApiStorePromotionsRouteWithChildren
   ApiStoreQueriesRoute: typeof ApiStoreQueriesRouteWithChildren
   ApiStoreStatsRoute: typeof ApiStoreStatsRoute
+  ApiAiSearchRoute: typeof ApiAiSearchRoute
+  ApiAiProductDescriptionRoute: typeof ApiAiProductDescriptionRoute
+  ApiAiPriceSuggestionRoute: typeof ApiAiPriceSuggestionRoute
+  ApiAiPromotionCopyRoute: typeof ApiAiPromotionCopyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -456,6 +536,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiClientFavoritesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/ai/search': {
+      id: '/api/ai/search'
+      path: '/api/ai/search'
+      fullPath: '/api/ai/search'
+      preLoaderRoute: typeof ApiAiSearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/ai/promotion-copy': {
+      id: '/api/ai/promotion-copy'
+      path: '/api/ai/promotion-copy'
+      fullPath: '/api/ai/promotion-copy'
+      preLoaderRoute: typeof ApiAiPromotionCopyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/ai/product-description': {
+      id: '/api/ai/product-description'
+      path: '/api/ai/product-description'
+      fullPath: '/api/ai/product-description'
+      preLoaderRoute: typeof ApiAiProductDescriptionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/ai/price-suggestion': {
+      id: '/api/ai/price-suggestion'
+      path: '/api/ai/price-suggestion'
+      fullPath: '/api/ai/price-suggestion'
+      preLoaderRoute: typeof ApiAiPriceSuggestionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/admin/users': {
       id: '/api/admin/users'
       path: '/api/admin/users'
@@ -525,6 +633,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/admin/stores/$id/status'
       preLoaderRoute: typeof ApiAdminStoresIdStatusRouteImport
       parentRoute: typeof ApiAdminStoresRoute
+    }
+    '/api/ai/search': {
+      id: '/api/ai/search'
+      path: '/api/ai/search'
+      fullPath: '/api/ai/search'
+      preLoaderRoute: typeof ApiAiSearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/ai/product-description': {
+      id: '/api/ai/product-description'
+      path: '/api/ai/product-description'
+      fullPath: '/api/ai/product-description'
+      preLoaderRoute: typeof ApiAiProductDescriptionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/ai/price-suggestion': {
+      id: '/api/ai/price-suggestion'
+      path: '/api/ai/price-suggestion'
+      fullPath: '/api/ai/price-suggestion'
+      preLoaderRoute: typeof ApiAiPriceSuggestionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/ai/promotion-copy': {
+      id: '/api/ai/promotion-copy'
+      path: '/api/ai/promotion-copy'
+      fullPath: '/api/ai/promotion-copy'
+      preLoaderRoute: typeof ApiAiPromotionCopyRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -609,6 +745,10 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAdminReportsRoute: ApiAdminReportsRoute,
   ApiAdminStoresRoute: ApiAdminStoresRouteWithChildren,
   ApiAdminUsersRoute: ApiAdminUsersRoute,
+  ApiAiPriceSuggestionRoute: ApiAiPriceSuggestionRoute,
+  ApiAiProductDescriptionRoute: ApiAiProductDescriptionRoute,
+  ApiAiPromotionCopyRoute: ApiAiPromotionCopyRoute,
+  ApiAiSearchRoute: ApiAiSearchRoute,
   ApiClientFavoritesRoute: ApiClientFavoritesRouteWithChildren,
   ApiClientQueriesRoute: ApiClientQueriesRoute,
   ApiClientReviewsRoute: ApiClientReviewsRoute,
@@ -618,6 +758,10 @@ const rootRouteChildren: RootRouteChildren = {
   ApiStorePromotionsRoute: ApiStorePromotionsRouteWithChildren,
   ApiStoreQueriesRoute: ApiStoreQueriesRouteWithChildren,
   ApiStoreStatsRoute: ApiStoreStatsRoute,
+  ApiAiSearchRoute: ApiAiSearchRoute,
+  ApiAiProductDescriptionRoute: ApiAiProductDescriptionRoute,
+  ApiAiPriceSuggestionRoute: ApiAiPriceSuggestionRoute,
+  ApiAiPromotionCopyRoute: ApiAiPromotionCopyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
