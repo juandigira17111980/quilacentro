@@ -21,9 +21,13 @@ import { Route as ApiStorePromotionsRouteImport } from './routes/api/store.promo
 import { Route as ApiStoreProfileRouteImport } from './routes/api/store.profile'
 import { Route as ApiStoreProductsRouteImport } from './routes/api/store.products'
 import { Route as ApiProductsIdRouteImport } from './routes/api/products.$id'
+import { Route as ApiClientReviewsRouteImport } from './routes/api/client.reviews'
+import { Route as ApiClientQueriesRouteImport } from './routes/api/client.queries'
+import { Route as ApiClientFavoritesRouteImport } from './routes/api/client.favorites'
 import { Route as ApiStoreQueriesIdRouteImport } from './routes/api/store.queries.$id'
 import { Route as ApiStorePromotionsIdRouteImport } from './routes/api/store.promotions.$id'
 import { Route as ApiStoreProductsIdRouteImport } from './routes/api/store.products.$id'
+import { Route as ApiClientFavoritesIdRouteImport } from './routes/api/client.favorites.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -85,6 +89,21 @@ const ApiProductsIdRoute = ApiProductsIdRouteImport.update({
   path: '/api/products/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiClientReviewsRoute = ApiClientReviewsRouteImport.update({
+  id: '/api/client/reviews',
+  path: '/api/client/reviews',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiClientQueriesRoute = ApiClientQueriesRouteImport.update({
+  id: '/api/client/queries',
+  path: '/api/client/queries',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiClientFavoritesRoute = ApiClientFavoritesRouteImport.update({
+  id: '/api/client/favorites',
+  path: '/api/client/favorites',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiStoreQueriesIdRoute = ApiStoreQueriesIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -100,6 +119,11 @@ const ApiStoreProductsIdRoute = ApiStoreProductsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => ApiStoreProductsRoute,
 } as any)
+const ApiClientFavoritesIdRoute = ApiClientFavoritesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ApiClientFavoritesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -107,6 +131,9 @@ export interface FileRoutesByFullPath {
   '/api/promotions': typeof ApiPromotionsRoute
   '/api/search': typeof ApiSearchRoute
   '/api/stores': typeof ApiStoresRouteWithChildren
+  '/api/client/favorites': typeof ApiClientFavoritesRouteWithChildren
+  '/api/client/queries': typeof ApiClientQueriesRoute
+  '/api/client/reviews': typeof ApiClientReviewsRoute
   '/api/products/$id': typeof ApiProductsIdRoute
   '/api/store/products': typeof ApiStoreProductsRouteWithChildren
   '/api/store/profile': typeof ApiStoreProfileRoute
@@ -114,6 +141,7 @@ export interface FileRoutesByFullPath {
   '/api/store/queries': typeof ApiStoreQueriesRouteWithChildren
   '/api/store/stats': typeof ApiStoreStatsRoute
   '/api/stores/$slug': typeof ApiStoresSlugRoute
+  '/api/client/favorites/$id': typeof ApiClientFavoritesIdRoute
   '/api/store/products/$id': typeof ApiStoreProductsIdRoute
   '/api/store/promotions/$id': typeof ApiStorePromotionsIdRoute
   '/api/store/queries/$id': typeof ApiStoreQueriesIdRoute
@@ -124,6 +152,9 @@ export interface FileRoutesByTo {
   '/api/promotions': typeof ApiPromotionsRoute
   '/api/search': typeof ApiSearchRoute
   '/api/stores': typeof ApiStoresRouteWithChildren
+  '/api/client/favorites': typeof ApiClientFavoritesRouteWithChildren
+  '/api/client/queries': typeof ApiClientQueriesRoute
+  '/api/client/reviews': typeof ApiClientReviewsRoute
   '/api/products/$id': typeof ApiProductsIdRoute
   '/api/store/products': typeof ApiStoreProductsRouteWithChildren
   '/api/store/profile': typeof ApiStoreProfileRoute
@@ -131,6 +162,7 @@ export interface FileRoutesByTo {
   '/api/store/queries': typeof ApiStoreQueriesRouteWithChildren
   '/api/store/stats': typeof ApiStoreStatsRoute
   '/api/stores/$slug': typeof ApiStoresSlugRoute
+  '/api/client/favorites/$id': typeof ApiClientFavoritesIdRoute
   '/api/store/products/$id': typeof ApiStoreProductsIdRoute
   '/api/store/promotions/$id': typeof ApiStorePromotionsIdRoute
   '/api/store/queries/$id': typeof ApiStoreQueriesIdRoute
@@ -142,6 +174,9 @@ export interface FileRoutesById {
   '/api/promotions': typeof ApiPromotionsRoute
   '/api/search': typeof ApiSearchRoute
   '/api/stores': typeof ApiStoresRouteWithChildren
+  '/api/client/favorites': typeof ApiClientFavoritesRouteWithChildren
+  '/api/client/queries': typeof ApiClientQueriesRoute
+  '/api/client/reviews': typeof ApiClientReviewsRoute
   '/api/products/$id': typeof ApiProductsIdRoute
   '/api/store/products': typeof ApiStoreProductsRouteWithChildren
   '/api/store/profile': typeof ApiStoreProfileRoute
@@ -149,6 +184,7 @@ export interface FileRoutesById {
   '/api/store/queries': typeof ApiStoreQueriesRouteWithChildren
   '/api/store/stats': typeof ApiStoreStatsRoute
   '/api/stores/$slug': typeof ApiStoresSlugRoute
+  '/api/client/favorites/$id': typeof ApiClientFavoritesIdRoute
   '/api/store/products/$id': typeof ApiStoreProductsIdRoute
   '/api/store/promotions/$id': typeof ApiStorePromotionsIdRoute
   '/api/store/queries/$id': typeof ApiStoreQueriesIdRoute
@@ -161,6 +197,9 @@ export interface FileRouteTypes {
     | '/api/promotions'
     | '/api/search'
     | '/api/stores'
+    | '/api/client/favorites'
+    | '/api/client/queries'
+    | '/api/client/reviews'
     | '/api/products/$id'
     | '/api/store/products'
     | '/api/store/profile'
@@ -168,6 +207,7 @@ export interface FileRouteTypes {
     | '/api/store/queries'
     | '/api/store/stats'
     | '/api/stores/$slug'
+    | '/api/client/favorites/$id'
     | '/api/store/products/$id'
     | '/api/store/promotions/$id'
     | '/api/store/queries/$id'
@@ -178,6 +218,9 @@ export interface FileRouteTypes {
     | '/api/promotions'
     | '/api/search'
     | '/api/stores'
+    | '/api/client/favorites'
+    | '/api/client/queries'
+    | '/api/client/reviews'
     | '/api/products/$id'
     | '/api/store/products'
     | '/api/store/profile'
@@ -185,6 +228,7 @@ export interface FileRouteTypes {
     | '/api/store/queries'
     | '/api/store/stats'
     | '/api/stores/$slug'
+    | '/api/client/favorites/$id'
     | '/api/store/products/$id'
     | '/api/store/promotions/$id'
     | '/api/store/queries/$id'
@@ -195,6 +239,9 @@ export interface FileRouteTypes {
     | '/api/promotions'
     | '/api/search'
     | '/api/stores'
+    | '/api/client/favorites'
+    | '/api/client/queries'
+    | '/api/client/reviews'
     | '/api/products/$id'
     | '/api/store/products'
     | '/api/store/profile'
@@ -202,6 +249,7 @@ export interface FileRouteTypes {
     | '/api/store/queries'
     | '/api/store/stats'
     | '/api/stores/$slug'
+    | '/api/client/favorites/$id'
     | '/api/store/products/$id'
     | '/api/store/promotions/$id'
     | '/api/store/queries/$id'
@@ -213,6 +261,9 @@ export interface RootRouteChildren {
   ApiPromotionsRoute: typeof ApiPromotionsRoute
   ApiSearchRoute: typeof ApiSearchRoute
   ApiStoresRoute: typeof ApiStoresRouteWithChildren
+  ApiClientFavoritesRoute: typeof ApiClientFavoritesRouteWithChildren
+  ApiClientQueriesRoute: typeof ApiClientQueriesRoute
+  ApiClientReviewsRoute: typeof ApiClientReviewsRoute
   ApiProductsIdRoute: typeof ApiProductsIdRoute
   ApiStoreProductsRoute: typeof ApiStoreProductsRouteWithChildren
   ApiStoreProfileRoute: typeof ApiStoreProfileRoute
@@ -307,6 +358,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiProductsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/client/reviews': {
+      id: '/api/client/reviews'
+      path: '/api/client/reviews'
+      fullPath: '/api/client/reviews'
+      preLoaderRoute: typeof ApiClientReviewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/client/queries': {
+      id: '/api/client/queries'
+      path: '/api/client/queries'
+      fullPath: '/api/client/queries'
+      preLoaderRoute: typeof ApiClientQueriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/client/favorites': {
+      id: '/api/client/favorites'
+      path: '/api/client/favorites'
+      fullPath: '/api/client/favorites'
+      preLoaderRoute: typeof ApiClientFavoritesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/store/queries/$id': {
       id: '/api/store/queries/$id'
       path: '/$id'
@@ -328,6 +400,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiStoreProductsIdRouteImport
       parentRoute: typeof ApiStoreProductsRoute
     }
+    '/api/client/favorites/$id': {
+      id: '/api/client/favorites/$id'
+      path: '/$id'
+      fullPath: '/api/client/favorites/$id'
+      preLoaderRoute: typeof ApiClientFavoritesIdRouteImport
+      parentRoute: typeof ApiClientFavoritesRoute
+    }
   }
 }
 
@@ -342,6 +421,17 @@ const ApiStoresRouteChildren: ApiStoresRouteChildren = {
 const ApiStoresRouteWithChildren = ApiStoresRoute._addFileChildren(
   ApiStoresRouteChildren,
 )
+
+interface ApiClientFavoritesRouteChildren {
+  ApiClientFavoritesIdRoute: typeof ApiClientFavoritesIdRoute
+}
+
+const ApiClientFavoritesRouteChildren: ApiClientFavoritesRouteChildren = {
+  ApiClientFavoritesIdRoute: ApiClientFavoritesIdRoute,
+}
+
+const ApiClientFavoritesRouteWithChildren =
+  ApiClientFavoritesRoute._addFileChildren(ApiClientFavoritesRouteChildren)
 
 interface ApiStoreProductsRouteChildren {
   ApiStoreProductsIdRoute: typeof ApiStoreProductsIdRoute
@@ -383,6 +473,9 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPromotionsRoute: ApiPromotionsRoute,
   ApiSearchRoute: ApiSearchRoute,
   ApiStoresRoute: ApiStoresRouteWithChildren,
+  ApiClientFavoritesRoute: ApiClientFavoritesRouteWithChildren,
+  ApiClientQueriesRoute: ApiClientQueriesRoute,
+  ApiClientReviewsRoute: ApiClientReviewsRoute,
   ApiProductsIdRoute: ApiProductsIdRoute,
   ApiStoreProductsRoute: ApiStoreProductsRouteWithChildren,
   ApiStoreProfileRoute: ApiStoreProfileRoute,
