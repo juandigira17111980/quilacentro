@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiStoresRouteImport } from './routes/api/stores'
 import { Route as ApiSearchRouteImport } from './routes/api/search'
@@ -39,6 +40,11 @@ import { Route as ApiStoreProductsIdRouteImport } from './routes/api/store.produ
 import { Route as ApiClientFavoritesIdRouteImport } from './routes/api/client.favorites.$id'
 import { Route as ApiAdminStoresIdStatusRouteImport } from './routes/api/admin.stores.$id.status'
 
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -187,6 +193,7 @@ const ApiAdminStoresIdStatusRoute = ApiAdminStoresIdStatusRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/api/categories': typeof ApiCategoriesRoute
   '/api/promotions': typeof ApiPromotionsRoute
   '/api/search': typeof ApiSearchRoute
@@ -218,6 +225,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/api/categories': typeof ApiCategoriesRoute
   '/api/promotions': typeof ApiPromotionsRoute
   '/api/search': typeof ApiSearchRoute
@@ -250,6 +258,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/api/categories': typeof ApiCategoriesRoute
   '/api/promotions': typeof ApiPromotionsRoute
   '/api/search': typeof ApiSearchRoute
@@ -283,6 +292,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/api/categories'
     | '/api/promotions'
     | '/api/search'
@@ -314,6 +324,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
     | '/api/categories'
     | '/api/promotions'
     | '/api/search'
@@ -345,6 +356,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/auth'
     | '/api/categories'
     | '/api/promotions'
     | '/api/search'
@@ -377,6 +389,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRoute
   ApiCategoriesRoute: typeof ApiCategoriesRoute
   ApiPromotionsRoute: typeof ApiPromotionsRoute
   ApiSearchRoute: typeof ApiSearchRoute
@@ -403,6 +416,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -680,6 +700,7 @@ const ApiStoreQueriesRouteWithChildren = ApiStoreQueriesRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRoute,
   ApiCategoriesRoute: ApiCategoriesRoute,
   ApiPromotionsRoute: ApiPromotionsRoute,
   ApiSearchRoute: ApiSearchRoute,
