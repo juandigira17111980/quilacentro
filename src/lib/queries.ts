@@ -169,3 +169,143 @@ export function buildSearchComerciosQuery(filters: SearchFilters) {
     staleTime: 15_000,
   });
 }
+
+// ============================ DETAIL QUERIES ============================
+
+export type ComercioFull = {
+  id: string;
+  nombre: string;
+  slug: string;
+  descripcion: string | null;
+  logo_url: string | null;
+  banner_url: string | null;
+  direccion: string | null;
+  lat: number | null;
+  lng: number | null;
+  telefono: string | null;
+  whatsapp: string | null;
+  email: string | null;
+  horarios: Record<string, string> | null;
+  rating_avg: number | null;
+  total_reviews: number | null;
+  categoria_id: number | null;
+  categorias?: { nombre: string; slug: string } | null;
+};
+
+export type ProductoFull = Producto & {
+  descripcion: string | null;
+  marca: string | null;
+  imagenes: string[] | null;
+  stock: number | null;
+  tags: string[] | null;
+  atributos: Record<string, string> | null;
+  comercios?: (Comercio & { whatsapp?: string | null; telefono?: string | null; horarios?: Record<string, string> | null; lat?: number | null; lng?: number | null; descripcion?: string | null }) | null;
+};
+
+export function productoByIdQuery(id: string) {
+  return queryOptions({
+    queryKey: ["producto", id],
+    queryFn: async (): Promise<ProductoFull | null> => {
+      const { data, error } = await supabase
+        .from("productos")
+        .select(`
+          id, nombre, slug, descripcion, marca, precio_base, precio_oferta,
+          imagen_url, imagenes, comercio_id, categoria_id, destacado, disponible,
+          stock, tags, atributos,
+          comercios(id, nombre, slug, logo_url, direccion, lat, lng, telefono,
+                    whatsapp, horarios, rating_avg, total_reviews, categoria_id, descripcion,
+                    categorias(nombre, slug))
+        `)
+        .eq("id", id)
+        .is("deleted_at", null)
+        .maybeSingle();
+      if (error) throw error;
+      return (data ?? null) as unknown as ProductoFull | null;
+    },
+  });
+}
+
+export function comercioBySlugQuery(slug: string) {
+  return queryOptions({
+    queryKey: ["comercio", slug],
+    queryFn: async (): Promise<ComercioFull | null> => {
+      const { data, error } = await supabase
+        .from("comercios")
+        .select(`
+          id, nombre, slug, descripcion, logo_url, banner_url, direccion, lat, lng,
+          telefono, whatsapp, email, horarios, rating_avg, total_reviews, categoria_id,
+          categorias(nombre, slug)
+        `)
+        .eq("slug", slug)
+        .eq("estado", "activo")
+        .is("deleted_at", null)
+        .maybeSingle();
+      if (error) throw error;
+      return (data ?? null) as unknown as ComercioFull | null;
+    },
+  });
+}
+
+export function productosByComercioQuery(comercioId: string, opts?: { excludeId?: string; limit?: number }) {
+  const key = ["productos", "by-comercio", comercioId, opts?.excludeId ?? null, opts?.limit ?? 200];
+  return queryOptions({
+    queryKey: key,
+    queryFn: async (): Promise<Producto[]> => {
+      let q = supabase
+        .from("productos")
+        .select("id, nombre, slug, precio_base, precio_oferta, imagen_url, comercio_id, categoria_id, destacado, disponible")
+        .eq("comercio_id", comercioId)
+        .eq("disponible", true)
+        .is("deleted_at", null);
+      if (opts?.excludeId) q = q.neq("id", opts.excludeId);
+      const { data, error } = await q.limit(opts?.limit ?? 200);
+      if (error) throw error;
+      return (data ?? []) as Producto[];
+    },
+  });
+}
+
+export function promocionesByComercioQuery(comercioId: string, limit = 20) {
+  return queryOptions({
+    queryKey: ["promociones", "by-comercio", comercioId, limit],
+    queryFn: async (): Promise<(Promocion & { fecha_fin: string })[]> => {
+      const nowIso = new Date().toISOString();
+      const { data, error } = await supabase
+        .from("promociones")
+        .select("id, titulo, descripcion, tipo, valor, imagen_url, comercio_id, fecha_fin")
+        .eq("comercio_id", comercioId)
+        .eq("activa", true)
+        .lte("fecha_inicio", nowIso)
+        .gte("fecha_fin", nowIso)
+        .limit(limit);
+      if (error) throw error;
+      return (data ?? []) as unknown as (Promocion & { fecha_fin: string })[];
+    },
+  });
+}
+
+export type Resena = {
+  id: string;
+  rating: number;
+  comentario: string | null;
+  created_at: string;
+  cliente_id: string;
+  profiles?: { full_name: string | null; avatar_url: string | null } | null;
+};
+
+export function resenasByComercioQuery(comercioId: string) {
+  return queryOptions({
+    queryKey: ["resenas", comercioId],
+    queryFn: async (): Promise<Resena[]> => {
+      const { data, error } = await supabase
+        .from("calificaciones")
+        .select("id, rating, comentario, created_at, cliente_id, profiles(full_name, avatar_url)")
+        .eq("comercio_id", comercioId)
+        .order("created_at", { ascending: false })
+        .limit(50);
+      if (error) throw error;
+      return (data ?? []) as unknown as Resena[];
+    },
+  });
+}
+
