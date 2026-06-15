@@ -3,7 +3,8 @@ import { jsonResponse, errorResponse } from "./cors";
 
 export type AuthedContext = {
   userId: string;
-  supabase: ReturnType<typeof createClient>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabase: any;
 };
 
 /**
