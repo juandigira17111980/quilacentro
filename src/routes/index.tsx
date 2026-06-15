@@ -1,7 +1,15 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { z } from "zod";
+import { zodValidator, fallback } from "@tanstack/zod-adapter";
+import { toast } from "sonner";
 import { AppShell } from "@/components/site/AppShell";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, MapPin, Search, Store } from "lucide-react";
+
+const homeSearch = z.object({
+  denied: fallback(z.string(), "").default(""),
+});
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -14,10 +22,17 @@ export const Route = createFileRoute("/")({
       },
     ],
   }),
+  validateSearch: zodValidator(homeSearch),
   component: HomePage,
 });
 
 function HomePage() {
+  const { denied } = useSearch({ from: "/" });
+
+  useEffect(() => {
+    if (denied) toast.error("No tenés permiso para acceder a esa sección.");
+  }, [denied]);
+
   return (
     <AppShell>
       <section className="relative overflow-hidden border-b">
