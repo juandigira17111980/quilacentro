@@ -111,7 +111,7 @@ export const Route = createFileRoute("/api/search")({
             comercios: comerciosRanked,
           });
         } catch (e: any) {
-          return errorResponse(e?.message || "Error en búsqueda");
+          return errorResponse("Error en búsqueda");
         }
       },
     },

@@ -60,7 +60,7 @@ export const Route = createFileRoute("/api/admin/dashboard")({
             total_reviews: ratings.length,
           });
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al obtener dashboard");
+          return errorResponse("Error al obtener dashboard");
         }
       },
     },

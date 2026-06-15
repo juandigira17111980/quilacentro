@@ -30,7 +30,7 @@ export const Route = createFileRoute("/api/admin/stores")({
           if (error) throw error;
           return jsonResponse({ comercios: data || [] });
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al listar comercios");
+          return errorResponse("Error al listar comercios");
         }
       },
     },

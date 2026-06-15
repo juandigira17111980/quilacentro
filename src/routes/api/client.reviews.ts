@@ -58,7 +58,7 @@ export const Route = createFileRoute("/api/client/reviews")({
 
           return jsonResponse({ calificacion: data }, 201);
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al crear calificación");
+          return errorResponse("Error al crear calificación");
         }
       },
     },

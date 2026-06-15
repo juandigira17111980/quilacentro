@@ -54,7 +54,7 @@ export const Route = createFileRoute("/api/store/products/$id")({
           if (error) throw error;
           return jsonResponse({ producto: data });
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al actualizar producto");
+          return errorResponse("Error al actualizar producto");
         }
       },
       DELETE: async ({ request, params }) => {
@@ -82,7 +82,7 @@ export const Route = createFileRoute("/api/store/products/$id")({
           if (error) throw error;
           return jsonResponse({ ok: true });
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al eliminar producto");
+          return errorResponse("Error al eliminar producto");
         }
       },
     },

@@ -28,7 +28,7 @@ export const Route = createFileRoute("/api/admin/users")({
           if (error) throw error;
           return jsonResponse({ usuarios: data || [] });
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al listar usuarios");
+          return errorResponse("Error al listar usuarios");
         }
       },
       PUT: async ({ request }) => {
@@ -54,7 +54,7 @@ export const Route = createFileRoute("/api/admin/users")({
           if (error) throw error;
           return jsonResponse({ usuario: data });
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al actualizar usuario");
+          return errorResponse("Error al actualizar usuario");
         }
       },
     },

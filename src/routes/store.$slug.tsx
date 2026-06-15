@@ -20,6 +20,7 @@ import {
   productosByComercioQuery,
   promocionesByComercioQuery,
   resenasByComercioQuery,
+  myReviewQuery,
   categoriasQuery,
 } from "@/lib/queries";
 
@@ -231,11 +232,14 @@ function ResenasTab({ comercioId }: { comercioId: string }) {
       const u = data.user;
       setUserId(u?.id ?? null);
       if (u) {
-        const { data: p } = await supabase.from("profiles").select("role").eq("id", u.id).maybeSingle();
-        setRole((p as { role?: string } | null)?.role ?? null);
+        const { data: p } = await supabase.rpc("get_my_profile");
+        const row = Array.isArray(p) ? (p[0] as { role?: string } | undefined) : null;
+        setRole(row?.role ?? null);
       }
     });
   }, []);
+
+  const { data: myReview = null } = useQuery(myReviewQuery(comercioId, userId));
 
   const distribution = useMemo(() => {
     const d = [0, 0, 0, 0, 0];
@@ -245,7 +249,6 @@ function ResenasTab({ comercioId }: { comercioId: string }) {
   const total = resenas.length;
   const avg = total ? resenas.reduce((s, r) => s + r.rating, 0) / total : 0;
 
-  const myReview = userId ? resenas.find((r) => r.cliente_id === userId) ?? null : null;
 
   return (
     <div className="grid gap-6 md:grid-cols-[280px_1fr]">

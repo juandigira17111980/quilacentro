@@ -44,12 +44,8 @@ export function Header() {
 
   useEffect(() => {
     const loadProfile = async (u: SupaUser) => {
-      const { data } = await supabase
-        .from("profiles")
-        .select("role, full_name")
-        .eq("id", u.id)
-        .maybeSingle();
-      const p = data as { role?: string; full_name?: string } | null;
+      const { data } = await supabase.rpc("get_my_profile");
+      const p = Array.isArray(data) ? (data[0] as { role?: string; full_name?: string } | undefined) : null;
       setRole(p?.role ?? "cliente");
       setFullName(p?.full_name ?? u.email ?? null);
     };

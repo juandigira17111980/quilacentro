@@ -54,7 +54,7 @@ export const Route = createFileRoute("/api/admin/categories")({
           if (error) throw error;
           return jsonResponse({ categoria: data }, 201);
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al guardar categoría");
+          return errorResponse("Error al guardar categoría");
         }
       },
       DELETE: async ({ request }) => {
@@ -77,7 +77,7 @@ export const Route = createFileRoute("/api/admin/categories")({
           if (error) throw error;
           return jsonResponse({ ok: true });
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al eliminar categoría");
+          return errorResponse("Error al eliminar categoría");
         }
       },
     },

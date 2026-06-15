@@ -34,7 +34,7 @@ export const Route = createFileRoute("/api/admin/stores/$id/status")({
           if (error) throw error;
           return jsonResponse({ comercio: data });
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al actualizar estado");
+          return errorResponse("Error al actualizar estado");
         }
       },
     },

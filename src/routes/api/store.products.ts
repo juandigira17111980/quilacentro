@@ -67,7 +67,7 @@ export const Route = createFileRoute("/api/store/products")({
           if (error) throw error;
           return jsonResponse({ producto: data }, 201);
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al crear producto");
+          return errorResponse("Error al crear producto");
         }
       },
     },

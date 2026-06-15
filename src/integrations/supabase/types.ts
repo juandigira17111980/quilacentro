@@ -681,6 +681,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_my_profile: {
+        Args: never
+        Returns: {
+          avatar_url: string
+          created_at: string
+          full_name: string
+          id: string
+          phone: string
+          role: string
+          updated_at: string
+        }[]
+      }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
       is_comercio_owner: {
         Args: { _comercio_id: string; _user_id: string }

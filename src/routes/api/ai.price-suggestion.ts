@@ -67,7 +67,7 @@ export const Route = createFileRoute("/api/ai/price-suggestion")({
           const sugerencia = parseJSON(raw);
           return jsonResponse({ sugerencia, mercado: stats, muestras: similares?.length ?? 0 });
         } catch (e: any) {
-          return errorResponse(e?.message || "Error sugiriendo precio");
+          return errorResponse("Error sugiriendo precio");
         }
       },
     },

@@ -47,7 +47,7 @@ export const Route = createFileRoute("/api/categories")({
 
           return jsonResponse({ categorias: tree });
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al listar categorías");
+          return errorResponse("Error al listar categorías");
         }
       },
     },
