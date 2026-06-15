@@ -319,8 +319,16 @@ function ProductFormDialog({
             <Input value={f.nombre} onChange={(e) => set("nombre", e.target.value)} maxLength={160} />
           </div>
           <div>
-            <Label>Descripción</Label>
-            <Textarea value={f.descripcion} onChange={(e) => set("descripcion", e.target.value)} rows={3} />
+            <div className="mb-1 flex items-center justify-between">
+              <Label>Descripción</Label>
+              <AIDescriptionButton
+                nombre={f.nombre}
+                marca={f.marca}
+                comercioId={comercioId}
+                onGenerated={(text) => set("descripcion", text)}
+              />
+            </div>
+            <Textarea value={f.descripcion} onChange={(e) => set("descripcion", e.target.value)} rows={4} />
           </div>
           <div className="grid gap-4 sm:grid-cols-3">
             <div>
@@ -343,7 +351,16 @@ function ProductFormDialog({
           </div>
           <div className="grid gap-4 sm:grid-cols-3">
             <div>
-              <Label>Precio base *</Label>
+              <div className="mb-1 flex items-center justify-between">
+                <Label>Precio base *</Label>
+                <AIPriceButton
+                  nombre={f.nombre}
+                  marca={f.marca}
+                  categoriaId={f.categoria_id}
+                  comercioId={comercioId}
+                  onSuggested={(v) => set("precio_base", String(v))}
+                />
+              </div>
               <Input type="number" min="0" value={f.precio_base} onChange={(e) => set("precio_base", e.target.value)} />
             </div>
             <div>
