@@ -53,4 +53,26 @@ export async function getOwnedComercio(
   return data as { id: string };
 }
 
+/**
+ * Verifica que el usuario autenticado sea admin o super_admin.
+ */
+export async function requireAdmin(
+  request: Request,
+): Promise<AuthedContext | Response> {
+  const ctx = await authenticate(request);
+  if (ctx instanceof Response) return ctx;
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data, error } = await supabaseAdmin
+    .from("profiles")
+    .select("role")
+    .eq("id", ctx.userId)
+    .maybeSingle();
+  if (error) return errorResponse(error.message);
+  const role = (data as { role?: string } | null)?.role;
+  if (role !== "admin" && role !== "super_admin") {
+    return errorResponse("Acceso solo para administradores", 403);
+  }
+  return ctx;
+}
+
 export { jsonResponse, errorResponse };
