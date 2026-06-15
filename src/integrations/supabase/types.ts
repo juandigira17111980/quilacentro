@@ -678,9 +678,48 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      reviews_public: {
+        Row: {
+          cliente_avatar: string | null
+          cliente_nombre: string | null
+          comentario: string | null
+          comercio_id: string | null
+          created_at: string | null
+          id: string | null
+          producto_id: string | null
+          rating: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calificaciones_comercio_id_fkey"
+            columns: ["comercio_id"]
+            isOneToOne: false
+            referencedRelation: "comercios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "calificaciones_producto_id_fkey"
+            columns: ["producto_id"]
+            isOneToOne: false
+            referencedRelation: "productos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
+      get_my_profile: {
+        Args: never
+        Returns: {
+          avatar_url: string
+          created_at: string
+          full_name: string
+          id: string
+          phone: string
+          role: string
+          updated_at: string
+        }[]
+      }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
       is_comercio_owner: {
         Args: { _comercio_id: string; _user_id: string }
