@@ -56,10 +56,10 @@ function Home() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("comercios")
-        .select("id, nombre, slug, descripcion_corta, logo_url, banner_url, rating_promedio, total_reviews")
+        .select("id, nombre, slug, descripcion, logo_url, banner_url, rating_avg, total_reviews")
         .eq("estado", "activo")
         .is("deleted_at", null)
-        .order("rating_promedio", { ascending: false, nullsFirst: false })
+        .order("rating_avg", { ascending: false })
         .limit(6);
       if (error) throw error;
       return data ?? [];
@@ -71,7 +71,7 @@ function Home() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("productos")
-        .select("id, nombre, precio, imagen_url, comercio_id, comercios(nombre, slug)")
+        .select("id, nombre, precio_base, precio_oferta, imagen_url, comercio_id, comercios(nombre, slug)")
         .eq("disponible", true)
         .is("deleted_at", null)
         .order("created_at", { ascending: false })
@@ -209,10 +209,10 @@ function Home() {
                       </div>
                       <div className="min-w-0 flex-1">
                         <h3 className="truncate font-display font-semibold">{s.nombre}</h3>
-                        <p className="line-clamp-1 text-sm text-muted-foreground">{s.descripcion_corta ?? "Comercio local"}</p>
+                        <p className="line-clamp-1 text-sm text-muted-foreground">{s.descripcion ?? "Comercio local"}</p>
                         {s.total_reviews && s.total_reviews > 0 ? (
                           <div className="mt-1 text-xs text-muted-foreground">
-                            ★ {Number(s.rating_promedio ?? 0).toFixed(1)} · {s.total_reviews} reseñas
+                            ★ {Number(s.rating_avg ?? 0).toFixed(1)} · {s.total_reviews} reseñas
                           </div>
                         ) : null}
                       </div>
@@ -255,9 +255,18 @@ function Home() {
                   </div>
                   <CardContent className="p-3">
                     <h4 className="line-clamp-2 text-sm font-medium">{p.nombre}</h4>
-                    {p.precio != null && (
+                    {p.precio_base != null && (
                       <p className="mt-1 font-display text-base font-bold text-primary">
-                        ${Number(p.precio).toLocaleString("es-AR")}
+                        {p.precio_oferta != null && Number(p.precio_oferta) < Number(p.precio_base) ? (
+                          <>
+                            ${Number(p.precio_oferta).toLocaleString("es-AR")}
+                            <span className="ml-2 text-xs font-normal text-muted-foreground line-through">
+                              ${Number(p.precio_base).toLocaleString("es-AR")}
+                            </span>
+                          </>
+                        ) : (
+                          <>${Number(p.precio_base).toLocaleString("es-AR")}</>
+                        )}
                       </p>
                     )}
                     {com && (
