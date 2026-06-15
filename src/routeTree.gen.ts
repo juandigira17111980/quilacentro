@@ -10,33 +10,114 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiStoresRouteImport } from './routes/api/stores'
+import { Route as ApiSearchRouteImport } from './routes/api/search'
+import { Route as ApiPromotionsRouteImport } from './routes/api/promotions'
+import { Route as ApiCategoriesRouteImport } from './routes/api/categories'
+import { Route as ApiStoresSlugRouteImport } from './routes/api/stores.$slug'
+import { Route as ApiProductsIdRouteImport } from './routes/api/products.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiStoresRoute = ApiStoresRouteImport.update({
+  id: '/api/stores',
+  path: '/api/stores',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSearchRoute = ApiSearchRouteImport.update({
+  id: '/api/search',
+  path: '/api/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPromotionsRoute = ApiPromotionsRouteImport.update({
+  id: '/api/promotions',
+  path: '/api/promotions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCategoriesRoute = ApiCategoriesRouteImport.update({
+  id: '/api/categories',
+  path: '/api/categories',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiStoresSlugRoute = ApiStoresSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ApiStoresRoute,
+} as any)
+const ApiProductsIdRoute = ApiProductsIdRouteImport.update({
+  id: '/api/products/$id',
+  path: '/api/products/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/api/categories': typeof ApiCategoriesRoute
+  '/api/promotions': typeof ApiPromotionsRoute
+  '/api/search': typeof ApiSearchRoute
+  '/api/stores': typeof ApiStoresRouteWithChildren
+  '/api/products/$id': typeof ApiProductsIdRoute
+  '/api/stores/$slug': typeof ApiStoresSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api/categories': typeof ApiCategoriesRoute
+  '/api/promotions': typeof ApiPromotionsRoute
+  '/api/search': typeof ApiSearchRoute
+  '/api/stores': typeof ApiStoresRouteWithChildren
+  '/api/products/$id': typeof ApiProductsIdRoute
+  '/api/stores/$slug': typeof ApiStoresSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/api/categories': typeof ApiCategoriesRoute
+  '/api/promotions': typeof ApiPromotionsRoute
+  '/api/search': typeof ApiSearchRoute
+  '/api/stores': typeof ApiStoresRouteWithChildren
+  '/api/products/$id': typeof ApiProductsIdRoute
+  '/api/stores/$slug': typeof ApiStoresSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/api/categories'
+    | '/api/promotions'
+    | '/api/search'
+    | '/api/stores'
+    | '/api/products/$id'
+    | '/api/stores/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/api/categories'
+    | '/api/promotions'
+    | '/api/search'
+    | '/api/stores'
+    | '/api/products/$id'
+    | '/api/stores/$slug'
+  id:
+    | '__root__'
+    | '/'
+    | '/api/categories'
+    | '/api/promotions'
+    | '/api/search'
+    | '/api/stores'
+    | '/api/products/$id'
+    | '/api/stores/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApiCategoriesRoute: typeof ApiCategoriesRoute
+  ApiPromotionsRoute: typeof ApiPromotionsRoute
+  ApiSearchRoute: typeof ApiSearchRoute
+  ApiStoresRoute: typeof ApiStoresRouteWithChildren
+  ApiProductsIdRoute: typeof ApiProductsIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +129,70 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/stores': {
+      id: '/api/stores'
+      path: '/api/stores'
+      fullPath: '/api/stores'
+      preLoaderRoute: typeof ApiStoresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/search': {
+      id: '/api/search'
+      path: '/api/search'
+      fullPath: '/api/search'
+      preLoaderRoute: typeof ApiSearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/promotions': {
+      id: '/api/promotions'
+      path: '/api/promotions'
+      fullPath: '/api/promotions'
+      preLoaderRoute: typeof ApiPromotionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/categories': {
+      id: '/api/categories'
+      path: '/api/categories'
+      fullPath: '/api/categories'
+      preLoaderRoute: typeof ApiCategoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/stores/$slug': {
+      id: '/api/stores/$slug'
+      path: '/$slug'
+      fullPath: '/api/stores/$slug'
+      preLoaderRoute: typeof ApiStoresSlugRouteImport
+      parentRoute: typeof ApiStoresRoute
+    }
+    '/api/products/$id': {
+      id: '/api/products/$id'
+      path: '/api/products/$id'
+      fullPath: '/api/products/$id'
+      preLoaderRoute: typeof ApiProductsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface ApiStoresRouteChildren {
+  ApiStoresSlugRoute: typeof ApiStoresSlugRoute
+}
+
+const ApiStoresRouteChildren: ApiStoresRouteChildren = {
+  ApiStoresSlugRoute: ApiStoresSlugRoute,
+}
+
+const ApiStoresRouteWithChildren = ApiStoresRoute._addFileChildren(
+  ApiStoresRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApiCategoriesRoute: ApiCategoriesRoute,
+  ApiPromotionsRoute: ApiPromotionsRoute,
+  ApiSearchRoute: ApiSearchRoute,
+  ApiStoresRoute: ApiStoresRouteWithChildren,
+  ApiProductsIdRoute: ApiProductsIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
