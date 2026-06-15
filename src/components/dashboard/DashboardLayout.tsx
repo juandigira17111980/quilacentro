@@ -8,13 +8,14 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const items = [
+type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean };
+const items: NavItem[] = [
   { to: "/dashboard", label: "Resumen", icon: LayoutDashboard, exact: true },
   { to: "/dashboard/profile", label: "Mi comercio", icon: StoreIcon },
   { to: "/dashboard/products", label: "Productos", icon: Package },
   { to: "/dashboard/promotions", label: "Promociones", icon: Tag },
   { to: "/dashboard/queries", label: "Consultas", icon: MessageSquare },
-] as const;
+];
 
 export function DashboardLayout() {
   const path = useRouterState({ select: (s) => s.location.pathname });
