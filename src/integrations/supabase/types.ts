@@ -14,13 +14,260 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      categorias: {
+        Row: {
+          activa: boolean
+          color: string | null
+          created_at: string
+          icono_url: string | null
+          id: number
+          nombre: string
+          orden: number
+          padre_id: number | null
+          slug: string
+        }
+        Insert: {
+          activa?: boolean
+          color?: string | null
+          created_at?: string
+          icono_url?: string | null
+          id?: number
+          nombre: string
+          orden?: number
+          padre_id?: number | null
+          slug: string
+        }
+        Update: {
+          activa?: boolean
+          color?: string | null
+          created_at?: string
+          icono_url?: string | null
+          id?: number
+          nombre?: string
+          orden?: number
+          padre_id?: number | null
+          slug?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "categorias_padre_id_fkey"
+            columns: ["padre_id"]
+            isOneToOne: false
+            referencedRelation: "categorias"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      comercios: {
+        Row: {
+          banner_url: string | null
+          categoria_id: number | null
+          created_at: string
+          created_by: string | null
+          deleted_at: string | null
+          descripcion: string | null
+          direccion: string | null
+          email: string | null
+          estado: string
+          horarios: Json | null
+          id: string
+          lat: number | null
+          lng: number | null
+          logo_url: string | null
+          nombre: string
+          owner_id: string
+          plan_id: number | null
+          rating_avg: number
+          slug: string
+          telefono: string | null
+          total_reviews: number
+          updated_at: string
+          whatsapp: string | null
+          zona_id: number | null
+        }
+        Insert: {
+          banner_url?: string | null
+          categoria_id?: number | null
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          descripcion?: string | null
+          direccion?: string | null
+          email?: string | null
+          estado?: string
+          horarios?: Json | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          logo_url?: string | null
+          nombre: string
+          owner_id: string
+          plan_id?: number | null
+          rating_avg?: number
+          slug: string
+          telefono?: string | null
+          total_reviews?: number
+          updated_at?: string
+          whatsapp?: string | null
+          zona_id?: number | null
+        }
+        Update: {
+          banner_url?: string | null
+          categoria_id?: number | null
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          descripcion?: string | null
+          direccion?: string | null
+          email?: string | null
+          estado?: string
+          horarios?: Json | null
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          logo_url?: string | null
+          nombre?: string
+          owner_id?: string
+          plan_id?: number | null
+          rating_avg?: number
+          slug?: string
+          telefono?: string | null
+          total_reviews?: number
+          updated_at?: string
+          whatsapp?: string | null
+          zona_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comercios_categoria_id_fkey"
+            columns: ["categoria_id"]
+            isOneToOne: false
+            referencedRelation: "categorias"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comercios_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comercios_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comercios_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "planes_suscripcion"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comercios_zona_id_fkey"
+            columns: ["zona_id"]
+            isOneToOne: false
+            referencedRelation: "zonas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      planes_suscripcion: {
+        Row: {
+          activo: boolean
+          created_at: string
+          descripcion: string | null
+          id: number
+          nombre: string
+          precio_mensual: number
+        }
+        Insert: {
+          activo?: boolean
+          created_at?: string
+          descripcion?: string | null
+          id?: number
+          nombre: string
+          precio_mensual?: number
+        }
+        Update: {
+          activo?: boolean
+          created_at?: string
+          descripcion?: string | null
+          id?: number
+          nombre?: string
+          precio_mensual?: number
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          full_name: string
+          id: string
+          phone: string | null
+          role: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name: string
+          id: string
+          phone?: string | null
+          role?: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string
+          id?: string
+          phone?: string | null
+          role?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      zonas: {
+        Row: {
+          activa: boolean
+          ciudad: string
+          created_at: string
+          departamento: string
+          id: number
+          nombre: string
+          pais: string
+        }
+        Insert: {
+          activa?: boolean
+          ciudad: string
+          created_at?: string
+          departamento: string
+          id?: number
+          nombre: string
+          pais?: string
+        }
+        Update: {
+          activa?: boolean
+          ciudad?: string
+          created_at?: string
+          departamento?: string
+          id?: number
+          nombre?: string
+          pais?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_admin: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
