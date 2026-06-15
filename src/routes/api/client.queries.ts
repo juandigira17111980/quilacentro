@@ -46,7 +46,7 @@ export const Route = createFileRoute("/api/client/queries")({
           if (error) throw error;
           return jsonResponse({ consulta: data }, 201);
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al enviar consulta");
+          return errorResponse("Error al enviar consulta");
         }
       },
     },

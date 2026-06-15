@@ -49,7 +49,7 @@ export const Route = createFileRoute("/api/store/promotions/$id")({
           if (error) throw error;
           return jsonResponse({ promocion: data });
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al actualizar promoción");
+          return errorResponse("Error al actualizar promoción");
         }
       },
     },

@@ -42,7 +42,7 @@ export const Route = createFileRoute("/api/products/$id")({
 
           return jsonResponse({ producto, promociones: promociones || [] });
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al obtener producto");
+          return errorResponse("Error al obtener producto");
         }
       },
     },

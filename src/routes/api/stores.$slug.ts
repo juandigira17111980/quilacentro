@@ -50,7 +50,7 @@ export const Route = createFileRoute("/api/stores/$slug")({
             promociones: promociones || [],
           });
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al obtener comercio");
+          return errorResponse("Error al obtener comercio");
         }
       },
     },

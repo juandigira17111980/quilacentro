@@ -35,7 +35,7 @@ export const Route = createFileRoute("/api/store/queries")({
           if (error) throw error;
           return jsonResponse({ consultas: data || [] });
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al obtener consultas");
+          return errorResponse("Error al obtener consultas");
         }
       },
     },

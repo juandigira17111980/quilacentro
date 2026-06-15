@@ -22,7 +22,7 @@ export const Route = createFileRoute("/api/client/favorites/$id")({
           if (error) throw error;
           return jsonResponse({ ok: true });
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al eliminar favorito");
+          return errorResponse("Error al eliminar favorito");
         }
       },
     },

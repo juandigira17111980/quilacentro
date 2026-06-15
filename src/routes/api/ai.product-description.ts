@@ -34,7 +34,7 @@ export const Route = createFileRoute("/api/ai/product-description")({
 
           return jsonResponse({ descripcion });
         } catch (e: any) {
-          return errorResponse(e?.message || "Error generando descripción");
+          return errorResponse("Error generando descripción");
         }
       },
     },

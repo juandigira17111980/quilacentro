@@ -85,7 +85,7 @@ export const Route = createFileRoute("/api/admin/reports")({
             usuarios_por_rol: countBy(usuariosPorRolRes.data, (x: any) => x.role),
           });
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al generar reporte");
+          return errorResponse("Error al generar reporte");
         }
       },
     },

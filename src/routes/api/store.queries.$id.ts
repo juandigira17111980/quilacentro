@@ -39,7 +39,7 @@ export const Route = createFileRoute("/api/store/queries/$id")({
           if (error) throw error;
           return jsonResponse({ consulta: data });
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al actualizar consulta");
+          return errorResponse("Error al actualizar consulta");
         }
       },
     },

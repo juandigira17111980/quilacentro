@@ -44,7 +44,7 @@ export const Route = createFileRoute("/api/ai/promotion-copy")({
           const copy = parseJSON(raw);
           return jsonResponse({ copy });
         } catch (e: any) {
-          return errorResponse(e?.message || "Error generando copy");
+          return errorResponse("Error generando copy");
         }
       },
     },

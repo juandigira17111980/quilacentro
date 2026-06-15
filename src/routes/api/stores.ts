@@ -65,7 +65,7 @@ export const Route = createFileRoute("/api/stores")({
 
           return jsonResponse({ comercios });
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al listar comercios");
+          return errorResponse("Error al listar comercios");
         }
       },
     },

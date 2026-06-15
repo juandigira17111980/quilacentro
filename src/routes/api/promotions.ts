@@ -36,7 +36,7 @@ export const Route = createFileRoute("/api/promotions")({
 
           return jsonResponse({ promociones: data || [] });
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al listar promociones");
+          return errorResponse("Error al listar promociones");
         }
       },
     },

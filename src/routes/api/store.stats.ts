@@ -97,7 +97,7 @@ export const Route = createFileRoute("/api/store/stats")({
             vistas_totales: totalVistas,
           });
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al obtener estadísticas");
+          return errorResponse("Error al obtener estadísticas");
         }
       },
     },

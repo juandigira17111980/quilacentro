@@ -56,7 +56,7 @@ export const Route = createFileRoute("/api/store/promotions")({
           if (error) throw error;
           return jsonResponse({ promocion: data }, 201);
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al crear promoción");
+          return errorResponse("Error al crear promoción");
         }
       },
     },

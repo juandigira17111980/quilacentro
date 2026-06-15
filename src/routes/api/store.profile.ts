@@ -98,7 +98,7 @@ export const Route = createFileRoute("/api/store/profile")({
           if (error) throw error;
           return jsonResponse({ comercio: data }, 201);
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al guardar perfil");
+          return errorResponse("Error al guardar perfil");
         }
       },
     },

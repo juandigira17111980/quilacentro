@@ -87,7 +87,7 @@ export const Route = createFileRoute("/api/ai/search")({
             ubicacion: lat && lng ? { lat, lng } : null,
           });
         } catch (e: any) {
-          return errorResponse(e?.message || "Error en búsqueda IA");
+          return errorResponse("Error en búsqueda IA");
         }
       },
     },

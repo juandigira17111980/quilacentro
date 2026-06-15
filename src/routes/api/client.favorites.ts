@@ -24,7 +24,7 @@ export const Route = createFileRoute("/api/client/favorites")({
           if (error) throw error;
           return jsonResponse({ favoritos: data || [] });
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al obtener favoritos");
+          return errorResponse("Error al obtener favoritos");
         }
       },
       POST: async ({ request }) => {
@@ -53,7 +53,7 @@ export const Route = createFileRoute("/api/client/favorites")({
           if (error) throw error;
           return jsonResponse({ favorito: data }, 201);
         } catch (e: any) {
-          return errorResponse(e?.message || "Error al agregar favorito");
+          return errorResponse("Error al agregar favorito");
         }
       },
     },
