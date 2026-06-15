@@ -14,6 +14,58 @@ export type Database = {
   }
   public: {
     Tables: {
+      calificaciones: {
+        Row: {
+          cliente_id: string
+          comentario: string | null
+          comercio_id: string
+          created_at: string
+          id: string
+          producto_id: string | null
+          rating: number
+        }
+        Insert: {
+          cliente_id: string
+          comentario?: string | null
+          comercio_id: string
+          created_at?: string
+          id?: string
+          producto_id?: string | null
+          rating: number
+        }
+        Update: {
+          cliente_id?: string
+          comentario?: string | null
+          comercio_id?: string
+          created_at?: string
+          id?: string
+          producto_id?: string | null
+          rating?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calificaciones_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "calificaciones_comercio_id_fkey"
+            columns: ["comercio_id"]
+            isOneToOne: false
+            referencedRelation: "comercios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "calificaciones_producto_id_fkey"
+            columns: ["producto_id"]
+            isOneToOne: false
+            referencedRelation: "productos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       categorias: {
         Row: {
           activa: boolean
@@ -171,6 +223,139 @@ export type Database = {
             columns: ["zona_id"]
             isOneToOne: false
             referencedRelation: "zonas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      consultas: {
+        Row: {
+          canal: string
+          cliente_id: string | null
+          comercio_id: string
+          created_at: string
+          estado: string
+          id: string
+          mensaje: string
+          producto_id: string | null
+        }
+        Insert: {
+          canal?: string
+          cliente_id?: string | null
+          comercio_id: string
+          created_at?: string
+          estado?: string
+          id?: string
+          mensaje: string
+          producto_id?: string | null
+        }
+        Update: {
+          canal?: string
+          cliente_id?: string | null
+          comercio_id?: string
+          created_at?: string
+          estado?: string
+          id?: string
+          mensaje?: string
+          producto_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consultas_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "consultas_comercio_id_fkey"
+            columns: ["comercio_id"]
+            isOneToOne: false
+            referencedRelation: "comercios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "consultas_producto_id_fkey"
+            columns: ["producto_id"]
+            isOneToOne: false
+            referencedRelation: "productos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      favoritos: {
+        Row: {
+          cliente_id: string
+          comercio_id: string | null
+          created_at: string
+          id: string
+          producto_id: string | null
+        }
+        Insert: {
+          cliente_id: string
+          comercio_id?: string | null
+          created_at?: string
+          id?: string
+          producto_id?: string | null
+        }
+        Update: {
+          cliente_id?: string
+          comercio_id?: string | null
+          created_at?: string
+          id?: string
+          producto_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favoritos_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "favoritos_comercio_id_fkey"
+            columns: ["comercio_id"]
+            isOneToOne: false
+            referencedRelation: "comercios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "favoritos_producto_id_fkey"
+            columns: ["producto_id"]
+            isOneToOne: false
+            referencedRelation: "productos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      historial_busquedas: {
+        Row: {
+          cliente_id: string | null
+          created_at: string
+          id: string
+          resultados: number
+          termino: string
+        }
+        Insert: {
+          cliente_id?: string | null
+          created_at?: string
+          id?: string
+          resultados?: number
+          termino: string
+        }
+        Update: {
+          cliente_id?: string | null
+          created_at?: string
+          id?: string
+          resultados?: number
+          termino?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "historial_busquedas_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
