@@ -202,6 +202,103 @@ export type Database = {
         }
         Relationships: []
       }
+      productos: {
+        Row: {
+          atributos: Json
+          categoria_id: number | null
+          comercio_id: string
+          created_at: string
+          created_by: string | null
+          deleted_at: string | null
+          descripcion: string | null
+          destacado: boolean
+          disponible: boolean
+          id: string
+          imagen_url: string | null
+          imagenes: Json
+          marca: string | null
+          nombre: string
+          precio_base: number
+          precio_oferta: number | null
+          sku: string | null
+          slug: string
+          stock: number | null
+          tags: string[] | null
+          updated_at: string
+          vistas: number
+        }
+        Insert: {
+          atributos?: Json
+          categoria_id?: number | null
+          comercio_id: string
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          descripcion?: string | null
+          destacado?: boolean
+          disponible?: boolean
+          id?: string
+          imagen_url?: string | null
+          imagenes?: Json
+          marca?: string | null
+          nombre: string
+          precio_base: number
+          precio_oferta?: number | null
+          sku?: string | null
+          slug: string
+          stock?: number | null
+          tags?: string[] | null
+          updated_at?: string
+          vistas?: number
+        }
+        Update: {
+          atributos?: Json
+          categoria_id?: number | null
+          comercio_id?: string
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          descripcion?: string | null
+          destacado?: boolean
+          disponible?: boolean
+          id?: string
+          imagen_url?: string | null
+          imagenes?: Json
+          marca?: string | null
+          nombre?: string
+          precio_base?: number
+          precio_oferta?: number | null
+          sku?: string | null
+          slug?: string
+          stock?: number | null
+          tags?: string[] | null
+          updated_at?: string
+          vistas?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "productos_categoria_id_fkey"
+            columns: ["categoria_id"]
+            isOneToOne: false
+            referencedRelation: "categorias"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "productos_comercio_id_fkey"
+            columns: ["comercio_id"]
+            isOneToOne: false
+            referencedRelation: "comercios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "productos_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -231,6 +328,72 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      promociones: {
+        Row: {
+          activa: boolean
+          comercio_id: string
+          created_at: string
+          descripcion: string | null
+          destacada: boolean
+          fecha_fin: string
+          fecha_inicio: string
+          id: string
+          imagen_url: string | null
+          producto_id: string | null
+          tipo: string
+          titulo: string
+          updated_at: string
+          valor: number | null
+        }
+        Insert: {
+          activa?: boolean
+          comercio_id: string
+          created_at?: string
+          descripcion?: string | null
+          destacada?: boolean
+          fecha_fin: string
+          fecha_inicio: string
+          id?: string
+          imagen_url?: string | null
+          producto_id?: string | null
+          tipo: string
+          titulo: string
+          updated_at?: string
+          valor?: number | null
+        }
+        Update: {
+          activa?: boolean
+          comercio_id?: string
+          created_at?: string
+          descripcion?: string | null
+          destacada?: boolean
+          fecha_fin?: string
+          fecha_inicio?: string
+          id?: string
+          imagen_url?: string | null
+          producto_id?: string | null
+          tipo?: string
+          titulo?: string
+          updated_at?: string
+          valor?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "promociones_comercio_id_fkey"
+            columns: ["comercio_id"]
+            isOneToOne: false
+            referencedRelation: "comercios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "promociones_producto_id_fkey"
+            columns: ["producto_id"]
+            isOneToOne: false
+            referencedRelation: "productos"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       zonas: {
         Row: {
@@ -268,6 +431,10 @@ export type Database = {
     }
     Functions: {
       is_admin: { Args: { _user_id: string }; Returns: boolean }
+      is_comercio_owner: {
+        Args: { _comercio_id: string; _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
