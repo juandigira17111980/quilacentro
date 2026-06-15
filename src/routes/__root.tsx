@@ -16,20 +16,33 @@ import { Toaster } from "@/components/ui/sonner";
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
+      <div className="w-full max-w-md text-center">
+        <h1 className="text-7xl font-bold text-primary">404</h1>
+        <h2 className="mt-4 text-xl font-semibold text-foreground">Página no encontrada</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+          La página que buscás no existe. Probá con una búsqueda:
         </p>
-        <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Go home
-          </Link>
-        </div>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            const data = new FormData(e.currentTarget);
+            const q = String(data.get("q") || "").trim();
+            window.location.href = q ? `/search?q=${encodeURIComponent(q)}` : "/search";
+          }}
+          className="mt-6 flex items-center gap-2"
+        >
+          <input
+            name="q"
+            placeholder="¿Qué buscás?"
+            className="flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/40"
+          />
+          <button className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
+            Buscar
+          </button>
+        </form>
+        <Link to="/" className="mt-4 inline-block text-sm text-muted-foreground underline">
+          Volver al inicio
+        </Link>
       </div>
     </div>
   );
@@ -93,6 +106,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap",
       },
       { rel: "stylesheet", href: appCss },
+      { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+      { rel: "apple-touch-icon", href: "/icon.svg" },
+      { rel: "manifest", href: "/manifest.webmanifest" },
     ],
   }),
   shellComponent: RootShell,

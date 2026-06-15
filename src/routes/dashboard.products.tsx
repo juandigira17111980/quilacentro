@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
-import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Loader2, Sparkles } from "lucide-react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
@@ -319,8 +319,16 @@ function ProductFormDialog({
             <Input value={f.nombre} onChange={(e) => set("nombre", e.target.value)} maxLength={160} />
           </div>
           <div>
-            <Label>Descripción</Label>
-            <Textarea value={f.descripcion} onChange={(e) => set("descripcion", e.target.value)} rows={3} />
+            <div className="mb-1 flex items-center justify-between">
+              <Label>Descripción</Label>
+              <AIDescriptionButton
+                nombre={f.nombre}
+                marca={f.marca}
+                comercioId={comercioId}
+                onGenerated={(text) => set("descripcion", text)}
+              />
+            </div>
+            <Textarea value={f.descripcion} onChange={(e) => set("descripcion", e.target.value)} rows={4} />
           </div>
           <div className="grid gap-4 sm:grid-cols-3">
             <div>
@@ -343,7 +351,16 @@ function ProductFormDialog({
           </div>
           <div className="grid gap-4 sm:grid-cols-3">
             <div>
-              <Label>Precio base *</Label>
+              <div className="mb-1 flex items-center justify-between">
+                <Label>Precio base *</Label>
+                <AIPriceButton
+                  nombre={f.nombre}
+                  marca={f.marca}
+                  categoriaId={f.categoria_id}
+                  comercioId={comercioId}
+                  onSuggested={(v) => set("precio_base", String(v))}
+                />
+              </div>
               <Input type="number" min="0" value={f.precio_base} onChange={(e) => set("precio_base", e.target.value)} />
             </div>
             <div>
@@ -399,5 +416,83 @@ function ProductFormDialog({
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  );
+}
+
+async function callAIEndpoint<T>(path: string, body: Record<string, unknown>): Promise<T> {
+  const { data: { session } } = await supabase.auth.getSession();
+  const token = session?.access_token;
+  if (!token) throw new Error("Debés iniciar sesión");
+  const res = await fetch(path, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json?.error || "Error en la IA");
+  return json as T;
+}
+
+function AIDescriptionButton({
+  nombre, marca, comercioId, onGenerated,
+}: { nombre: string; marca: string; comercioId: string; onGenerated: (t: string) => void }) {
+  const [loading, setLoading] = useState(false);
+  return (
+    <Button
+      type="button"
+      variant="ghost"
+      size="sm"
+      disabled={loading || !nombre.trim()}
+      onClick={async () => {
+        setLoading(true);
+        try {
+          const r = await callAIEndpoint<{ descripcion: string }>("/api/ai/product-description", {
+            nombre, marca: marca || undefined, comercio_id: comercioId, tono: "profesional y persuasivo",
+          });
+          onGenerated(r.descripcion);
+          toast.success("Descripción generada con IA");
+        } catch (e) {
+          toast.error(e instanceof Error ? e.message : "Error generando descripción");
+        } finally { setLoading(false); }
+      }}
+    >
+      {loading ? <Loader2 className="mr-1 h-3 w-3 animate-spin" /> : <Sparkles className="mr-1 h-3 w-3" />}
+      Generar con IA
+    </Button>
+  );
+}
+
+function AIPriceButton({
+  nombre, marca, categoriaId, comercioId, onSuggested,
+}: { nombre: string; marca: string; categoriaId: number | null; comercioId: string; onSuggested: (v: number) => void }) {
+  const [loading, setLoading] = useState(false);
+  return (
+    <Button
+      type="button"
+      variant="ghost"
+      size="sm"
+      disabled={loading || !nombre.trim()}
+      onClick={async () => {
+        setLoading(true);
+        try {
+          const r = await callAIEndpoint<{ sugerencia: { precio_sugerido: number; justificacion: string } }>(
+            "/api/ai/price-suggestion",
+            { nombre, marca: marca || undefined, categoria_id: categoriaId, comercio_id: comercioId },
+          );
+          onSuggested(Math.round(r.sugerencia.precio_sugerido));
+          toast.success(`Sugerido: $${Math.round(r.sugerencia.precio_sugerido).toLocaleString("es-CO")}`, {
+            description: r.sugerencia.justificacion,
+          });
+        } catch (e) {
+          toast.error(e instanceof Error ? e.message : "Error sugiriendo precio");
+        } finally { setLoading(false); }
+      }}
+    >
+      {loading ? <Loader2 className="mr-1 h-3 w-3 animate-spin" /> : <Sparkles className="mr-1 h-3 w-3" />}
+      Sugerir
+    </Button>
   );
 }
