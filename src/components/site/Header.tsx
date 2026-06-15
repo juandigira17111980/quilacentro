@@ -133,12 +133,16 @@ export function Header() {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon" className="rounded-full">
-                  <User className="h-4 w-4" />
+                <Button variant="outline" size="sm" className="rounded-full">
+                  <User className="h-4 w-4 sm:mr-2" />
+                  <span className="hidden max-w-[120px] truncate sm:inline">{displayName}</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel className="truncate">{user.email}</DropdownMenuLabel>
+                <DropdownMenuLabel className="truncate">
+                  <div className="font-semibold">{fullName ?? "Mi cuenta"}</div>
+                  <div className="truncate text-xs font-normal text-muted-foreground">{user.email}</div>
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {isComercio && (
                   <DropdownMenuItem asChild>
