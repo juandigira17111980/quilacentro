@@ -407,3 +407,107 @@ function Step3Contact({
     </div>
   );
 }
+
+const DEMO_TOUR_URL = "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=4096&q=80";
+
+function Tour360Card({
+  comercioId,
+  userId,
+  tourUrl,
+  onChange,
+}: {
+  comercioId: string;
+  userId: string;
+  tourUrl: string | null;
+  onChange: () => void;
+}) {
+  const [busy, setBusy] = useState(false);
+
+  const update = async (url: string | null) => {
+    setBusy(true);
+    try {
+      const { error } = await supabase
+        .from("comercios")
+        .update({ tour_360_url: url } as never)
+        .eq("id", comercioId);
+      if (error) throw error;
+      toast.success(url ? "Tour 360° activado" : "Tour 360° eliminado");
+      onChange();
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : "No se pudo guardar");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Camera className="h-4 w-4" /> Tour Virtual 360°
+            </CardTitle>
+            <CardDescription>Permite que tus clientes recorran tu local sin salir de casa.</CardDescription>
+          </div>
+          <Badge variant="outline" className="shrink-0">Plan Pro o Premium</Badge>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {tourUrl ? (
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="aspect-[2/1] w-64 overflow-hidden rounded-lg border bg-muted">
+              <img src={tourUrl} alt="Tour 360°" className="h-full w-full object-cover" />
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground">Tour activo y visible en tu perfil público.</p>
+              <div className="flex gap-2">
+                <ImageUploader
+                  bucket="comercios"
+                  pathPrefix={`${userId}/tour360`}
+                  value={null}
+                  onChange={(u) => u && update(u)}
+                  label="Cambiar imagen"
+                  aspect="wide"
+                />
+              </div>
+              <Button variant="ghost" size="sm" onClick={() => update(null)} disabled={busy}>
+                Eliminar tour
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="rounded-lg border-2 border-dashed bg-muted/30 p-6">
+            <div className="flex flex-col items-center gap-3 text-center">
+              <Camera className="h-10 w-10 text-muted-foreground" />
+              <p className="max-w-md text-sm text-muted-foreground">
+                Sube una foto panorámica de tu local (relación 2:1 o mayor) para activar el tour virtual.
+              </p>
+              <div className="w-full max-w-sm">
+                <ImageUploader
+                  bucket="comercios"
+                  pathPrefix={`${userId}/tour360`}
+                  value={null}
+                  onChange={(u) => u && update(u)}
+                  label="Subir imagen panorámica"
+                  aspect="wide"
+                />
+              </div>
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <span className="h-px flex-1 bg-border" /> o <span className="h-px flex-1 bg-border" />
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => update(DEMO_TOUR_URL)}
+                disabled={busy}
+              >
+                <Sparkles className="mr-2 h-4 w-4" /> Activar con imagen demo
+              </Button>
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
