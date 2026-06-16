@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Search, Menu, User, LogOut, LayoutDashboard, ShieldCheck, MapPin, Store, Home } from "lucide-react";
+import { Search, Menu, User, LogOut, LayoutDashboard, ShieldCheck, MapPin, Store } from "lucide-react";
 import type { User as SupaUser } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
