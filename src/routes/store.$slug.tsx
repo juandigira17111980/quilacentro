@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { ProductCard } from "@/components/cards/ProductCard";
 import { Tour360Viewer } from "@/components/store/Tour360Viewer";
-import { Camera, Sparkles } from "lucide-react";
+
 import { InteractiveStars, StarRating } from "@/components/cards/StarRating";
 import { StoreMiniMap } from "@/components/cards/StoreMiniMap";
 import {
