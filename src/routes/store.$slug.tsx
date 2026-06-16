@@ -137,13 +137,16 @@ function StorePage() {
                     <span className="rounded-full bg-accent px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-accent-foreground">
                       Exclusivo
                     </span>
-                    <span className="text-xs uppercase tracking-wider text-white/60">🏪 Recorre el Local</span>
+                    <span className="text-xs uppercase tracking-wider text-white/60">🏪 Recorre el Local Virtualmente</span>
                   </div>
-                  <h2 className="text-2xl font-bold md:text-3xl">Recorre el local sin salir de casa</h2>
-                  <p className="mt-1 text-sm text-white/70">Explora cada rincón de nuestra tienda</p>
+                  <h2 className="text-2xl font-bold md:text-3xl">Recorre el Local Virtualmente</h2>
+                  <p className="mt-1 text-sm text-white/70">Usa el mouse o toca la pantalla para mirar alrededor</p>
                 </div>
               </div>
-              <Tour360Viewer imageUrl={com.tour_360_url} alt={`Tour 360° de ${com.nombre}`} height={420} />
+              <Pannellum360Viewer imageUrl={com.tour_360_url} height={450} />
+              <p className="mt-3 text-center text-xs text-white/50">
+                🖱️ Arrastra para girar · 🔍 Scroll para zoom · ⛶ Pantalla completa
+              </p>
             </>
           ) : (
             <div className="relative overflow-hidden rounded-2xl border-2 border-dashed border-white/15 bg-gradient-to-br from-blue-950 via-slate-900 to-blue-900 px-6 py-12 text-center">
