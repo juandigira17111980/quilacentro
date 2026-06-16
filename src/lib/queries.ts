@@ -190,6 +190,7 @@ export type ComercioFull = {
   rating_avg: number | null;
   total_reviews: number | null;
   categoria_id: number | null;
+  tour_360_url: string | null;
   categorias?: { nombre: string; slug: string } | null;
 };
 
