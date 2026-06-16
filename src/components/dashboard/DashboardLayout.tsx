@@ -5,6 +5,7 @@ import {
   Package,
   Tag,
   MessageSquare,
+  Home,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
