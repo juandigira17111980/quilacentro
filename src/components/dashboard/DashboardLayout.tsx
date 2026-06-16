@@ -5,6 +5,7 @@ import {
   Package,
   Tag,
   MessageSquare,
+  Home,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -24,6 +25,14 @@ export function DashboardLayout() {
     <div className="container mx-auto grid gap-6 px-4 py-6 lg:grid-cols-[220px_1fr]">
       <aside className="lg:sticky lg:top-20 lg:self-start">
         <nav className="flex gap-1 overflow-x-auto rounded-xl border bg-card p-2 lg:flex-col lg:overflow-visible">
+          <Link
+            to="/"
+            className="flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
+            <Home className="h-4 w-4" />
+            Volver al inicio
+          </Link>
+          <div className="hidden h-px bg-border lg:block" />
           {items.map(({ to, label, icon: Icon, exact }) => {
             const active = exact ? path === to : path === to || path.startsWith(to + "/");
             return (
