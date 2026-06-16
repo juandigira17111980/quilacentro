@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { MapPin, Star, Store } from "lucide-react";
+import { Camera, MapPin, Star, Store } from "lucide-react";
 import type { Comercio } from "@/lib/queries";
 
 export function StoreCard({ c }: { c: Comercio }) {
@@ -23,10 +23,17 @@ export function StoreCard({ c }: { c: Comercio }) {
         {c.categorias?.nombre && (
           <p className="truncate text-xs text-muted-foreground">{c.categorias.nombre}</p>
         )}
-        <div className="mt-1 flex items-center gap-1 text-sm">
-          <Star className="h-3.5 w-3.5 fill-accent text-accent" />
-          <span className="font-medium">{(c.rating_avg ?? 0).toFixed(1)}</span>
-          <span className="text-xs text-muted-foreground">({c.total_reviews ?? 0})</span>
+        <div className="mt-1 flex items-center gap-2 text-sm">
+          <span className="flex items-center gap-1">
+            <Star className="h-3.5 w-3.5 fill-accent text-accent" />
+            <span className="font-medium">{(c.rating_avg ?? 0).toFixed(1)}</span>
+            <span className="text-xs text-muted-foreground">({c.total_reviews ?? 0})</span>
+          </span>
+          {c.tour_360_url && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary-foreground">
+              <Camera className="h-3 w-3" /> 360°
+            </span>
+          )}
         </div>
         {c.direccion && (
           <p className="mt-1 flex items-start gap-1 truncate text-xs text-muted-foreground">

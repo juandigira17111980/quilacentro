@@ -21,6 +21,7 @@ export type MyComercio = {
   plan_id: number | null;
   rating_avg: number | null;
   total_reviews: number | null;
+  tour_360_url: string | null;
 };
 
 export type MyProducto = {

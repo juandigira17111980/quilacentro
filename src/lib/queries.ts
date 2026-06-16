@@ -24,6 +24,7 @@ export type Comercio = {
   categoria_id: number | null;
   rating_avg: number | null;
   total_reviews: number | null;
+  tour_360_url: string | null;
   categorias?: { nombre: string } | null;
 };
 
@@ -100,7 +101,7 @@ export const comerciosDestacadosQuery = queryOptions({
   queryFn: async (): Promise<Comercio[]> => {
     const { data, error } = await supabase
       .from("comercios")
-      .select("id, nombre, slug, logo_url, direccion, categoria_id, rating_avg, total_reviews, categorias(nombre)")
+      .select("id, nombre, slug, logo_url, direccion, categoria_id, rating_avg, total_reviews, tour_360_url, categorias(nombre)")
       .eq("estado", "activo")
       .is("deleted_at", null)
       .order("rating_avg", { ascending: false, nullsFirst: false })
@@ -153,7 +154,7 @@ export function buildSearchComerciosQuery(filters: SearchFilters) {
     queryFn: async (): Promise<Comercio[]> => {
       let q = supabase
         .from("comercios")
-        .select("id, nombre, slug, logo_url, direccion, categoria_id, rating_avg, total_reviews, categorias(nombre)")
+        .select("id, nombre, slug, logo_url, direccion, categoria_id, rating_avg, total_reviews, tour_360_url, categorias(nombre)")
         .eq("estado", "activo")
         .is("deleted_at", null);
 
@@ -189,6 +190,7 @@ export type ComercioFull = {
   rating_avg: number | null;
   total_reviews: number | null;
   categoria_id: number | null;
+  tour_360_url: string | null;
   categorias?: { nombre: string; slug: string } | null;
 };
 
@@ -234,7 +236,7 @@ export function comercioBySlugQuery(slug: string) {
         .select(`
           id, nombre, slug, descripcion, logo_url, banner_url, direccion, lat, lng,
           telefono, whatsapp, email, horarios, rating_avg, total_reviews, categoria_id,
-          categorias(nombre, slug)
+          tour_360_url, categorias(nombre, slug)
         `)
         .eq("slug", slug)
         .eq("estado", "activo")

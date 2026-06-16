@@ -133,6 +133,7 @@ export type Database = {
           slug: string
           telefono: string | null
           total_reviews: number
+          tour_360_url: string | null
           updated_at: string
           whatsapp: string | null
           zona_id: number | null
@@ -159,6 +160,7 @@ export type Database = {
           slug: string
           telefono?: string | null
           total_reviews?: number
+          tour_360_url?: string | null
           updated_at?: string
           whatsapp?: string | null
           zona_id?: number | null
@@ -185,6 +187,7 @@ export type Database = {
           slug?: string
           telefono?: string | null
           total_reviews?: number
+          tour_360_url?: string | null
           updated_at?: string
           whatsapp?: string | null
           zona_id?: number | null

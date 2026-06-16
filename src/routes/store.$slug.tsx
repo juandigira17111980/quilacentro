@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import { Clock, MapPin, MessageCircle, Navigation, Phone, Search as SearchIcon, Store as StoreIcon } from "lucide-react";
+import { Camera, Clock, MapPin, MessageCircle, Navigation, Phone, Search as SearchIcon, Sparkles, Store as StoreIcon } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { AppShell } from "@/components/site/AppShell";
@@ -13,6 +13,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { ProductCard } from "@/components/cards/ProductCard";
+import { Tour360Viewer } from "@/components/store/Tour360Viewer";
+
 import { InteractiveStars, StarRating } from "@/components/cards/StarRating";
 import { StoreMiniMap } from "@/components/cards/StoreMiniMap";
 import {
@@ -123,6 +125,47 @@ function StorePage() {
           </div>
         </div>
       </header>
+
+      {/* TOUR 360° */}
+      <section className="mt-10 bg-neutral-950 py-12 text-white">
+        <div className="container mx-auto px-4">
+          {com.tour_360_url ? (
+            <>
+              <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <div className="mb-2 flex items-center gap-2">
+                    <span className="rounded-full bg-accent px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-accent-foreground">
+                      Exclusivo
+                    </span>
+                    <span className="text-xs uppercase tracking-wider text-white/60">🏪 Recorre el Local</span>
+                  </div>
+                  <h2 className="text-2xl font-bold md:text-3xl">Recorre el local sin salir de casa</h2>
+                  <p className="mt-1 text-sm text-white/70">Explora cada rincón de nuestra tienda</p>
+                </div>
+              </div>
+              <Tour360Viewer imageUrl={com.tour_360_url} alt={`Tour 360° de ${com.nombre}`} height={420} />
+            </>
+          ) : (
+            <div className="relative overflow-hidden rounded-2xl border-2 border-dashed border-white/15 bg-gradient-to-br from-blue-950 via-slate-900 to-blue-900 px-6 py-12 text-center">
+              <Camera className="mx-auto h-16 w-16 text-white/40" />
+              <h2 className="mt-4 text-2xl font-bold">¿Quieres mostrar tu local en 360°?</h2>
+              <p className="mx-auto mt-2 max-w-xl text-sm text-white/70">
+                Activa el Tour Virtual y permite que tus clientes recorran tu tienda desde cualquier lugar.
+              </p>
+              <div className="mt-6 flex flex-col items-center gap-3">
+                <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
+                  <Link to="/dashboard/profile">
+                    <Sparkles className="mr-2 h-4 w-4" /> Activar Tour Virtual
+                  </Link>
+                </Button>
+                <span className="text-xs uppercase tracking-wider text-white/50">Plan Pro o Premium</span>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+
 
       <div className="container mx-auto grid gap-8 px-4 py-10 lg:grid-cols-[1fr_360px]">
         <main>
