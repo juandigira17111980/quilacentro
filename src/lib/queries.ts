@@ -236,7 +236,7 @@ export function comercioBySlugQuery(slug: string) {
         .select(`
           id, nombre, slug, descripcion, logo_url, banner_url, direccion, lat, lng,
           telefono, whatsapp, email, horarios, rating_avg, total_reviews, categoria_id,
-          categorias(nombre, slug)
+          tour_360_url, categorias(nombre, slug)
         `)
         .eq("slug", slug)
         .eq("estado", "activo")
