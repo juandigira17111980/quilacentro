@@ -13,7 +13,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { ProductCard } from "@/components/cards/ProductCard";
-import { Tour360Viewer } from "@/components/store/Tour360Viewer";
+import { Pannellum360Viewer } from "@/components/store/Pannellum360Viewer";
 
 import { InteractiveStars, StarRating } from "@/components/cards/StarRating";
 import { StoreMiniMap } from "@/components/cards/StoreMiniMap";
