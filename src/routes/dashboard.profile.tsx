@@ -269,6 +269,10 @@ function ProfilePage() {
         </CardContent>
       </Card>
 
+      <Tour360Card comercioId={comercio.id} userId={userId} tourUrl={comercio.tour_360_url} onChange={() => qc.invalidateQueries({ queryKey: ["my-comercio"] })} />
+
+
+
       <Card>
         <CardHeader><CardTitle className="text-base">Ubicación</CardTitle></CardHeader>
         <CardContent><Step2Location form={form} set={set} useMyLocation={useMyLocation} /></CardContent>
