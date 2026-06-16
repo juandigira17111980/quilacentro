@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import { Clock, MapPin, MessageCircle, Navigation, Phone, Search as SearchIcon, Store as StoreIcon } from "lucide-react";
+import { Camera, Clock, MapPin, MessageCircle, Navigation, Phone, Search as SearchIcon, Sparkles, Store as StoreIcon } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { AppShell } from "@/components/site/AppShell";
