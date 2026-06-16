@@ -24,6 +24,7 @@ export type Comercio = {
   categoria_id: number | null;
   rating_avg: number | null;
   total_reviews: number | null;
+  tour_360_url: string | null;
   categorias?: { nombre: string } | null;
 };
 
