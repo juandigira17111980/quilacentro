@@ -101,7 +101,7 @@ export const comerciosDestacadosQuery = queryOptions({
   queryFn: async (): Promise<Comercio[]> => {
     const { data, error } = await supabase
       .from("comercios")
-      .select("id, nombre, slug, logo_url, direccion, categoria_id, rating_avg, total_reviews, categorias(nombre)")
+      .select("id, nombre, slug, logo_url, direccion, categoria_id, rating_avg, total_reviews, tour_360_url, categorias(nombre)")
       .eq("estado", "activo")
       .is("deleted_at", null)
       .order("rating_avg", { ascending: false, nullsFirst: false })
@@ -154,7 +154,7 @@ export function buildSearchComerciosQuery(filters: SearchFilters) {
     queryFn: async (): Promise<Comercio[]> => {
       let q = supabase
         .from("comercios")
-        .select("id, nombre, slug, logo_url, direccion, categoria_id, rating_avg, total_reviews, categorias(nombre)")
+        .select("id, nombre, slug, logo_url, direccion, categoria_id, rating_avg, total_reviews, tour_360_url, categorias(nombre)")
         .eq("estado", "activo")
         .is("deleted_at", null);
 
