@@ -11,9 +11,7 @@ export const Route = createFileRoute("/api/store/promotions/$id")({
           const ctx = await authenticate(request);
           if (ctx instanceof Response) return ctx;
 
-          const { supabaseAdmin } = await import(
-            "@/integrations/supabase/client.server"
-          );
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
           const { data: existing } = await supabaseAdmin
             .from("promociones")

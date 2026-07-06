@@ -11,9 +11,7 @@ export const Route = createFileRoute("/api/admin/dashboard")({
           const ctx = await requireAdmin(request);
           if (ctx instanceof Response) return ctx;
 
-          const { supabaseAdmin } = await import(
-            "@/integrations/supabase/client.server"
-          );
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
           const desde30 = new Date(Date.now() - 30 * 86400000).toISOString();
           const now = new Date().toISOString();
 
@@ -28,14 +26,38 @@ export const Route = createFileRoute("/api/admin/dashboard")({
             consultasNuevas,
             calificaciones,
           ] = await Promise.all([
-            supabaseAdmin.from("comercios").select("id", { count: "exact", head: true }).is("deleted_at", null),
-            supabaseAdmin.from("comercios").select("id", { count: "exact", head: true }).eq("estado", "activo").is("deleted_at", null),
-            supabaseAdmin.from("comercios").select("id", { count: "exact", head: true }).eq("estado", "pendiente"),
+            supabaseAdmin
+              .from("comercios")
+              .select("id", { count: "exact", head: true })
+              .is("deleted_at", null),
+            supabaseAdmin
+              .from("comercios")
+              .select("id", { count: "exact", head: true })
+              .eq("estado", "activo")
+              .is("deleted_at", null),
+            supabaseAdmin
+              .from("comercios")
+              .select("id", { count: "exact", head: true })
+              .eq("estado", "pendiente"),
             supabaseAdmin.from("profiles").select("id", { count: "exact", head: true }),
-            supabaseAdmin.from("profiles").select("id", { count: "exact", head: true }).gte("created_at", desde30),
-            supabaseAdmin.from("productos").select("id", { count: "exact", head: true }).is("deleted_at", null),
-            supabaseAdmin.from("promociones").select("id", { count: "exact", head: true }).eq("activa", true).lte("fecha_inicio", now).gte("fecha_fin", now),
-            supabaseAdmin.from("consultas").select("id", { count: "exact", head: true }).eq("estado", "nuevo"),
+            supabaseAdmin
+              .from("profiles")
+              .select("id", { count: "exact", head: true })
+              .gte("created_at", desde30),
+            supabaseAdmin
+              .from("productos")
+              .select("id", { count: "exact", head: true })
+              .is("deleted_at", null),
+            supabaseAdmin
+              .from("promociones")
+              .select("id", { count: "exact", head: true })
+              .eq("activa", true)
+              .lte("fecha_inicio", now)
+              .gte("fecha_fin", now),
+            supabaseAdmin
+              .from("consultas")
+              .select("id", { count: "exact", head: true })
+              .eq("estado", "nuevo"),
             supabaseAdmin.from("calificaciones").select("rating"),
           ]);
 

@@ -28,11 +28,15 @@ export const Route = createFileRoute("/api/store/profile")({
             whatsapp,
             email,
             horarios,
+            recogida_disponible,
+            recogida_notas,
+            domicilio_disponible,
+            domicilio_notas,
+            disponibilidad_notas,
+            confianza_notas,
           } = body || {};
 
-          const { supabaseAdmin } = await import(
-            "@/integrations/supabase/client.server"
-          );
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
           if (id) {
             // Update: validar ownership
@@ -61,6 +65,12 @@ export const Route = createFileRoute("/api/store/profile")({
                 whatsapp,
                 email,
                 horarios,
+                recogida_disponible,
+                recogida_notas,
+                domicilio_disponible,
+                domicilio_notas,
+                disponibilidad_notas,
+                confianza_notas,
               })
               .eq("id", id)
               .select()
@@ -92,6 +102,12 @@ export const Route = createFileRoute("/api/store/profile")({
               whatsapp,
               email,
               horarios,
+              recogida_disponible,
+              recogida_notas,
+              domicilio_disponible,
+              domicilio_notas,
+              disponibilidad_notas,
+              confianza_notas,
             })
             .select()
             .single();

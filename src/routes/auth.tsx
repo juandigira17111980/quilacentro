@@ -110,7 +110,14 @@ function AuthPage() {
             <CardDescription>Ingresá o creá tu cuenta para empezar.</CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs value={tab} onValueChange={(v) => { setTab(v as "signin" | "signup"); setError(null); setInfo(null); }}>
+            <Tabs
+              value={tab}
+              onValueChange={(v) => {
+                setTab(v as "signin" | "signup");
+                setError(null);
+                setInfo(null);
+              }}
+            >
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="signin">Ingresar</TabsTrigger>
                 <TabsTrigger value="signup">Crear cuenta</TabsTrigger>
@@ -120,13 +127,29 @@ function AuthPage() {
                 <form onSubmit={handleSubmit} className="space-y-3">
                   <div className="space-y-1.5">
                     <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <Input
+                      id="email"
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
                   </div>
                   <div className="space-y-1.5">
                     <Label htmlFor="pw">Contraseña</Label>
-                    <Input id="pw" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+                    <Input
+                      id="pw"
+                      type="password"
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
                   </div>
-                  <Button type="submit" className="w-full bg-accent text-accent-foreground hover:bg-accent/90" disabled={loading}>
+                  <Button
+                    type="submit"
+                    className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
+                    disabled={loading}
+                  >
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Ingresar
                   </Button>
@@ -137,15 +160,33 @@ function AuthPage() {
                 <form onSubmit={handleSubmit} className="space-y-3">
                   <div className="space-y-1.5">
                     <Label htmlFor="name">Nombre completo</Label>
-                    <Input id="name" required value={fullName} onChange={(e) => setFullName(e.target.value)} />
+                    <Input
+                      id="name"
+                      required
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                    />
                   </div>
                   <div className="space-y-1.5">
                     <Label htmlFor="email2">Email</Label>
-                    <Input id="email2" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <Input
+                      id="email2"
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
                   </div>
                   <div className="space-y-1.5">
                     <Label htmlFor="pw2">Contraseña</Label>
-                    <Input id="pw2" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
+                    <Input
+                      id="pw2"
+                      type="password"
+                      required
+                      minLength={6}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
                   </div>
 
                   <div className="space-y-2">
@@ -168,7 +209,11 @@ function AuthPage() {
                     </div>
                   </div>
 
-                  <Button type="submit" className="w-full bg-accent text-accent-foreground hover:bg-accent/90" disabled={loading}>
+                  <Button
+                    type="submit"
+                    className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
+                    disabled={loading}
+                  >
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Crear cuenta
                   </Button>
@@ -198,8 +243,18 @@ function AuthPage() {
 }
 
 function AccountTypeCard({
-  active, onClick, icon, label, desc,
-}: { active: boolean; onClick: () => void; icon: React.ReactNode; label: string; desc: string }) {
+  active,
+  onClick,
+  icon,
+  label,
+  desc,
+}: {
+  active: boolean;
+  onClick: () => void;
+  icon: React.ReactNode;
+  label: string;
+  desc: string;
+}) {
   return (
     <button
       type="button"
@@ -208,7 +263,9 @@ function AccountTypeCard({
         active ? "border-accent bg-accent-soft/40" : "border-border hover:border-accent/40"
       }`}
     >
-      <span className={`grid h-8 w-8 place-items-center rounded-lg ${active ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground"}`}>
+      <span
+        className={`grid h-8 w-8 place-items-center rounded-lg ${active ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground"}`}
+      >
         {icon}
       </span>
       <span className="text-sm font-semibold">{label}</span>

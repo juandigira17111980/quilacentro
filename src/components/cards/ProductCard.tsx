@@ -1,9 +1,14 @@
 import { Link } from "@tanstack/react-router";
+import { MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { Producto } from "@/lib/queries";
 
 const fmt = (n: number) =>
-  new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 }).format(n);
+  new Intl.NumberFormat("es-CO", {
+    style: "currency",
+    currency: "COP",
+    maximumFractionDigits: 0,
+  }).format(n);
 
 export function ProductCard({ p }: { p: Producto }) {
   const hasOferta = p.precio_oferta != null && p.precio_oferta < p.precio_base;
@@ -22,10 +27,14 @@ export function ProductCard({ p }: { p: Producto }) {
             className="h-full w-full object-cover transition group-hover:scale-105"
           />
         ) : (
-          <div className="grid h-full w-full place-items-center text-xs text-muted-foreground">Sin imagen</div>
+          <div className="grid h-full w-full place-items-center text-xs text-muted-foreground">
+            Sin imagen
+          </div>
         )}
         {hasOferta && (
-          <Badge className="absolute left-2 top-2 bg-accent text-accent-foreground hover:bg-accent">OFERTA</Badge>
+          <Badge className="absolute left-2 top-2 bg-accent text-accent-foreground hover:bg-accent">
+            OFERTA
+          </Badge>
         )}
       </div>
       <div className="flex flex-1 flex-col gap-1 p-3">
@@ -33,11 +42,21 @@ export function ProductCard({ p }: { p: Producto }) {
         {p.comercios?.nombre && (
           <p className="truncate text-xs text-muted-foreground">{p.comercios.nombre}</p>
         )}
+        {p.distancia_km != null && (
+          <p className="inline-flex items-center gap-1 text-xs font-medium text-primary">
+            <MapPin className="h-3 w-3" />
+            {p.distancia_km < 1
+              ? `${Math.round(p.distancia_km * 1000)} m`
+              : `${p.distancia_km.toFixed(1)} km`}
+          </p>
+        )}
         <div className="mt-auto flex items-baseline gap-2 pt-2">
           {hasOferta ? (
             <>
               <span className="text-base font-bold text-accent">{fmt(p.precio_oferta!)}</span>
-              <span className="text-xs text-muted-foreground line-through">{fmt(p.precio_base)}</span>
+              <span className="text-xs text-muted-foreground line-through">
+                {fmt(p.precio_base)}
+              </span>
             </>
           ) : (
             <span className="text-base font-bold">{fmt(p.precio_base)}</span>

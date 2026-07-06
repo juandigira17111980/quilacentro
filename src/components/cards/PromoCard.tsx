@@ -11,12 +11,19 @@ const tipoLabel: Record<string, string> = {
 
 export function PromoCard({ p }: { p: Promocion }) {
   const label =
-    p.tipo === "descuento_pct" && p.valor ? `-${Math.round(p.valor)}%` : tipoLabel[p.tipo] ?? p.tipo;
+    p.tipo === "descuento_pct" && p.valor
+      ? `-${Math.round(p.valor)}%`
+      : (tipoLabel[p.tipo] ?? p.tipo);
   return (
     <div className="relative w-[280px] shrink-0 overflow-hidden rounded-2xl border bg-card shadow-[var(--shadow-soft)] md:w-[320px]">
       <div className="relative aspect-[16/10] bg-muted">
         {p.imagen_url ? (
-          <img src={p.imagen_url} alt={p.titulo} className="h-full w-full object-cover" loading="lazy" />
+          <img
+            src={p.imagen_url}
+            alt={p.titulo}
+            className="h-full w-full object-cover"
+            loading="lazy"
+          />
         ) : (
           <div className="h-full w-full bg-gradient-to-br from-primary to-primary/70" />
         )}

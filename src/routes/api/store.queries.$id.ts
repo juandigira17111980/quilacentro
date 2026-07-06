@@ -17,9 +17,7 @@ export const Route = createFileRoute("/api/store/queries/$id")({
             return errorResponse("estado inválido", 400);
           }
 
-          const { supabaseAdmin } = await import(
-            "@/integrations/supabase/client.server"
-          );
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
           const { data: existing } = await supabaseAdmin
             .from("consultas")

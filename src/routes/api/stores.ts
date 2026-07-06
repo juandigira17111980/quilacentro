@@ -25,11 +25,9 @@ export const Route = createFileRoute("/api/stores")({
           const lng = url.searchParams.get("lng");
           const radio = Number(url.searchParams.get("radio") || "10");
 
-          const { supabaseAdmin } = await import(
-            "@/integrations/supabase/client.server"
-          );
+          const { supabasePublic } = await import("@/integrations/supabase/public.server");
 
-          let query = supabaseAdmin
+          let query = supabasePublic
             .from("comercios")
             .select(
               "id, nombre, slug, descripcion, logo_url, banner_url, telefono, whatsapp, lat, lng, direccion, zona_id, categoria_id, rating_avg, total_reviews, horarios",

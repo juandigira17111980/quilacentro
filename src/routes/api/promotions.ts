@@ -11,9 +11,7 @@ export const Route = createFileRoute("/api/promotions")({
           const zona = url.searchParams.get("zona");
           const categoria = url.searchParams.get("categoria");
 
-          const { supabaseAdmin } = await import(
-            "@/integrations/supabase/client.server"
-          );
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
           const now = new Date().toISOString();
           let query = supabaseAdmin

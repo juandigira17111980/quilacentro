@@ -29,12 +29,10 @@ export const Route = createFileRoute("/api/search")({
           const lng = url.searchParams.get("lng");
           const radio = Number(url.searchParams.get("radio") || "10");
 
-          const { supabaseAdmin } = await import(
-            "@/integrations/supabase/client.server"
-          );
+          const { supabasePublic } = await import("@/integrations/supabase/public.server");
 
           // Productos
-          let prodQuery = supabaseAdmin
+          let prodQuery = supabasePublic
             .from("productos")
             .select(
               "id, nombre, slug, descripcion, precio_base, precio_oferta, imagen_url, marca, comercio_id, categoria_id, comercios!inner(id, nombre, slug, lat, lng, zona_id, estado)",
@@ -53,7 +51,7 @@ export const Route = createFileRoute("/api/search")({
           if (prodErr) throw prodErr;
 
           // Comercios
-          let comQuery = supabaseAdmin
+          let comQuery = supabasePublic
             .from("comercios")
             .select(
               "id, nombre, slug, descripcion, logo_url, banner_url, lat, lng, zona_id, categoria_id, rating_avg, total_reviews",

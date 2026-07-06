@@ -1,7 +1,21 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
 import { useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import { Camera, Clock, MapPin, MessageCircle, Navigation, Phone, Search as SearchIcon, Sparkles, Store as StoreIcon } from "lucide-react";
+import {
+  Camera,
+  CheckCircle2,
+  Clock,
+  MapPin,
+  MessageCircle,
+  Navigation,
+  PackageCheck,
+  Phone,
+  Search as SearchIcon,
+  ShieldCheck,
+  Sparkles,
+  Store as StoreIcon,
+  Truck,
+} from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { AppShell } from "@/components/site/AppShell";
@@ -10,13 +24,20 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { ProductCard } from "@/components/cards/ProductCard";
 import { Pannellum360Viewer } from "@/components/store/Pannellum360Viewer";
 
 import { InteractiveStars, StarRating } from "@/components/cards/StarRating";
 import { StoreMiniMap } from "@/components/cards/StoreMiniMap";
+import { trackLeadEvent } from "@/lib/leadEvents";
 import {
   comercioBySlugQuery,
   productosByComercioQuery,
@@ -58,9 +79,23 @@ function StorePage() {
   const waHref = waNumber
     ? `https://wa.me/${waNumber}?text=${encodeURIComponent(`Hola ${com.nombre}, quisiera más información.`)}`
     : null;
-  const directions = com.lat != null && com.lng != null
-    ? `https://www.google.com/maps/dir/?api=1&destination=${com.lat},${com.lng}&travelmode=walking`
-    : null;
+  const directions =
+    com.lat != null && com.lng != null
+      ? `https://www.google.com/maps/dir/?api=1&destination=${com.lat},${com.lng}&travelmode=walking`
+      : null;
+  const pickupText =
+    com.recogida_disponible === false
+      ? "No disponible por ahora."
+      : com.recogida_notas ||
+        (com.direccion ? "Visita el punto fisico." : "Confirma ubicacion por WhatsApp.");
+  const deliveryText =
+    com.domicilio_disponible === true
+      ? com.domicilio_notas || "Coordina entrega directa con la tienda."
+      : "No disponible por ahora.";
+  const availabilityText = com.disponibilidad_notas || "Consulta inventario antes de comprar.";
+  const trustText =
+    com.confianza_notas ||
+    `${Number(com.rating_avg ?? 0).toFixed(1)} de 5 con ${com.total_reviews ?? 0} resenas.`;
 
   return (
     <AppShell>
@@ -80,7 +115,9 @@ function StorePage() {
                 {com.logo_url ? (
                   <img src={com.logo_url} alt={com.nombre} className="h-full w-full object-cover" />
                 ) : (
-                  <div className="grid h-full w-full place-items-center text-muted-foreground"><StoreIcon className="h-8 w-8" /></div>
+                  <div className="grid h-full w-full place-items-center text-muted-foreground">
+                    <StoreIcon className="h-8 w-8" />
+                  </div>
                 )}
               </div>
               <div className="pb-1">
@@ -89,24 +126,63 @@ function StorePage() {
                   {com.categorias?.nombre && (
                     <Badge variant="secondary">{com.categorias.nombre}</Badge>
                   )}
-                  <StarRating value={Number(com.rating_avg ?? 0)} showNumber count={com.total_reviews ?? 0} />
+                  <StarRating
+                    value={Number(com.rating_avg ?? 0)}
+                    showNumber
+                    count={com.total_reviews ?? 0}
+                  />
                 </div>
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
               {waHref && (
-                <Button asChild className="rounded-full bg-[#25D366] text-white hover:bg-[#25D366]/90">
-                  <a href={waHref} target="_blank" rel="noopener noreferrer"><MessageCircle className="mr-2 h-4 w-4" /> WhatsApp</a>
+                <Button
+                  asChild
+                  className="rounded-full bg-[#25D366] text-white hover:bg-[#25D366]/90"
+                >
+                  <a
+                    href={waHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() =>
+                      void trackLeadEvent({
+                        eventType: "whatsapp_click",
+                        comercioId: com.id,
+                        channel: "whatsapp",
+                        source: "store_detail",
+                        metadata: { store_slug: com.slug },
+                      })
+                    }
+                  >
+                    <MessageCircle className="mr-2 h-4 w-4" /> Consultar por WhatsApp
+                  </a>
                 </Button>
               )}
               {com.telefono && (
                 <Button asChild variant="outline" className="rounded-full">
-                  <a href={`tel:${com.telefono}`}><Phone className="mr-2 h-4 w-4" /> Llamar</a>
+                  <a href={`tel:${com.telefono}`}>
+                    <Phone className="mr-2 h-4 w-4" /> Llamar
+                  </a>
                 </Button>
               )}
               {directions && (
                 <Button asChild variant="outline" className="rounded-full">
-                  <a href={directions} target="_blank" rel="noopener noreferrer"><Navigation className="mr-2 h-4 w-4" /> Cómo llegar</a>
+                  <a
+                    href={directions}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() =>
+                      void trackLeadEvent({
+                        eventType: "directions_click",
+                        comercioId: com.id,
+                        channel: "maps",
+                        source: "store_detail",
+                        metadata: { store_slug: com.slug },
+                      })
+                    }
+                  >
+                    <Navigation className="mr-2 h-4 w-4" /> Cómo llegar
+                  </a>
                 </Button>
               )}
             </div>
@@ -117,11 +193,37 @@ function StorePage() {
           )}
           <div className="mt-3 flex flex-wrap gap-4 text-xs text-muted-foreground">
             {com.direccion && (
-              <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" /> {com.direccion}</span>
+              <span className="flex items-center gap-1">
+                <MapPin className="h-3.5 w-3.5" /> {com.direccion}
+              </span>
             )}
             {com.horarios && Object.keys(com.horarios).length > 0 && (
-              <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" /> {summarizeHorarios(com.horarios)}</span>
+              <span className="flex items-center gap-1">
+                <Clock className="h-3.5 w-3.5" /> {summarizeHorarios(com.horarios)}
+              </span>
             )}
+          </div>
+          <div className="mt-5 grid gap-2 rounded-2xl border bg-card p-4 shadow-[var(--shadow-soft)] sm:grid-cols-2 lg:grid-cols-4">
+            <StoreTrustItem
+              icon={<PackageCheck className="h-4 w-4" />}
+              title="Recoger en tienda"
+              text={pickupText}
+            />
+            <StoreTrustItem
+              icon={<Truck className="h-4 w-4" />}
+              title="Domicilio"
+              text={deliveryText}
+            />
+            <StoreTrustItem
+              icon={<CheckCircle2 className="h-4 w-4" />}
+              title="Productos disponibles"
+              text={availabilityText}
+            />
+            <StoreTrustItem
+              icon={<ShieldCheck className="h-4 w-4" />}
+              title="Confianza local"
+              text={trustText}
+            />
           </div>
         </div>
       </header>
@@ -137,10 +239,14 @@ function StorePage() {
                     <span className="rounded-full bg-accent px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-accent-foreground">
                       Exclusivo
                     </span>
-                    <span className="text-xs uppercase tracking-wider text-white/60">🏪 Recorre el Local Virtualmente</span>
+                    <span className="text-xs uppercase tracking-wider text-white/60">
+                      🏪 Recorre el Local Virtualmente
+                    </span>
                   </div>
                   <h2 className="text-2xl font-bold md:text-3xl">Recorre el Local Virtualmente</h2>
-                  <p className="mt-1 text-sm text-white/70">Usa el mouse o toca la pantalla para mirar alrededor</p>
+                  <p className="mt-1 text-sm text-white/70">
+                    Usa el mouse o toca la pantalla para mirar alrededor
+                  </p>
                 </div>
               </div>
               <Pannellum360Viewer imageUrl={com.tour_360_url} height={450} />
@@ -153,22 +259,27 @@ function StorePage() {
               <Camera className="mx-auto h-16 w-16 text-white/40" />
               <h2 className="mt-4 text-2xl font-bold">¿Quieres mostrar tu local en 360°?</h2>
               <p className="mx-auto mt-2 max-w-xl text-sm text-white/70">
-                Activa el Tour Virtual y permite que tus clientes recorran tu tienda desde cualquier lugar.
+                Activa el Tour Virtual y permite que tus clientes recorran tu tienda desde cualquier
+                lugar.
               </p>
               <div className="mt-6 flex flex-col items-center gap-3">
-                <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
+                <Button
+                  asChild
+                  size="lg"
+                  className="bg-accent text-accent-foreground hover:bg-accent/90"
+                >
                   <Link to="/dashboard/profile">
                     <Sparkles className="mr-2 h-4 w-4" /> Activar Tour Virtual
                   </Link>
                 </Button>
-                <span className="text-xs uppercase tracking-wider text-white/50">Plan Pro o Premium</span>
+                <span className="text-xs uppercase tracking-wider text-white/50">
+                  Plan Pro o Premium
+                </span>
               </div>
             </div>
           )}
         </div>
       </section>
-
-
 
       <div className="container mx-auto grid gap-8 px-4 py-10 lg:grid-cols-[1fr_360px]">
         <main>
@@ -178,22 +289,49 @@ function StorePage() {
               <TabsTrigger value="promociones">Promociones</TabsTrigger>
               <TabsTrigger value="resenas">Reseñas</TabsTrigger>
             </TabsList>
-            <TabsContent value="productos" className="mt-5"><ProductosTab comercioId={com.id} /></TabsContent>
-            <TabsContent value="promociones" className="mt-5"><PromosTab comercioId={com.id} /></TabsContent>
-            <TabsContent value="resenas" className="mt-5"><ResenasTab comercioId={com.id} /></TabsContent>
+            <TabsContent value="productos" className="mt-5">
+              <ProductosTab comercioId={com.id} />
+            </TabsContent>
+            <TabsContent value="promociones" className="mt-5">
+              <PromosTab comercioId={com.id} />
+            </TabsContent>
+            <TabsContent value="resenas" className="mt-5">
+              <ResenasTab comercioId={com.id} />
+            </TabsContent>
           </Tabs>
         </main>
 
         <aside className="space-y-6">
-          <StoreMiniMap lat={com.lat ?? null} lng={com.lng ?? null} name={com.nombre} height={280} />
+          <StoreMiniMap
+            lat={com.lat ?? null}
+            lng={com.lng ?? null}
+            name={com.nombre}
+            height={280}
+          />
         </aside>
       </div>
     </AppShell>
   );
 }
 
+function StoreTrustItem({ icon, title, text }: { icon: ReactNode; title: string; text: string }) {
+  return (
+    <div className="flex items-start gap-2">
+      <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-muted text-primary">
+        {icon}
+      </span>
+      <span>
+        <span className="block text-sm font-medium">{title}</span>
+        <span className="block text-xs leading-relaxed text-muted-foreground">{text}</span>
+      </span>
+    </div>
+  );
+}
+
 function summarizeHorarios(h: Record<string, string>) {
-  return Object.entries(h).map(([d, hh]) => `${d}: ${hh}`).join(" · ");
+  return Object.entries(h)
+    .map(([d, hh]) => `${d}: ${hh}`)
+    .join(" · ");
 }
 
 function ProductosTab({ comercioId }: { comercioId: string }) {
@@ -218,14 +356,25 @@ function ProductosTab({ comercioId }: { comercioId: string }) {
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <div className="flex flex-1 items-center gap-2 rounded-full border bg-card px-4 shadow-[var(--shadow-soft)]">
           <SearchIcon className="h-4 w-4 text-muted-foreground" />
-          <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar en esta tienda" className="h-10 border-0 bg-transparent shadow-none focus-visible:ring-0" />
+          <Input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Buscar en esta tienda"
+            className="h-10 border-0 bg-transparent shadow-none focus-visible:ring-0"
+          />
         </div>
         {catsConProd.length > 0 && (
           <Select value={cat} onValueChange={setCat}>
-            <SelectTrigger className="w-48 rounded-full"><SelectValue placeholder="Categoría" /></SelectTrigger>
+            <SelectTrigger className="w-48 rounded-full">
+              <SelectValue placeholder="Categoría" />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Todas las categorías</SelectItem>
-              {catsConProd.map((c) => <SelectItem key={c.id} value={String(c.id)}>{c.nombre}</SelectItem>)}
+              {catsConProd.map((c) => (
+                <SelectItem key={c.id} value={String(c.id)}>
+                  {c.nombre}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         )}
@@ -236,7 +385,9 @@ function ProductosTab({ comercioId }: { comercioId: string }) {
         <EmptyBox text="No hay productos para mostrar." />
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-          {filtered.map((p) => <ProductCard key={p.id} p={p} />)}
+          {filtered.map((p) => (
+            <ProductCard key={p.id} p={p} />
+          ))}
         </div>
       )}
     </>
@@ -259,7 +410,12 @@ function PromosTab({ comercioId }: { comercioId: string }) {
           </div>
           {p.descripcion && <p className="mt-1 text-sm text-muted-foreground">{p.descripcion}</p>}
           <p className="mt-3 text-xs text-muted-foreground">
-            Vence el {new Date(p.fecha_fin).toLocaleDateString("es-CO", { day: "numeric", month: "short", year: "numeric" })}
+            Vence el{" "}
+            {new Date(p.fecha_fin).toLocaleDateString("es-CO", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            })}
           </p>
         </li>
       ))}
@@ -289,12 +445,13 @@ function ResenasTab({ comercioId }: { comercioId: string }) {
 
   const distribution = useMemo(() => {
     const d = [0, 0, 0, 0, 0];
-    resenas.forEach((r) => { if (r.rating >= 1 && r.rating <= 5) d[r.rating - 1]++; });
+    resenas.forEach((r) => {
+      if (r.rating >= 1 && r.rating <= 5) d[r.rating - 1]++;
+    });
     return d;
   }, [resenas]);
   const total = resenas.length;
   const avg = total ? resenas.reduce((s, r) => s + r.rating, 0) / total : 0;
-
 
   return (
     <div className="grid gap-6 md:grid-cols-[280px_1fr]">
@@ -302,7 +459,9 @@ function ResenasTab({ comercioId }: { comercioId: string }) {
         <div className="text-center">
           <p className="text-4xl font-extrabold">{avg.toFixed(1)}</p>
           <StarRating value={avg} size="md" />
-          <p className="mt-1 text-xs text-muted-foreground">{total} reseña{total === 1 ? "" : "s"}</p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {total} reseña{total === 1 ? "" : "s"}
+          </p>
         </div>
         <Separator className="my-4" />
         <ul className="space-y-1.5">
@@ -324,11 +483,19 @@ function ResenasTab({ comercioId }: { comercioId: string }) {
 
       <div>
         {userId && role === "cliente" && (
-          <ReviewForm comercioId={comercioId} userId={userId} existing={myReview} onSaved={() => qc.invalidateQueries({ queryKey: ["resenas", comercioId] })} />
+          <ReviewForm
+            comercioId={comercioId}
+            userId={userId}
+            existing={myReview}
+            onSaved={() => qc.invalidateQueries({ queryKey: ["resenas", comercioId] })}
+          />
         )}
         {!userId && (
           <div className="mb-6 rounded-2xl border bg-muted/40 p-4 text-sm">
-            <Link to="/auth" className="font-medium text-accent hover:underline">Iniciá sesión</Link> para dejar tu reseña.
+            <Link to="/auth" className="font-medium text-accent hover:underline">
+              Iniciá sesión
+            </Link>{" "}
+            para dejar tu reseña.
           </div>
         )}
 
@@ -343,10 +510,16 @@ function ResenasTab({ comercioId }: { comercioId: string }) {
                 <div className="flex items-center justify-between">
                   <p className="font-medium">{r.profiles?.full_name ?? "Cliente"}</p>
                   <span className="text-xs text-muted-foreground">
-                    {new Date(r.created_at).toLocaleDateString("es-CO", { day: "numeric", month: "short", year: "numeric" })}
+                    {new Date(r.created_at).toLocaleDateString("es-CO", {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    })}
                   </span>
                 </div>
-                <div className="mt-1"><StarRating value={r.rating} /></div>
+                <div className="mt-1">
+                  <StarRating value={r.rating} />
+                </div>
                 {r.comentario && <p className="mt-2 text-sm leading-relaxed">{r.comentario}</p>}
               </li>
             ))}
@@ -358,7 +531,10 @@ function ResenasTab({ comercioId }: { comercioId: string }) {
 }
 
 function ReviewForm({
-  comercioId, userId, existing, onSaved,
+  comercioId,
+  userId,
+  existing,
+  onSaved,
 }: {
   comercioId: string;
   userId: string;
@@ -378,8 +554,15 @@ function ReviewForm({
     e.preventDefault();
     if (rating < 1 || rating > 5) return;
     setLoading(true);
-    const payload = { cliente_id: userId, comercio_id: comercioId, rating, comentario: comentario.trim() || null };
-    const { error } = await supabase.from("calificaciones").upsert(payload, { onConflict: "cliente_id,comercio_id" });
+    const payload = {
+      cliente_id: userId,
+      comercio_id: comercioId,
+      rating,
+      comentario: comentario.trim() || null,
+    };
+    const { error } = await supabase
+      .from("calificaciones")
+      .upsert(payload, { onConflict: "cliente_id,comercio_id" });
     setLoading(false);
     if (error) {
       toast.error("No pudimos guardar tu reseña", { description: error.message });
@@ -390,7 +573,10 @@ function ReviewForm({
   };
 
   return (
-    <form onSubmit={submit} className="mb-6 space-y-3 rounded-2xl border bg-card p-5 shadow-[var(--shadow-soft)]">
+    <form
+      onSubmit={submit}
+      className="mb-6 space-y-3 rounded-2xl border bg-card p-5 shadow-[var(--shadow-soft)]"
+    >
       <h3 className="font-semibold">{existing ? "Editar mi reseña" : "Dejar una reseña"}</h3>
       <InteractiveStars value={rating} onChange={setRating} />
       <Textarea
@@ -401,7 +587,11 @@ function ReviewForm({
         placeholder="Contá tu experiencia con este comercio (opcional)"
       />
       <div className="flex justify-end">
-        <Button type="submit" disabled={loading} className="rounded-full bg-accent text-accent-foreground hover:bg-accent/90">
+        <Button
+          type="submit"
+          disabled={loading}
+          className="rounded-full bg-accent text-accent-foreground hover:bg-accent/90"
+        >
           {loading ? "Guardando…" : existing ? "Actualizar reseña" : "Publicar reseña"}
         </Button>
       </div>
@@ -410,5 +600,9 @@ function ReviewForm({
 }
 
 function EmptyBox({ text }: { text: string }) {
-  return <div className="rounded-2xl border bg-card p-8 text-center text-sm text-muted-foreground">{text}</div>;
+  return (
+    <div className="rounded-2xl border bg-card p-8 text-center text-sm text-muted-foreground">
+      {text}
+    </div>
+  );
 }

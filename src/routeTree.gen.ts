@@ -25,6 +25,7 @@ import { Route as DashboardProductsRouteImport } from './routes/dashboard.produc
 import { Route as ApiStoresRouteImport } from './routes/api/stores'
 import { Route as ApiSearchRouteImport } from './routes/api/search'
 import { Route as ApiPromotionsRouteImport } from './routes/api/promotions'
+import { Route as ApiLeadEventsRouteImport } from './routes/api/lead-events'
 import { Route as ApiCategoriesRouteImport } from './routes/api/categories'
 import { Route as ApiStoresSlugRouteImport } from './routes/api/stores.$slug'
 import { Route as ApiStoreStatsRouteImport } from './routes/api/store.stats'
@@ -129,6 +130,11 @@ const ApiSearchRoute = ApiSearchRouteImport.update({
 const ApiPromotionsRoute = ApiPromotionsRouteImport.update({
   id: '/api/promotions',
   path: '/api/promotions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiLeadEventsRoute = ApiLeadEventsRouteImport.update({
+  id: '/api/lead-events',
+  path: '/api/lead-events',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiCategoriesRoute = ApiCategoriesRouteImport.update({
@@ -265,6 +271,7 @@ export interface FileRoutesByFullPath {
   '/map': typeof MapRoute
   '/search': typeof SearchRoute
   '/api/categories': typeof ApiCategoriesRoute
+  '/api/lead-events': typeof ApiLeadEventsRoute
   '/api/promotions': typeof ApiPromotionsRoute
   '/api/search': typeof ApiSearchRoute
   '/api/stores': typeof ApiStoresRouteWithChildren
@@ -307,6 +314,7 @@ export interface FileRoutesByTo {
   '/map': typeof MapRoute
   '/search': typeof SearchRoute
   '/api/categories': typeof ApiCategoriesRoute
+  '/api/lead-events': typeof ApiLeadEventsRoute
   '/api/promotions': typeof ApiPromotionsRoute
   '/api/search': typeof ApiSearchRoute
   '/api/stores': typeof ApiStoresRouteWithChildren
@@ -351,6 +359,7 @@ export interface FileRoutesById {
   '/map': typeof MapRoute
   '/search': typeof SearchRoute
   '/api/categories': typeof ApiCategoriesRoute
+  '/api/lead-events': typeof ApiLeadEventsRoute
   '/api/promotions': typeof ApiPromotionsRoute
   '/api/search': typeof ApiSearchRoute
   '/api/stores': typeof ApiStoresRouteWithChildren
@@ -396,6 +405,7 @@ export interface FileRouteTypes {
     | '/map'
     | '/search'
     | '/api/categories'
+    | '/api/lead-events'
     | '/api/promotions'
     | '/api/search'
     | '/api/stores'
@@ -438,6 +448,7 @@ export interface FileRouteTypes {
     | '/map'
     | '/search'
     | '/api/categories'
+    | '/api/lead-events'
     | '/api/promotions'
     | '/api/search'
     | '/api/stores'
@@ -481,6 +492,7 @@ export interface FileRouteTypes {
     | '/map'
     | '/search'
     | '/api/categories'
+    | '/api/lead-events'
     | '/api/promotions'
     | '/api/search'
     | '/api/stores'
@@ -525,6 +537,7 @@ export interface RootRouteChildren {
   MapRoute: typeof MapRoute
   SearchRoute: typeof SearchRoute
   ApiCategoriesRoute: typeof ApiCategoriesRoute
+  ApiLeadEventsRoute: typeof ApiLeadEventsRoute
   ApiPromotionsRoute: typeof ApiPromotionsRoute
   ApiSearchRoute: typeof ApiSearchRoute
   ApiStoresRoute: typeof ApiStoresRouteWithChildren
@@ -662,6 +675,13 @@ declare module '@tanstack/react-router' {
       path: '/api/promotions'
       fullPath: '/api/promotions'
       preLoaderRoute: typeof ApiPromotionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/lead-events': {
+      id: '/api/lead-events'
+      path: '/api/lead-events'
+      fullPath: '/api/lead-events'
+      preLoaderRoute: typeof ApiLeadEventsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/categories': {
@@ -939,6 +959,7 @@ const rootRouteChildren: RootRouteChildren = {
   MapRoute: MapRoute,
   SearchRoute: SearchRoute,
   ApiCategoriesRoute: ApiCategoriesRoute,
+  ApiLeadEventsRoute: ApiLeadEventsRoute,
   ApiPromotionsRoute: ApiPromotionsRoute,
   ApiSearchRoute: ApiSearchRoute,
   ApiStoresRoute: ApiStoresRouteWithChildren,
@@ -966,3 +987,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

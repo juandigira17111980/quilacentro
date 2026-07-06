@@ -11,9 +11,7 @@ export type AuthedContext = {
  * Valida el bearer token, devuelve cliente Supabase con contexto del usuario.
  * RLS aplica como ese usuario.
  */
-export async function authenticate(
-  request: Request,
-): Promise<AuthedContext | Response> {
+export async function authenticate(request: Request): Promise<AuthedContext | Response> {
   const authHeader = request.headers.get("authorization");
   if (!authHeader?.startsWith("Bearer ")) {
     return errorResponse("No autenticado", 401);
@@ -56,9 +54,7 @@ export async function getOwnedComercio(
 /**
  * Verifica que el usuario autenticado sea admin o super_admin.
  */
-export async function requireAdmin(
-  request: Request,
-): Promise<AuthedContext | Response> {
+export async function requireAdmin(request: Request): Promise<AuthedContext | Response> {
   const ctx = await authenticate(request);
   if (ctx instanceof Response) return ctx;
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");

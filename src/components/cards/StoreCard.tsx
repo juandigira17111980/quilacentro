@@ -11,7 +11,12 @@ export function StoreCard({ c }: { c: Comercio }) {
     >
       <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-muted">
         {c.logo_url ? (
-          <img src={c.logo_url} alt={c.nombre} className="h-full w-full object-cover" loading="lazy" />
+          <img
+            src={c.logo_url}
+            alt={c.nombre}
+            className="h-full w-full object-cover"
+            loading="lazy"
+          />
         ) : (
           <div className="grid h-full w-full place-items-center text-muted-foreground">
             <Store className="h-6 w-6" />
@@ -39,6 +44,14 @@ export function StoreCard({ c }: { c: Comercio }) {
           <p className="mt-1 flex items-start gap-1 truncate text-xs text-muted-foreground">
             <MapPin className="mt-0.5 h-3 w-3 shrink-0" />
             <span className="truncate">{c.direccion}</span>
+          </p>
+        )}
+        {c.distancia_km != null && (
+          <p className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-primary">
+            <MapPin className="h-3 w-3" />
+            {c.distancia_km < 1
+              ? `${Math.round(c.distancia_km * 1000)} m de ti`
+              : `${c.distancia_km.toFixed(1)} km de ti`}
           </p>
         )}
       </div>

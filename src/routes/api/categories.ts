@@ -19,11 +19,9 @@ export const Route = createFileRoute("/api/categories")({
       OPTIONS: optionsHandler,
       GET: async () => {
         try {
-          const { supabaseAdmin } = await import(
-            "@/integrations/supabase/client.server"
-          );
+          const { supabasePublic } = await import("@/integrations/supabase/public.server");
 
-          const { data, error } = await supabaseAdmin
+          const { data, error } = await supabasePublic
             .from("categorias")
             .select("id, nombre, slug, icono_url, color, padre_id, activa, orden")
             .eq("activa", true)

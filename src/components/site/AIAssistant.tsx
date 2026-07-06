@@ -14,7 +14,13 @@ type ProductoLite = {
   precio_oferta: number | null;
   imagen_url: string | null;
 };
-type ComercioLite = { id: string; nombre: string; slug: string; logo_url: string | null; rating_avg: number | null };
+type ComercioLite = {
+  id: string;
+  nombre: string;
+  slug: string;
+  logo_url: string | null;
+  rating_avg: number | null;
+};
 type Msg =
   | { role: "user"; text: string }
   | { role: "assistant"; text: string; productos?: ProductoLite[]; comercios?: ComercioLite[] };
@@ -26,7 +32,7 @@ export function AIAssistant() {
   const [messages, setMessages] = useState<Msg[]>([
     {
       role: "assistant",
-      text: "¡Hola! Soy el asistente de QuillacentrO. Contame qué buscás (por ejemplo: \"una plancha para cabello que no cueste más de 80 mil\") y te muestro opciones del Centro.",
+      text: '¡Hola! Soy el asistente de QuillacentrO. Contame qué buscás (por ejemplo: "una plancha para cabello que no cueste más de 80 mil") y te muestro opciones del Centro.',
     },
   ]);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -101,7 +107,9 @@ export function AIAssistant() {
                     <p className="text-sm text-foreground">{m.text}</p>
                     {m.productos && m.productos.length > 0 && (
                       <div className="space-y-2">
-                        <p className="text-xs font-medium text-muted-foreground">Productos sugeridos</p>
+                        <p className="text-xs font-medium text-muted-foreground">
+                          Productos sugeridos
+                        </p>
                         {m.productos.slice(0, 5).map((p) => (
                           <Link
                             key={p.id}
@@ -111,7 +119,13 @@ export function AIAssistant() {
                             className="flex items-center gap-3 rounded-xl border bg-card p-2 transition hover:bg-muted/50"
                           >
                             <div className="h-12 w-12 shrink-0 overflow-hidden rounded-md bg-muted">
-                              {p.imagen_url && <img src={p.imagen_url} alt="" className="h-full w-full object-cover" />}
+                              {p.imagen_url && (
+                                <img
+                                  src={p.imagen_url}
+                                  alt=""
+                                  className="h-full w-full object-cover"
+                                />
+                              )}
                             </div>
                             <div className="min-w-0 flex-1">
                               <div className="truncate text-sm font-medium">{p.nombre}</div>
@@ -136,7 +150,11 @@ export function AIAssistant() {
                           >
                             <div className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-md bg-muted">
                               {c.logo_url ? (
-                                <img src={c.logo_url} alt="" className="h-full w-full object-cover" />
+                                <img
+                                  src={c.logo_url}
+                                  alt=""
+                                  className="h-full w-full object-cover"
+                                />
                               ) : (
                                 <Store className="h-4 w-4 text-muted-foreground" />
                               )}
@@ -144,7 +162,9 @@ export function AIAssistant() {
                             <div className="min-w-0 flex-1">
                               <div className="truncate text-sm font-medium">{c.nombre}</div>
                               {c.rating_avg ? (
-                                <div className="text-xs text-muted-foreground">★ {Number(c.rating_avg).toFixed(1)}</div>
+                                <div className="text-xs text-muted-foreground">
+                                  ★ {Number(c.rating_avg).toFixed(1)}
+                                </div>
                               ) : null}
                             </div>
                           </Link>
@@ -177,9 +197,19 @@ export function AIAssistant() {
               autoFocus
             />
             <Button type="submit" size="icon" disabled={loading || !input.trim()}>
-              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+              {loading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Send className="h-4 w-4" />
+              )}
             </Button>
-            <Button type="button" variant="ghost" size="icon" onClick={() => setOpen(false)} aria-label="Cerrar">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => setOpen(false)}
+              aria-label="Cerrar"
+            >
               <X className="h-4 w-4" />
             </Button>
           </form>

@@ -16,15 +16,10 @@ export const Route = createFileRoute("/api/admin/stores/$id/status")({
           const body = await request.json().catch(() => ({}));
           const { estado } = body || {};
           if (!estado || !ESTADOS.includes(estado)) {
-            return errorResponse(
-              `estado debe ser uno de: ${ESTADOS.join(", ")}`,
-              400,
-            );
+            return errorResponse(`estado debe ser uno de: ${ESTADOS.join(", ")}`, 400);
           }
 
-          const { supabaseAdmin } = await import(
-            "@/integrations/supabase/client.server"
-          );
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
           const { data, error } = await supabaseAdmin
             .from("comercios")
             .update({ estado })

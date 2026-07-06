@@ -29,7 +29,9 @@ export function PagePlaceholder({
             </span>
           )}
           <h1 className="mt-4 text-3xl font-extrabold tracking-tight md:text-4xl">{title}</h1>
-          <p className="mx-auto mt-3 max-w-lg text-sm text-muted-foreground md:text-base">{description}</p>
+          <p className="mx-auto mt-3 max-w-lg text-sm text-muted-foreground md:text-base">
+            {description}
+          </p>
         </div>
         {children && <div className="mx-auto mt-10 max-w-5xl">{children}</div>}
       </section>

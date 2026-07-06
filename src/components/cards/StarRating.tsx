@@ -26,9 +26,7 @@ export function StarRating({
           />
         ))}
       </div>
-      {showNumber && (
-        <span className="text-sm font-medium">{(value ?? 0).toFixed(1)}</span>
-      )}
+      {showNumber && <span className="text-sm font-medium">{(value ?? 0).toFixed(1)}</span>}
       {typeof count === "number" && (
         <span className="text-xs text-muted-foreground">({count})</span>
       )}

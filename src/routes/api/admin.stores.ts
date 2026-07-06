@@ -15,9 +15,7 @@ export const Route = createFileRoute("/api/admin/stores")({
           const estado = url.searchParams.get("estado");
           const q = url.searchParams.get("q");
 
-          const { supabaseAdmin } = await import(
-            "@/integrations/supabase/client.server"
-          );
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
           let query = supabaseAdmin
             .from("comercios")
             .select(

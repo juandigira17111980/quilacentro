@@ -17,9 +17,7 @@ export const Route = createFileRoute("/api/ai/search")({
             return errorResponse("query requerido", 400);
           }
 
-          const { supabaseAdmin } = await import(
-            "@/integrations/supabase/client.server"
-          );
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
           // 1. Extraer intención con IA
           const intentRaw = await callAI(

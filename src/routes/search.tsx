@@ -3,14 +3,25 @@ import { useEffect, useState } from "react";
 import { z } from "zod";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
-import { Search as SearchIcon, SlidersHorizontal, Store, X } from "lucide-react";
+import {
+  LocateFixed,
+  MapPin,
+  Search as SearchIcon,
+  SlidersHorizontal,
+  Store,
+  X,
+} from "lucide-react";
 import { AppShell } from "@/components/site/AppShell";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -30,6 +41,9 @@ const searchSchema = z.object({
   precioMax: fallback(z.coerce.number().nonnegative().optional(), undefined),
   conPromo: fallback(z.coerce.boolean(), false).default(false),
   disponibles: fallback(z.coerce.boolean(), true).default(true),
+  lat: fallback(z.coerce.number().min(-90).max(90).optional(), undefined),
+  lng: fallback(z.coerce.number().min(-180).max(180).optional(), undefined),
+  radioKm: fallback(z.coerce.number().positive(), 10).default(10),
   tab: fallback(z.enum(["productos", "comercios"]), "productos").default("productos"),
 });
 
@@ -39,7 +53,10 @@ export const Route = createFileRoute("/search")({
   head: () => ({
     meta: [
       { title: "Buscar — QuillacentrO" },
-      { name: "description", content: "Buscá productos en los comercios físicos del Centro de Barranquilla." },
+      {
+        name: "description",
+        content: "Buscá productos en los comercios físicos del Centro de Barranquilla.",
+      },
     ],
   }),
   validateSearch: zodValidator(searchSchema),
@@ -70,10 +87,15 @@ function SearchPage() {
     precioMax: search.precioMax ?? null,
     conPromo: search.conPromo,
     disponibles: search.disponibles,
+    lat: search.lat ?? null,
+    lng: search.lng ?? null,
+    radioKm: search.radioKm ?? 10,
   };
 
-  const setFilter = <K extends keyof typeof search>(key: K, value: (typeof search)[K] | undefined) =>
-    navigate({ search: (prev: SearchParams) => ({ ...prev, [key]: value }), replace: true });
+  const setFilter = <K extends keyof typeof search>(
+    key: K,
+    value: (typeof search)[K] | undefined,
+  ) => navigate({ search: (prev: SearchParams) => ({ ...prev, [key]: value }), replace: true });
 
   const clearFilters = () =>
     navigate({
@@ -84,8 +106,37 @@ function SearchPage() {
         precioMax: undefined,
         conPromo: false,
         disponibles: true,
+        lat: undefined,
+        lng: undefined,
+        radioKm: 10,
         tab: search.tab,
       },
+      replace: true,
+    });
+
+  const useMyLocation = () => {
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition((pos) => {
+      navigate({
+        search: (prev: SearchParams) => ({
+          ...prev,
+          lat: Number(pos.coords.latitude.toFixed(6)),
+          lng: Number(pos.coords.longitude.toFixed(6)),
+          radioKm: prev.radioKm ?? 10,
+        }),
+        replace: true,
+      });
+    });
+  };
+
+  const clearLocation = () =>
+    navigate({
+      search: (prev: SearchParams) => ({
+        ...prev,
+        lat: undefined,
+        lng: undefined,
+        radioKm: 10,
+      }),
       replace: true,
     });
 
@@ -94,6 +145,8 @@ function SearchPage() {
       search={search}
       onChange={setFilter}
       onClear={clearFilters}
+      onUseLocation={useMyLocation}
+      onClearLocation={clearLocation}
     />
   );
 
@@ -111,7 +164,10 @@ function SearchPage() {
               className="h-11 border-0 bg-transparent shadow-none focus-visible:ring-0"
             />
             {qLocal && (
-              <button onClick={() => setQLocal("")} className="text-muted-foreground hover:text-foreground">
+              <button
+                onClick={() => setQLocal("")}
+                className="text-muted-foreground hover:text-foreground"
+              >
                 <X className="h-4 w-4" />
               </button>
             )}
@@ -144,7 +200,15 @@ function SearchPage() {
           <section>
             <Tabs
               value={search.tab}
-              onValueChange={(v) => navigate({ search: (prev: SearchParams) => ({ ...prev, tab: v as "productos" | "comercios" }), replace: true })}
+              onValueChange={(v) =>
+                navigate({
+                  search: (prev: SearchParams) => ({
+                    ...prev,
+                    tab: v as "productos" | "comercios",
+                  }),
+                  replace: true,
+                })
+              }
             >
               <TabsList>
                 <TabsTrigger value="productos">Productos</TabsTrigger>
@@ -168,19 +232,66 @@ function FiltersPanel({
   search,
   onChange,
   onClear,
+  onUseLocation,
+  onClearLocation,
 }: {
   search: z.infer<typeof searchSchema>;
-  onChange: <K extends keyof z.infer<typeof searchSchema>>(k: K, v: z.infer<typeof searchSchema>[K] | undefined) => void;
+  onChange: <K extends keyof z.infer<typeof searchSchema>>(
+    k: K,
+    v: z.infer<typeof searchSchema>[K] | undefined,
+  ) => void;
   onClear: () => void;
+  onUseLocation: () => void;
+  onClearLocation: () => void;
 }) {
   const { data: categorias } = useSuspenseQuery(categoriasQuery);
+  const hasLocation = search.lat != null && search.lng != null;
   return (
     <div className="space-y-5">
+      <div className="rounded-xl border bg-muted/30 p-3">
+        <Label className="text-xs font-medium uppercase text-muted-foreground">Cercania</Label>
+        <div className="mt-2 flex flex-wrap gap-2">
+          <Button
+            type="button"
+            variant={hasLocation ? "default" : "outline"}
+            size="sm"
+            onClick={onUseLocation}
+          >
+            <LocateFixed className="mr-2 h-4 w-4" />
+            {hasLocation ? "Ubicacion activa" : "Usar mi ubicacion"}
+          </Button>
+          {hasLocation && (
+            <Button type="button" variant="ghost" size="sm" onClick={onClearLocation}>
+              Quitar
+            </Button>
+          )}
+        </div>
+        {hasLocation && (
+          <div className="mt-3">
+            <Label htmlFor="radioKm" className="text-xs text-muted-foreground">
+              Radio: {search.radioKm} km
+            </Label>
+            <Input
+              id="radioKm"
+              type="number"
+              inputMode="numeric"
+              min={1}
+              max={50}
+              value={search.radioKm}
+              onChange={(e) => onChange("radioKm", Number(e.target.value || 10) as never)}
+              className="mt-1.5"
+            />
+          </div>
+        )}
+      </div>
+
       <div>
         <Label className="text-xs font-medium uppercase text-muted-foreground">Categoría</Label>
         <Select
           value={search.categoria ? String(search.categoria) : "all"}
-          onValueChange={(v) => onChange("categoria", v === "all" ? undefined : (Number(v) as never))}
+          onValueChange={(v) =>
+            onChange("categoria", v === "all" ? undefined : (Number(v) as never))
+          }
         >
           <SelectTrigger className="mt-1.5">
             <SelectValue placeholder="Todas" />
@@ -188,7 +299,9 @@ function FiltersPanel({
           <SelectContent>
             <SelectItem value="all">Todas las categorías</SelectItem>
             {categorias.map((c) => (
-              <SelectItem key={c.id} value={String(c.id)}>{c.nombre}</SelectItem>
+              <SelectItem key={c.id} value={String(c.id)}>
+                {c.nombre}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -196,27 +309,41 @@ function FiltersPanel({
 
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <Label htmlFor="precioMin" className="text-xs font-medium uppercase text-muted-foreground">Precio mín.</Label>
+          <Label
+            htmlFor="precioMin"
+            className="text-xs font-medium uppercase text-muted-foreground"
+          >
+            Precio mín.
+          </Label>
           <Input
             id="precioMin"
             type="number"
             inputMode="numeric"
             min={0}
             value={search.precioMin ?? ""}
-            onChange={(e) => onChange("precioMin", e.target.value ? (Number(e.target.value) as never) : undefined)}
+            onChange={(e) =>
+              onChange("precioMin", e.target.value ? (Number(e.target.value) as never) : undefined)
+            }
             className="mt-1.5"
             placeholder="0"
           />
         </div>
         <div>
-          <Label htmlFor="precioMax" className="text-xs font-medium uppercase text-muted-foreground">Precio máx.</Label>
+          <Label
+            htmlFor="precioMax"
+            className="text-xs font-medium uppercase text-muted-foreground"
+          >
+            Precio máx.
+          </Label>
           <Input
             id="precioMax"
             type="number"
             inputMode="numeric"
             min={0}
             value={search.precioMax ?? ""}
-            onChange={(e) => onChange("precioMax", e.target.value ? (Number(e.target.value) as never) : undefined)}
+            onChange={(e) =>
+              onChange("precioMax", e.target.value ? (Number(e.target.value) as never) : undefined)
+            }
             className="mt-1.5"
             placeholder="∞"
           />
@@ -247,24 +374,43 @@ function FiltersPanel({
 
 function ProductosResults({ filters }: { filters: SearchFilters }) {
   const { data, isLoading, isError } = useQuery(buildSearchProductsQuery(filters));
+  const usingLocation = filters.lat != null && filters.lng != null;
 
   if (isLoading) {
     return (
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-        {Array.from({ length: 8 }).map((_, i) => <ProductCardSkeleton key={i} />)}
+        {Array.from({ length: 8 }).map((_, i) => (
+          <ProductCardSkeleton key={i} />
+        ))}
       </div>
     );
   }
   if (isError) return <p className="text-sm text-destructive">Error al cargar resultados.</p>;
   const items = data ?? [];
   if (items.length === 0) {
-    return <Empty title="No encontramos productos" description="Probá ajustar los filtros o el término de búsqueda." />;
+    return (
+      <Empty
+        title="No encontramos productos"
+        description="Probá ajustar los filtros o el término de búsqueda."
+      />
+    );
   }
   return (
     <>
-      <p className="mb-3 text-sm text-muted-foreground">{items.length} producto{items.length === 1 ? "" : "s"} encontrado{items.length === 1 ? "" : "s"}</p>
+      <p className="mb-3 text-sm text-muted-foreground">
+        {items.length} producto{items.length === 1 ? "" : "s"} encontrado
+        {items.length === 1 ? "" : "s"}
+        {usingLocation && (
+          <span className="ml-2 inline-flex items-center gap-1 font-medium text-primary">
+            <MapPin className="h-3.5 w-3.5" />
+            ordenados por cercania
+          </span>
+        )}
+      </p>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-        {items.map((p) => <ProductCard key={p.id} p={p} />)}
+        {items.map((p) => (
+          <ProductCard key={p.id} p={p} />
+        ))}
       </div>
     </>
   );
@@ -272,24 +418,40 @@ function ProductosResults({ filters }: { filters: SearchFilters }) {
 
 function ComerciosResults({ filters }: { filters: SearchFilters }) {
   const { data, isLoading, isError } = useQuery(buildSearchComerciosQuery(filters));
+  const usingLocation = filters.lat != null && filters.lng != null;
 
   if (isLoading) {
     return (
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {Array.from({ length: 6 }).map((_, i) => <StoreCardSkeleton key={i} />)}
+        {Array.from({ length: 6 }).map((_, i) => (
+          <StoreCardSkeleton key={i} />
+        ))}
       </div>
     );
   }
   if (isError) return <p className="text-sm text-destructive">Error al cargar resultados.</p>;
   const items = data ?? [];
   if (items.length === 0) {
-    return <Empty title="No encontramos comercios" description="Probá con otra categoría o término." />;
+    return (
+      <Empty title="No encontramos comercios" description="Probá con otra categoría o término." />
+    );
   }
   return (
     <>
-      <p className="mb-3 text-sm text-muted-foreground">{items.length} comercio{items.length === 1 ? "" : "s"} encontrado{items.length === 1 ? "" : "s"}</p>
+      <p className="mb-3 text-sm text-muted-foreground">
+        {items.length} comercio{items.length === 1 ? "" : "s"} encontrado
+        {items.length === 1 ? "" : "s"}
+        {usingLocation && (
+          <span className="ml-2 inline-flex items-center gap-1 font-medium text-primary">
+            <MapPin className="h-3.5 w-3.5" />
+            ordenados por cercania
+          </span>
+        )}
+      </p>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((c) => <StoreCard key={c.id} c={c} />)}
+        {items.map((c) => (
+          <StoreCard key={c.id} c={c} />
+        ))}
       </div>
     </>
   );

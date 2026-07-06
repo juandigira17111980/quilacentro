@@ -3,7 +3,13 @@ import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { AIAssistant } from "./AIAssistant";
 
-export function AppShell({ children, hideFooter = false }: { children: ReactNode; hideFooter?: boolean }) {
+export function AppShell({
+  children,
+  hideFooter = false,
+}: {
+  children: ReactNode;
+  hideFooter?: boolean;
+}) {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />

@@ -33,9 +33,7 @@ export const Route = createFileRoute("/api/store/promotions")({
           const comercio = await getOwnedComercio(ctx, comercio_id);
           if (comercio instanceof Response) return comercio;
 
-          const { supabaseAdmin } = await import(
-            "@/integrations/supabase/client.server"
-          );
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
           const { data, error } = await supabaseAdmin
             .from("promociones")
             .insert({

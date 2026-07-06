@@ -15,9 +15,7 @@ export const Route = createFileRoute("/api/admin/reports")({
           const dias = Number(url.searchParams.get("dias") || "30");
           const desde = new Date(Date.now() - dias * 86400000).toISOString();
 
-          const { supabaseAdmin } = await import(
-            "@/integrations/supabase/client.server"
-          );
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
           const [
             topComerciosRes,
@@ -57,7 +55,7 @@ export const Route = createFileRoute("/api/admin/reports")({
           ]);
 
           // Agregar conteos
-          const countBy = <T,>(arr: T[] | null, key: (x: T) => string | null) => {
+          const countBy = <T>(arr: T[] | null, key: (x: T) => string | null) => {
             const m = new Map<string, number>();
             (arr || []).forEach((x) => {
               const k = key(x);
@@ -76,10 +74,8 @@ export const Route = createFileRoute("/api/admin/reports")({
               topCategoriasRes.data,
               (x: any) => x.categorias?.nombre || null,
             ),
-            top_zonas: countBy(
-              topZonasRes.data,
-              (x: any) =>
-                x.zonas ? `${x.zonas.nombre} (${x.zonas.ciudad})` : null,
+            top_zonas: countBy(topZonasRes.data, (x: any) =>
+              x.zonas ? `${x.zonas.nombre} (${x.zonas.ciudad})` : null,
             ),
             top_busquedas: countBy(busquedasRes.data, (x: any) => x.termino),
             usuarios_por_rol: countBy(usuariosPorRolRes.data, (x: any) => x.role),

@@ -1,7 +1,18 @@
 import { Link } from "@tanstack/react-router";
 import {
-  Shirt, Smartphone, Sofa, Sparkles, Gem, Dumbbell,
-  ToyBrick, NotebookPen, Wrench, UtensilsCrossed, Pill, Briefcase, Tag,
+  Shirt,
+  Smartphone,
+  Sofa,
+  Sparkles,
+  Gem,
+  Dumbbell,
+  ToyBrick,
+  NotebookPen,
+  Wrench,
+  UtensilsCrossed,
+  Pill,
+  Briefcase,
+  Tag,
   type LucideIcon,
 } from "lucide-react";
 import type { Categoria } from "@/lib/queries";
@@ -30,7 +41,15 @@ export function CategoryGrid({ categorias }: { categorias: Categoria[] }) {
           <Link
             key={c.id}
             to="/search"
-            search={{ q: "", categoria: c.id, precioMin: undefined, precioMax: undefined, conPromo: false, disponibles: true, tab: "productos" }}
+            search={{
+              q: "",
+              categoria: c.id,
+              precioMin: undefined,
+              precioMax: undefined,
+              conPromo: false,
+              disponibles: true,
+              tab: "productos",
+            }}
             className="group flex flex-col items-center gap-2 rounded-2xl border bg-card p-4 text-center shadow-[var(--shadow-soft)] transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-elevated)]"
           >
             <span className="grid h-12 w-12 place-items-center rounded-xl bg-primary-soft text-primary transition group-hover:bg-accent group-hover:text-accent-foreground">

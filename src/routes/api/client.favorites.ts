@@ -11,9 +11,7 @@ export const Route = createFileRoute("/api/client/favorites")({
           const ctx = await authenticate(request);
           if (ctx instanceof Response) return ctx;
 
-          const { supabaseAdmin } = await import(
-            "@/integrations/supabase/client.server"
-          );
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
           const { data, error } = await supabaseAdmin
             .from("favoritos")
             .select(
@@ -38,9 +36,7 @@ export const Route = createFileRoute("/api/client/favorites")({
             return errorResponse("Se requiere comercio_id o producto_id", 400);
           }
 
-          const { supabaseAdmin } = await import(
-            "@/integrations/supabase/client.server"
-          );
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
           const { data, error } = await supabaseAdmin
             .from("favoritos")
             .insert({

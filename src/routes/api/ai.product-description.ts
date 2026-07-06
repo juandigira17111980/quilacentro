@@ -12,8 +12,9 @@ export const Route = createFileRoute("/api/ai/product-description")({
           const ctx = await authenticate(request);
           if (ctx instanceof Response) return ctx;
 
-          const { nombre, marca, categoria, atributos, tono, comercio_id } =
-            await request.json().catch(() => ({}));
+          const { nombre, marca, categoria, atributos, tono, comercio_id } = await request
+            .json()
+            .catch(() => ({}));
 
           if (!nombre) return errorResponse("nombre requerido", 400);
 

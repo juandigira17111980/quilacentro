@@ -8,11 +8,7 @@ export async function getCurrentRole(): Promise<{ userId: string; role: AppRole 
   const { data: userData } = await supabase.auth.getUser();
   const user = userData.user;
   if (!user) return null;
-  const { data } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .maybeSingle();
+  const { data } = await supabase.from("profiles").select("role").eq("id", user.id).maybeSingle();
   const role = ((data as { role?: string } | null)?.role ?? "cliente") as AppRole;
   return { userId: user.id, role };
 }

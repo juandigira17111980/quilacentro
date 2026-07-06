@@ -58,7 +58,7 @@
   --color-sidebar-ring: var(--sidebar-ring);
 
   --shadow-soft: 0 1px 2px 0 rgb(26 43 74 / 0.04), 0 2px 8px -2px rgb(26 43 74 / 0.06);
-  --shadow-elevated: 0 4px 16px -4px rgb(26 43 74 / 0.10), 0 8px 32px -8px rgb(26 43 74 / 0.08);
+  --shadow-elevated: 0 4px 16px -4px rgb(26 43 74 / 0.1), 0 8px 32px -8px rgb(26 43 74 / 0.08);
 }
 
 :root {
@@ -161,14 +161,19 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
     font-weight: 700;
   }
 }
 
-a[href*="lovable.dev"], 
+a[href*="lovable.dev"],
 iframe[src*="lovable.dev"],
 div[style*="Edit with Lovable"],
 .lovable-badge {

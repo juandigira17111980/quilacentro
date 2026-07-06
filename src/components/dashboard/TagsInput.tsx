@@ -3,7 +3,11 @@ import { X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 
-export function TagsInput({ value, onChange, placeholder = "Agregar etiqueta y Enter" }: {
+export function TagsInput({
+  value,
+  onChange,
+  placeholder = "Agregar etiqueta y Enter",
+}: {
   value: string[];
   onChange: (tags: string[]) => void;
   placeholder?: string;
@@ -36,7 +40,11 @@ export function TagsInput({ value, onChange, placeholder = "Agregar etiqueta y E
         {value.map((t) => (
           <Badge key={t} variant="secondary" className="gap-1 pr-1">
             {t}
-            <button type="button" onClick={() => onChange(value.filter((x) => x !== t))} className="rounded-full hover:bg-background/50 p-0.5">
+            <button
+              type="button"
+              onClick={() => onChange(value.filter((x) => x !== t))}
+              className="rounded-full hover:bg-background/50 p-0.5"
+            >
               <X className="h-3 w-3" />
             </button>
           </Badge>

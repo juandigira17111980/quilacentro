@@ -92,15 +92,35 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "QuillacentrO — Marketplace del Centro de Barranquilla" },
-      { name: "description", content: "Encontrá productos y los comercios físicos del Centro de Barranquilla que los venden. Precios, distancias y contacto directo." },
+      {
+        name: "description",
+        content:
+          "Encontrá productos y los comercios físicos del Centro de Barranquilla que los venden. Precios, distancias y contacto directo.",
+      },
       { property: "og:title", content: "QuillacentrO — Marketplace del Centro de Barranquilla" },
-      { property: "og:description", content: "Encontrá productos y los comercios físicos del Centro de Barranquilla que los venden. Precios, distancias y contacto directo." },
+      {
+        property: "og:description",
+        content:
+          "Encontrá productos y los comercios físicos del Centro de Barranquilla que los venden. Precios, distancias y contacto directo.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "QuillacentrO — Marketplace del Centro de Barranquilla" },
-      { name: "twitter:description", content: "Encontrá productos y los comercios físicos del Centro de Barranquilla que los venden. Precios, distancias y contacto directo." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/dcb4458b-f64e-4ef6-bc40-af5c51c0d6b2/id-preview-6a3e1378--70a805e1-1ca8-4970-8acc-1c7861fdd07d.lovable.app-1781572378973.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/dcb4458b-f64e-4ef6-bc40-af5c51c0d6b2/id-preview-6a3e1378--70a805e1-1ca8-4970-8acc-1c7861fdd07d.lovable.app-1781572378973.png" },
+      {
+        name: "twitter:description",
+        content:
+          "Encontrá productos y los comercios físicos del Centro de Barranquilla que los venden. Precios, distancias y contacto directo.",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/dcb4458b-f64e-4ef6-bc40-af5c51c0d6b2/id-preview-6a3e1378--70a805e1-1ca8-4970-8acc-1c7861fdd07d.lovable.app-1781572378973.png",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/dcb4458b-f64e-4ef6-bc40-af5c51c0d6b2/id-preview-6a3e1378--70a805e1-1ca8-4970-8acc-1c7861fdd07d.lovable.app-1781572378973.png",
+      },
     ],
     scripts: [
       { src: "https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js", defer: true },
@@ -115,7 +135,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "stylesheet", href: appCss },
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
       { rel: "apple-touch-icon", href: "/icon.svg" },
-      { rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css" },
+      {
+        rel: "stylesheet",
+        href: "https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css",
+      },
       { rel: "manifest", href: "/manifest.webmanifest" },
     ],
   }),

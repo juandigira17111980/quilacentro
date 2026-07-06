@@ -18,8 +18,8 @@ export function MerchantCta() {
             ¿Tienes un negocio en el Centro?
           </h2>
           <p className="mt-3 max-w-md text-base text-slate-300">
-            Lleva tu comercio al siguiente nivel. Publica tus productos gratis y llega a
-            miles de clientes.
+            Lleva tu comercio al siguiente nivel. Publica tus productos gratis y llega a miles de
+            clientes.
           </p>
           <ul className="mt-6 space-y-3">
             {BULLETS.map((b) => (

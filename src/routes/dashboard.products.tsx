@@ -10,10 +10,38 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
@@ -57,9 +85,11 @@ function ProductsPage() {
 
   if (!comercio) {
     return (
-      <Card><CardContent className="py-10 text-center text-sm text-muted-foreground">
-        Primero creá tu comercio en "Mi comercio".
-      </CardContent></Card>
+      <Card>
+        <CardContent className="py-10 text-center text-sm text-muted-foreground">
+          Primero creá tu comercio en "Mi comercio".
+        </CardContent>
+      </Card>
     );
   }
 
@@ -75,22 +105,27 @@ function ProductsPage() {
         <Button
           onClick={() => {
             if (atLimit) {
-              toast.error(`Alcanzaste el límite del plan (${maxProductos}). Actualizá tu plan para publicar más.`);
+              toast.error(
+                `Alcanzaste el límite del plan (${maxProductos}). Actualizá tu plan para publicar más.`,
+              );
               return;
             }
             setCreating(true);
           }}
         >
-          <Plus className="mr-2 h-4 w-4" />Nuevo producto
+          <Plus className="mr-2 h-4 w-4" />
+          Nuevo producto
         </Button>
       </div>
 
       {isLoading ? (
         <Skeleton className="h-64" />
       ) : productos.length === 0 ? (
-        <Card><CardContent className="py-10 text-center text-sm text-muted-foreground">
-          Todavía no publicaste productos.
-        </CardContent></Card>
+        <Card>
+          <CardContent className="py-10 text-center text-sm text-muted-foreground">
+            Todavía no publicaste productos.
+          </CardContent>
+        </Card>
       ) : (
         <Card>
           <div className="overflow-x-auto">
@@ -110,7 +145,9 @@ function ProductsPage() {
                   <TableRow key={p.id}>
                     <TableCell>
                       <div className="h-10 w-10 overflow-hidden rounded-md bg-muted">
-                        {p.imagen_url && <img src={p.imagen_url} alt="" className="h-full w-full object-cover" />}
+                        {p.imagen_url && (
+                          <img src={p.imagen_url} alt="" className="h-full w-full object-cover" />
+                        )}
                       </div>
                     </TableCell>
                     <TableCell>
@@ -120,8 +157,12 @@ function ProductsPage() {
                     <TableCell className="text-right tabular-nums">
                       {p.precio_oferta ? (
                         <>
-                          <div className="text-xs text-muted-foreground line-through">${Number(p.precio_base).toLocaleString()}</div>
-                          <div className="font-semibold">${Number(p.precio_oferta).toLocaleString()}</div>
+                          <div className="text-xs text-muted-foreground line-through">
+                            ${Number(p.precio_base).toLocaleString()}
+                          </div>
+                          <div className="font-semibold">
+                            ${Number(p.precio_oferta).toLocaleString()}
+                          </div>
                         </>
                       ) : (
                         <>${Number(p.precio_base).toLocaleString()}</>
@@ -130,13 +171,19 @@ function ProductsPage() {
                     <TableCell className="text-right tabular-nums">{p.stock ?? "—"}</TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
-                        <Badge variant={p.disponible ? "default" : "outline"}>{p.disponible ? "Disponible" : "Agotado"}</Badge>
+                        <Badge variant={p.disponible ? "default" : "outline"}>
+                          {p.disponible ? "Disponible" : "Agotado"}
+                        </Badge>
                         {p.destacado && <Badge variant="secondary">Destacado</Badge>}
                       </div>
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="icon" onClick={() => setEditing(p)}><Pencil className="h-4 w-4" /></Button>
-                      <Button variant="ghost" size="icon" onClick={() => setDeleting(p)}><Trash2 className="h-4 w-4" /></Button>
+                      <Button variant="ghost" size="icon" onClick={() => setEditing(p)}>
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => setDeleting(p)}>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -149,7 +196,12 @@ function ProductsPage() {
       {(creating || editing) && userId && (
         <ProductFormDialog
           open
-          onOpenChange={(o) => { if (!o) { setCreating(false); setEditing(null); } }}
+          onOpenChange={(o) => {
+            if (!o) {
+              setCreating(false);
+              setEditing(null);
+            }
+          }}
           comercioId={comercio.id}
           userId={userId}
           producto={editing}
@@ -187,7 +239,9 @@ function ProductsPage() {
                 }
                 setDeleting(null);
               }}
-            >Eliminar</AlertDialogAction>
+            >
+              Eliminar
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -234,27 +288,32 @@ function ProductFormDialog({
     tags: string[];
     atributos: Record<string, string>;
   };
-  const initial: FormP = useMemo(() => ({
-    nombre: producto?.nombre ?? "",
-    descripcion: producto?.descripcion ?? "",
-    categoria_id: producto?.categoria_id ?? null,
-    marca: producto?.marca ?? "",
-    sku: producto?.sku ?? "",
-    precio_base: producto ? String(producto.precio_base) : "",
-    precio_oferta: producto?.precio_oferta != null ? String(producto.precio_oferta) : "",
-    stock: producto?.stock != null ? String(producto.stock) : "",
-    disponible: producto?.disponible ?? true,
-    destacado: producto?.destacado ?? false,
-    imagen_url: producto?.imagen_url ?? null,
-    imagenes: producto?.imagenes ?? [],
-    tags: producto?.tags ?? [],
-    atributos: producto?.atributos ?? {},
-  }), [producto]);
+  const initial: FormP = useMemo(
+    () => ({
+      nombre: producto?.nombre ?? "",
+      descripcion: producto?.descripcion ?? "",
+      categoria_id: producto?.categoria_id ?? null,
+      marca: producto?.marca ?? "",
+      sku: producto?.sku ?? "",
+      precio_base: producto ? String(producto.precio_base) : "",
+      precio_oferta: producto?.precio_oferta != null ? String(producto.precio_oferta) : "",
+      stock: producto?.stock != null ? String(producto.stock) : "",
+      disponible: producto?.disponible ?? true,
+      destacado: producto?.destacado ?? false,
+      imagen_url: producto?.imagen_url ?? null,
+      imagenes: producto?.imagenes ?? [],
+      tags: producto?.tags ?? [],
+      atributos: producto?.atributos ?? {},
+    }),
+    [producto],
+  );
 
   const [f, setF] = useState<FormP>(initial);
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => { setF(initial); }, [initial]);
+  useEffect(() => {
+    setF(initial);
+  }, [initial]);
 
   const set = <K extends keyof FormP>(k: K, v: FormP[K]) => setF((p) => ({ ...p, [k]: v }));
 
@@ -288,7 +347,10 @@ function ProductFormDialog({
         atributos: f.atributos,
       };
       if (producto) {
-        const { error } = await supabase.from("productos").update(payload as never).eq("id", producto.id);
+        const { error } = await supabase
+          .from("productos")
+          .update(payload as never)
+          .eq("id", producto.id);
         if (error) throw error;
         toast.success("Producto actualizado");
       } else {
@@ -316,7 +378,11 @@ function ProductFormDialog({
         <div className="grid gap-4">
           <div>
             <Label>Nombre *</Label>
-            <Input value={f.nombre} onChange={(e) => set("nombre", e.target.value)} maxLength={160} />
+            <Input
+              value={f.nombre}
+              onChange={(e) => set("nombre", e.target.value)}
+              maxLength={160}
+            />
           </div>
           <div>
             <div className="mb-1 flex items-center justify-between">
@@ -328,15 +394,28 @@ function ProductFormDialog({
                 onGenerated={(text) => set("descripcion", text)}
               />
             </div>
-            <Textarea value={f.descripcion} onChange={(e) => set("descripcion", e.target.value)} rows={4} />
+            <Textarea
+              value={f.descripcion}
+              onChange={(e) => set("descripcion", e.target.value)}
+              rows={4}
+            />
           </div>
           <div className="grid gap-4 sm:grid-cols-3">
             <div>
               <Label>Categoría</Label>
-              <Select value={f.categoria_id?.toString() ?? ""} onValueChange={(v) => set("categoria_id", v ? Number(v) : null)}>
-                <SelectTrigger><SelectValue placeholder="Categoría" /></SelectTrigger>
+              <Select
+                value={f.categoria_id?.toString() ?? ""}
+                onValueChange={(v) => set("categoria_id", v ? Number(v) : null)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Categoría" />
+                </SelectTrigger>
                 <SelectContent>
-                  {categorias.map((c) => (<SelectItem key={c.id} value={c.id.toString()}>{c.nombre}</SelectItem>))}
+                  {categorias.map((c) => (
+                    <SelectItem key={c.id} value={c.id.toString()}>
+                      {c.nombre}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -361,15 +440,30 @@ function ProductFormDialog({
                   onSuggested={(v) => set("precio_base", String(v))}
                 />
               </div>
-              <Input type="number" min="0" value={f.precio_base} onChange={(e) => set("precio_base", e.target.value)} />
+              <Input
+                type="number"
+                min="0"
+                value={f.precio_base}
+                onChange={(e) => set("precio_base", e.target.value)}
+              />
             </div>
             <div>
               <Label>Precio oferta</Label>
-              <Input type="number" min="0" value={f.precio_oferta} onChange={(e) => set("precio_oferta", e.target.value)} />
+              <Input
+                type="number"
+                min="0"
+                value={f.precio_oferta}
+                onChange={(e) => set("precio_oferta", e.target.value)}
+              />
             </div>
             <div>
               <Label>Stock</Label>
-              <Input type="number" min="0" value={f.stock} onChange={(e) => set("stock", e.target.value)} />
+              <Input
+                type="number"
+                min="0"
+                value={f.stock}
+                onChange={(e) => set("stock", e.target.value)}
+              />
             </div>
           </div>
           <div className="flex gap-6">
@@ -408,7 +502,9 @@ function ProductFormDialog({
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
+            Cancelar
+          </Button>
           <Button onClick={save} disabled={saving}>
             {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Guardar
@@ -420,7 +516,9 @@ function ProductFormDialog({
 }
 
 async function callAIEndpoint<T>(path: string, body: Record<string, unknown>): Promise<T> {
-  const { data: { session } } = await supabase.auth.getSession();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
   const token = session?.access_token;
   if (!token) throw new Error("Debés iniciar sesión");
   const res = await fetch(path, {
@@ -437,8 +535,16 @@ async function callAIEndpoint<T>(path: string, body: Record<string, unknown>): P
 }
 
 function AIDescriptionButton({
-  nombre, marca, comercioId, onGenerated,
-}: { nombre: string; marca: string; comercioId: string; onGenerated: (t: string) => void }) {
+  nombre,
+  marca,
+  comercioId,
+  onGenerated,
+}: {
+  nombre: string;
+  marca: string;
+  comercioId: string;
+  onGenerated: (t: string) => void;
+}) {
   const [loading, setLoading] = useState(false);
   return (
     <Button
@@ -450,24 +556,43 @@ function AIDescriptionButton({
         setLoading(true);
         try {
           const r = await callAIEndpoint<{ descripcion: string }>("/api/ai/product-description", {
-            nombre, marca: marca || undefined, comercio_id: comercioId, tono: "profesional y persuasivo",
+            nombre,
+            marca: marca || undefined,
+            comercio_id: comercioId,
+            tono: "profesional y persuasivo",
           });
           onGenerated(r.descripcion);
           toast.success("Descripción generada con IA");
         } catch (e) {
           toast.error(e instanceof Error ? e.message : "Error generando descripción");
-        } finally { setLoading(false); }
+        } finally {
+          setLoading(false);
+        }
       }}
     >
-      {loading ? <Loader2 className="mr-1 h-3 w-3 animate-spin" /> : <Sparkles className="mr-1 h-3 w-3" />}
+      {loading ? (
+        <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+      ) : (
+        <Sparkles className="mr-1 h-3 w-3" />
+      )}
       Generar con IA
     </Button>
   );
 }
 
 function AIPriceButton({
-  nombre, marca, categoriaId, comercioId, onSuggested,
-}: { nombre: string; marca: string; categoriaId: number | null; comercioId: string; onSuggested: (v: number) => void }) {
+  nombre,
+  marca,
+  categoriaId,
+  comercioId,
+  onSuggested,
+}: {
+  nombre: string;
+  marca: string;
+  categoriaId: number | null;
+  comercioId: string;
+  onSuggested: (v: number) => void;
+}) {
   const [loading, setLoading] = useState(false);
   return (
     <Button
@@ -478,20 +603,33 @@ function AIPriceButton({
       onClick={async () => {
         setLoading(true);
         try {
-          const r = await callAIEndpoint<{ sugerencia: { precio_sugerido: number; justificacion: string } }>(
-            "/api/ai/price-suggestion",
-            { nombre, marca: marca || undefined, categoria_id: categoriaId, comercio_id: comercioId },
-          );
-          onSuggested(Math.round(r.sugerencia.precio_sugerido));
-          toast.success(`Sugerido: $${Math.round(r.sugerencia.precio_sugerido).toLocaleString("es-CO")}`, {
-            description: r.sugerencia.justificacion,
+          const r = await callAIEndpoint<{
+            sugerencia: { precio_sugerido: number; justificacion: string };
+          }>("/api/ai/price-suggestion", {
+            nombre,
+            marca: marca || undefined,
+            categoria_id: categoriaId,
+            comercio_id: comercioId,
           });
+          onSuggested(Math.round(r.sugerencia.precio_sugerido));
+          toast.success(
+            `Sugerido: $${Math.round(r.sugerencia.precio_sugerido).toLocaleString("es-CO")}`,
+            {
+              description: r.sugerencia.justificacion,
+            },
+          );
         } catch (e) {
           toast.error(e instanceof Error ? e.message : "Error sugiriendo precio");
-        } finally { setLoading(false); }
+        } finally {
+          setLoading(false);
+        }
       }}
     >
-      {loading ? <Loader2 className="mr-1 h-3 w-3 animate-spin" /> : <Sparkles className="mr-1 h-3 w-3" />}
+      {loading ? (
+        <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+      ) : (
+        <Sparkles className="mr-1 h-3 w-3" />
+      )}
       Sugerir
     </Button>
   );

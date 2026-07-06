@@ -13,8 +13,17 @@ const DAYS: Array<{ key: string; label: string }> = [
 
 export type HoursMap = Record<string, { open?: string; close?: string; closed?: boolean }>;
 
-export function HoursEditor({ value, onChange }: { value: HoursMap; onChange: (h: HoursMap) => void }) {
-  const update = (key: string, patch: Partial<{ open: string; close: string; closed: boolean }>) => {
+export function HoursEditor({
+  value,
+  onChange,
+}: {
+  value: HoursMap;
+  onChange: (h: HoursMap) => void;
+}) {
+  const update = (
+    key: string,
+    patch: Partial<{ open: string; close: string; closed: boolean }>,
+  ) => {
     onChange({ ...value, [key]: { ...(value[key] ?? {}), ...patch } });
   };
 
@@ -23,7 +32,10 @@ export function HoursEditor({ value, onChange }: { value: HoursMap; onChange: (h
       {DAYS.map(({ key, label }) => {
         const day = value[key] ?? {};
         return (
-          <div key={key} className="grid grid-cols-[100px_1fr_1fr_auto] items-center gap-2 rounded-lg border p-2">
+          <div
+            key={key}
+            className="grid grid-cols-[100px_1fr_1fr_auto] items-center gap-2 rounded-lg border p-2"
+          >
             <div className="text-sm font-medium">{label}</div>
             <Input
               type="time"
@@ -42,7 +54,9 @@ export function HoursEditor({ value, onChange }: { value: HoursMap; onChange: (h
             <label className="flex items-center gap-1.5 text-xs">
               <Checkbox
                 checked={!!day.closed}
-                onCheckedChange={(c) => update(key, { closed: !!c, open: c ? "" : day.open, close: c ? "" : day.close })}
+                onCheckedChange={(c) =>
+                  update(key, { closed: !!c, open: c ? "" : day.open, close: c ? "" : day.close })
+                }
               />
               Cerrado
             </label>

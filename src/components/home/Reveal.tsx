@@ -20,7 +20,7 @@ export function Reveal({
           io.disconnect();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
     io.observe(ref.current);
     return () => io.disconnect();

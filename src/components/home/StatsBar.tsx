@@ -24,10 +24,9 @@ export function StatsBar() {
   const [inView, setInView] = useState(false);
   useEffect(() => {
     if (!ref.current) return;
-    const io = new IntersectionObserver(
-      ([e]) => e.isIntersecting && setInView(true),
-      { threshold: 0.3 }
-    );
+    const io = new IntersectionObserver(([e]) => e.isIntersecting && setInView(true), {
+      threshold: 0.3,
+    });
     io.observe(ref.current);
     return () => io.disconnect();
   }, []);

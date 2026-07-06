@@ -22,6 +22,12 @@ export type MyComercio = {
   rating_avg: number | null;
   total_reviews: number | null;
   tour_360_url: string | null;
+  recogida_disponible: boolean;
+  recogida_notas: string | null;
+  domicilio_disponible: boolean;
+  domicilio_notas: string | null;
+  disponibilidad_notas: string | null;
+  confianza_notas: string | null;
 };
 
 export type MyProducto = {
@@ -70,6 +76,31 @@ export type MyConsulta = {
   created_at: string;
   profiles?: { full_name: string | null } | null;
   productos?: { nombre: string } | null;
+};
+
+export type MyStoreStats = {
+  comercio_id: string;
+  productos: number;
+  promociones_activas: number;
+  consultas_nuevas: number;
+  consultas_total: number;
+  consultas_30d: number;
+  favoritos: number;
+  rating_promedio: number;
+  total_reviews: number;
+  vistas_totales: number;
+  eventos_30d: {
+    whatsapp_clicks: number;
+    directions_clicks: number;
+    availability_submits: number;
+    total: number;
+  };
+  productos_interes: {
+    producto_id: string;
+    nombre: string;
+    slug: string;
+    eventos: number;
+  }[];
 };
 
 export function myComercioQuery(ownerId: string) {
@@ -137,6 +168,23 @@ export function myQueriesQuery(comercioId: string | null | undefined) {
         .limit(200);
       if (error) throw error;
       return (data ?? []) as unknown as MyConsulta[];
+    },
+  });
+}
+
+export function myStoreStatsQuery(comercioId: string | null | undefined) {
+  return queryOptions({
+    queryKey: ["my-store-stats", comercioId],
+    enabled: !!comercioId,
+    queryFn: async (): Promise<MyStoreStats | null> => {
+      if (!comercioId) return null;
+      const { data } = await supabase.auth.getSession();
+      const token = data.session?.access_token;
+      const res = await fetch(`/api/store/stats?comercio_id=${encodeURIComponent(comercioId)}`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      });
+      if (!res.ok) throw new Error("No pudimos cargar las estadísticas");
+      return (await res.json()) as MyStoreStats;
     },
   });
 }

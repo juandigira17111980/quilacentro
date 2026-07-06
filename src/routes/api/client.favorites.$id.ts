@@ -11,9 +11,7 @@ export const Route = createFileRoute("/api/client/favorites/$id")({
           const ctx = await authenticate(request);
           if (ctx instanceof Response) return ctx;
 
-          const { supabaseAdmin } = await import(
-            "@/integrations/supabase/client.server"
-          );
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
           const { error } = await supabaseAdmin
             .from("favoritos")
             .delete()

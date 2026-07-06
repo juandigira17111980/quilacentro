@@ -28,9 +28,7 @@ export const Route = createFileRoute("/api/client/queries")({
             clienteId = data.user?.id || null;
           }
 
-          const { supabaseAdmin } = await import(
-            "@/integrations/supabase/client.server"
-          );
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
           const { data, error } = await supabaseAdmin
             .from("consultas")
             .insert({

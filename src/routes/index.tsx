@@ -145,7 +145,9 @@ function CategoriasSection() {
 function PromocionesSection() {
   const { data } = useSuspenseQuery(promocionesDestacadasQuery);
   if (data.length === 0) {
-    return <p className="text-sm text-muted-foreground">No hay promociones destacadas por ahora.</p>;
+    return (
+      <p className="text-sm text-muted-foreground">No hay promociones destacadas por ahora.</p>
+    );
   }
   return (
     <div className="-mx-4 flex gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:thin]">

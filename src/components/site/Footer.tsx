@@ -19,15 +19,31 @@ export function Footer() {
         <div>
           <h4 className="mb-3 text-sm font-semibold">Explorar</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li><Link to="/search" className="hover:text-foreground">Buscar productos</Link></li>
-            <li><Link to="/map" className="hover:text-foreground">Mapa de comercios</Link></li>
+            <li>
+              <Link to="/search" className="hover:text-foreground">
+                Buscar productos
+              </Link>
+            </li>
+            <li>
+              <Link to="/map" className="hover:text-foreground">
+                Mapa de comercios
+              </Link>
+            </li>
           </ul>
         </div>
         <div>
           <h4 className="mb-3 text-sm font-semibold">Para comercios</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li><Link to="/auth" className="hover:text-foreground">Registrá tu comercio</Link></li>
-            <li><Link to="/dashboard" className="hover:text-foreground">Panel de control</Link></li>
+            <li>
+              <Link to="/auth" className="hover:text-foreground">
+                Registrá tu comercio
+              </Link>
+            </li>
+            <li>
+              <Link to="/dashboard" className="hover:text-foreground">
+                Panel de control
+              </Link>
+            </li>
           </ul>
         </div>
         <div>

@@ -1,6 +1,15 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Search, Menu, User, LogOut, LayoutDashboard, ShieldCheck, MapPin, Store } from "lucide-react";
+import {
+  Search,
+  Menu,
+  User,
+  LogOut,
+  LayoutDashboard,
+  ShieldCheck,
+  MapPin,
+  Store,
+} from "lucide-react";
 import type { User as SupaUser } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -13,13 +22,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
 const nav = [
   { to: "/", label: "Inicio", exact: true },
@@ -46,7 +49,9 @@ export function Header() {
   useEffect(() => {
     const loadProfile = async (u: SupaUser) => {
       const { data } = await supabase.rpc("get_my_profile");
-      const p = Array.isArray(data) ? (data[0] as { role?: string; full_name?: string } | undefined) : null;
+      const p = Array.isArray(data)
+        ? (data[0] as { role?: string; full_name?: string } | undefined)
+        : null;
       setRole(p?.role ?? "cliente");
       setFullName(p?.full_name ?? u.email ?? null);
     };
@@ -119,7 +124,9 @@ export function Header() {
               to={item.to}
               activeOptions={item.exact ? { exact: true } : undefined}
               className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-              activeProps={{ className: "rounded-md px-3 py-2 text-sm font-medium text-primary bg-primary-soft" }}
+              activeProps={{
+                className: "rounded-md px-3 py-2 text-sm font-medium text-primary bg-primary-soft",
+              }}
             >
               {item.label}
             </Link>
@@ -139,21 +146,30 @@ export function Header() {
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel className="truncate">
                   <div className="font-semibold">{fullName ?? "Mi cuenta"}</div>
-                  <div className="truncate text-xs font-normal text-muted-foreground">{user.email}</div>
+                  <div className="truncate text-xs font-normal text-muted-foreground">
+                    {user.email}
+                  </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {isComercio && (
                   <DropdownMenuItem asChild>
-                    <Link to="/dashboard"><LayoutDashboard className="mr-2 h-4 w-4" />Panel Comercio</Link>
+                    <Link to="/dashboard">
+                      <LayoutDashboard className="mr-2 h-4 w-4" />
+                      Panel Comercio
+                    </Link>
                   </DropdownMenuItem>
                 )}
                 {isAdmin && (
                   <DropdownMenuItem asChild>
-                    <Link to="/admin"><ShieldCheck className="mr-2 h-4 w-4" />Admin</Link>
+                    <Link to="/admin">
+                      <ShieldCheck className="mr-2 h-4 w-4" />
+                      Admin
+                    </Link>
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem onClick={handleSignOut}>
-                  <LogOut className="mr-2 h-4 w-4" />Cerrar sesión
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Cerrar sesión
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -200,8 +216,13 @@ export function Header() {
                     {item.label}
                   </Link>
                 ))}
-                <Link to="/admin" className="rounded-md px-3 py-2 text-sm font-medium hover:bg-muted">
-                  <span className="inline-flex items-center gap-2"><ShieldCheck className="h-4 w-4" /> Admin</span>
+                <Link
+                  to="/admin"
+                  className="rounded-md px-3 py-2 text-sm font-medium hover:bg-muted"
+                >
+                  <span className="inline-flex items-center gap-2">
+                    <ShieldCheck className="h-4 w-4" /> Admin
+                  </span>
                 </Link>
                 {!user && (
                   <Link

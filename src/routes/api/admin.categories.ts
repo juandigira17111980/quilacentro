@@ -12,16 +12,21 @@ export const Route = createFileRoute("/api/admin/categories")({
           if (ctx instanceof Response) return ctx;
 
           const body = await request.json().catch(() => ({}));
-          const { id, nombre, slug, icono_url, color, padre_id, activa, orden } =
-            body || {};
+          const { id, nombre, slug, icono_url, color, padre_id, activa, orden } = body || {};
 
-          const { supabaseAdmin } = await import(
-            "@/integrations/supabase/client.server"
-          );
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
           if (id) {
             const updates: Record<string, unknown> = {};
-            for (const k of ["nombre", "slug", "icono_url", "color", "padre_id", "activa", "orden"]) {
+            for (const k of [
+              "nombre",
+              "slug",
+              "icono_url",
+              "color",
+              "padre_id",
+              "activa",
+              "orden",
+            ]) {
               if (k in body) updates[k] = body[k];
             }
             const { data, error } = await supabaseAdmin
@@ -66,9 +71,7 @@ export const Route = createFileRoute("/api/admin/categories")({
           const id = url.searchParams.get("id");
           if (!id) return errorResponse("id es requerido", 400);
 
-          const { supabaseAdmin } = await import(
-            "@/integrations/supabase/client.server"
-          );
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
           // Soft delete: desactivar
           const { error } = await supabaseAdmin
             .from("categorias")

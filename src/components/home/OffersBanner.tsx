@@ -7,9 +7,7 @@ export function OffersBanner() {
       <div className="pointer-events-none absolute inset-0 rounded-3xl ring-4 ring-orange-300/60 ring-offset-2 ring-offset-transparent animate-pulse" />
       <div className="relative flex flex-col items-center gap-6 md:flex-row md:justify-between">
         <div className="flex-1 text-white">
-          <h3 className="text-2xl font-extrabold tracking-tight md:text-4xl">
-            🔥 OFERTAS DEL DÍA
-          </h3>
+          <h3 className="text-2xl font-extrabold tracking-tight md:text-4xl">🔥 OFERTAS DEL DÍA</h3>
           <p className="mt-2 text-white/90 md:text-lg">
             Descuentos de hasta 50% en productos seleccionados
           </p>

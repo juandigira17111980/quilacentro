@@ -12,14 +12,9 @@ export const Route = createFileRoute("/api/ai/promotion-copy")({
           const ctx = await authenticate(request);
           if (ctx instanceof Response) return ctx;
 
-          const {
-            producto,
-            descuento,
-            fecha_inicio,
-            fecha_fin,
-            tono,
-            comercio_id,
-          } = await request.json().catch(() => ({}));
+          const { producto, descuento, fecha_inicio, fecha_fin, tono, comercio_id } = await request
+            .json()
+            .catch(() => ({}));
 
           if (!producto) return errorResponse("producto requerido", 400);
 

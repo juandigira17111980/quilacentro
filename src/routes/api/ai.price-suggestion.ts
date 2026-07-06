@@ -20,9 +20,7 @@ export const Route = createFileRoute("/api/ai/price-suggestion")({
           const comercio = await getOwnedComercio(ctx, comercio_id);
           if (comercio instanceof Response) return comercio;
 
-          const { supabaseAdmin } = await import(
-            "@/integrations/supabase/client.server"
-          );
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
           // Buscar productos similares en mercado
           let q = supabaseAdmin

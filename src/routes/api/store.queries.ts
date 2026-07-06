@@ -18,9 +18,7 @@ export const Route = createFileRoute("/api/store/queries")({
           const comercio = await getOwnedComercio(ctx, comercioId);
           if (comercio instanceof Response) return comercio;
 
-          const { supabaseAdmin } = await import(
-            "@/integrations/supabase/client.server"
-          );
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
           let query = supabaseAdmin
             .from("consultas")
             .select(

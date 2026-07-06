@@ -13,7 +13,14 @@ type Props = {
   aspect?: "square" | "wide";
 };
 
-export function ImageUploader({ bucket, pathPrefix, value, onChange, label = "Imagen", aspect = "square" }: Props) {
+export function ImageUploader({
+  bucket,
+  pathPrefix,
+  value,
+  onChange,
+  label = "Imagen",
+  aspect = "square",
+}: Props) {
   const ref = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
 
@@ -73,8 +80,18 @@ export function ImageUploader({ bucket, pathPrefix, value, onChange, label = "Im
           if (f) void handleFile(f);
         }}
       />
-      <Button type="button" size="sm" variant="outline" onClick={() => ref.current?.click()} disabled={busy}>
-        {busy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
+      <Button
+        type="button"
+        size="sm"
+        variant="outline"
+        onClick={() => ref.current?.click()}
+        disabled={busy}
+      >
+        {busy ? (
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        ) : (
+          <Upload className="mr-2 h-4 w-4" />
+        )}
         {value ? "Reemplazar" : "Subir imagen"}
       </Button>
     </div>
@@ -123,7 +140,9 @@ export function MultiImageUploader({
 
   return (
     <div className="space-y-2">
-      <div className="text-sm font-medium">Imágenes adicionales ({values.length}/{max})</div>
+      <div className="text-sm font-medium">
+        Imágenes adicionales ({values.length}/{max})
+      </div>
       <div className="flex flex-wrap gap-2">
         {values.map((u, i) => (
           <div key={i} className="relative h-20 w-20 overflow-hidden rounded-lg border">

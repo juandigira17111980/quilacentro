@@ -43,8 +43,18 @@ export function AttributesEditor({
       )}
       {entries.map(([k, v]) => (
         <div key={k} className="grid grid-cols-[1fr_1fr_auto] gap-2">
-          <Input value={k} onChange={(e) => setKey(k, e.target.value)} placeholder="Clave" className="h-9" />
-          <Input value={v} onChange={(e) => setVal(k, e.target.value)} placeholder="Valor" className="h-9" />
+          <Input
+            value={k}
+            onChange={(e) => setKey(k, e.target.value)}
+            placeholder="Clave"
+            className="h-9"
+          />
+          <Input
+            value={v}
+            onChange={(e) => setVal(k, e.target.value)}
+            placeholder="Valor"
+            className="h-9"
+          />
           <Button type="button" variant="ghost" size="icon" onClick={() => remove(k)}>
             <X className="h-4 w-4" />
           </Button>

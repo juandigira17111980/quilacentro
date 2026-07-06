@@ -1,7 +1,18 @@
 import { Link } from "@tanstack/react-router";
 import {
-  Shirt, Smartphone, Sofa, Sparkles, Gem, Dumbbell,
-  ToyBrick, NotebookPen, Wrench, UtensilsCrossed, Pill, Briefcase, Tag,
+  Shirt,
+  Smartphone,
+  Sofa,
+  Sparkles,
+  Gem,
+  Dumbbell,
+  ToyBrick,
+  NotebookPen,
+  Wrench,
+  UtensilsCrossed,
+  Pill,
+  Briefcase,
+  Tag,
   type LucideIcon,
 } from "lucide-react";
 import type { Categoria } from "@/lib/queries";

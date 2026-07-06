@@ -12,7 +12,8 @@ export type Producto = {
   categoria_id: number | null;
   destacado: boolean;
   disponible: boolean;
-  comercios?: { nombre: string; slug: string } | null;
+  distancia_km?: number | null;
+  comercios?: { nombre: string; slug: string; lat?: number | null; lng?: number | null } | null;
 };
 
 export type Comercio = {
@@ -25,6 +26,9 @@ export type Comercio = {
   rating_avg: number | null;
   total_reviews: number | null;
   tour_360_url: string | null;
+  lat?: number | null;
+  lng?: number | null;
+  distancia_km?: number | null;
   categorias?: { nombre: string } | null;
 };
 
@@ -66,7 +70,7 @@ export const productosDestacadosQuery = queryOptions({
     const { data, error } = await supabase
       .from("productos")
       .select(
-        "id, nombre, slug, precio_base, precio_oferta, imagen_url, comercio_id, categoria_id, destacado, disponible, comercios(nombre, slug)"
+        "id, nombre, slug, precio_base, precio_oferta, imagen_url, comercio_id, categoria_id, destacado, disponible, comercios(nombre, slug)",
       )
       .eq("destacado", true)
       .eq("disponible", true)
@@ -84,7 +88,9 @@ export const promocionesDestacadasQuery = queryOptions({
     const nowIso = new Date().toISOString();
     const { data, error } = await supabase
       .from("promociones")
-      .select("id, titulo, descripcion, tipo, valor, imagen_url, comercio_id, comercios(nombre, slug)")
+      .select(
+        "id, titulo, descripcion, tipo, valor, imagen_url, comercio_id, comercios(nombre, slug)",
+      )
       .eq("destacada", true)
       .eq("activa", true)
       .lte("fecha_inicio", nowIso)
@@ -101,7 +107,9 @@ export const comerciosDestacadosQuery = queryOptions({
   queryFn: async (): Promise<Comercio[]> => {
     const { data, error } = await supabase
       .from("comercios")
-      .select("id, nombre, slug, logo_url, direccion, categoria_id, rating_avg, total_reviews, tour_360_url, categorias(nombre)")
+      .select(
+        "id, nombre, slug, logo_url, direccion, categoria_id, rating_avg, total_reviews, tour_360_url, categorias(nombre)",
+      )
       .eq("estado", "activo")
       .is("deleted_at", null)
       .order("rating_avg", { ascending: false, nullsFirst: false })
@@ -119,7 +127,47 @@ export type SearchFilters = {
   precioMax: number | null;
   conPromo: boolean;
   disponibles: boolean;
+  lat?: number | null;
+  lng?: number | null;
+  radioKm?: number | null;
 };
+
+function distanceKm(lat1: number, lng1: number, lat2: number, lng2: number) {
+  const R = 6371;
+  const toRad = (v: number) => (v * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+function withDistance<T extends { lat?: number | null; lng?: number | null }>(
+  rows: T[],
+  filters: Pick<SearchFilters, "lat" | "lng" | "radioKm">,
+) {
+  const lat = filters.lat ?? null;
+  const lng = filters.lng ?? null;
+  const radioKm = filters.radioKm ?? 10;
+  if (lat == null || lng == null) return rows.map((row) => ({ ...row, distancia_km: null }));
+
+  return rows
+    .map((row) => {
+      const distancia =
+        row.lat != null && row.lng != null
+          ? distanceKm(lat, lng, Number(row.lat), Number(row.lng))
+          : null;
+      return { ...row, distancia_km: distancia };
+    })
+    .filter((row) => row.distancia_km == null || row.distancia_km <= radioKm)
+    .sort((a, b) => {
+      if (a.distancia_km == null && b.distancia_km == null) return 0;
+      if (a.distancia_km == null) return 1;
+      if (b.distancia_km == null) return -1;
+      return a.distancia_km - b.distancia_km;
+    });
+}
 
 export function buildSearchProductsQuery(filters: SearchFilters) {
   return queryOptions({
@@ -128,8 +176,8 @@ export function buildSearchProductsQuery(filters: SearchFilters) {
       let q = supabase
         .from("productos")
         .select(
-          "id, nombre, slug, precio_base, precio_oferta, imagen_url, comercio_id, categoria_id, destacado, disponible, comercios(nombre, slug)",
-          { count: "exact" }
+          "id, nombre, slug, precio_base, precio_oferta, imagen_url, comercio_id, categoria_id, destacado, disponible, comercios(nombre, slug, lat, lng)",
+          { count: "exact" },
         )
         .is("deleted_at", null);
 
@@ -142,7 +190,15 @@ export function buildSearchProductsQuery(filters: SearchFilters) {
 
       const { data, error } = await q.limit(60);
       if (error) throw error;
-      return (data ?? []) as unknown as Producto[];
+      const rows = (data ?? []) as unknown as Producto[];
+      return withDistance(
+        rows.map((p) => ({
+          ...p,
+          lat: p.comercios?.lat ?? null,
+          lng: p.comercios?.lng ?? null,
+        })),
+        filters,
+      ).map(({ lat: _lat, lng: _lng, ...p }) => p);
     },
     staleTime: 15_000,
   });
@@ -154,7 +210,9 @@ export function buildSearchComerciosQuery(filters: SearchFilters) {
     queryFn: async (): Promise<Comercio[]> => {
       let q = supabase
         .from("comercios")
-        .select("id, nombre, slug, logo_url, direccion, categoria_id, rating_avg, total_reviews, tour_360_url, categorias(nombre)")
+        .select(
+          "id, nombre, slug, logo_url, direccion, lat, lng, categoria_id, rating_avg, total_reviews, tour_360_url, categorias(nombre)",
+        )
         .eq("estado", "activo")
         .is("deleted_at", null);
 
@@ -165,7 +223,7 @@ export function buildSearchComerciosQuery(filters: SearchFilters) {
         .order("rating_avg", { ascending: false, nullsFirst: false })
         .limit(60);
       if (error) throw error;
-      return (data ?? []) as unknown as Comercio[];
+      return withDistance((data ?? []) as unknown as Comercio[], filters);
     },
     staleTime: 15_000,
   });
@@ -191,6 +249,12 @@ export type ComercioFull = {
   total_reviews: number | null;
   categoria_id: number | null;
   tour_360_url: string | null;
+  recogida_disponible: boolean | null;
+  recogida_notas: string | null;
+  domicilio_disponible: boolean | null;
+  domicilio_notas: string | null;
+  disponibilidad_notas: string | null;
+  confianza_notas: string | null;
   categorias?: { nombre: string; slug: string } | null;
 };
 
@@ -201,7 +265,22 @@ export type ProductoFull = Producto & {
   stock: number | null;
   tags: string[] | null;
   atributos: Record<string, string> | null;
-  comercios?: (Comercio & { whatsapp?: string | null; telefono?: string | null; horarios?: Record<string, string> | null; lat?: number | null; lng?: number | null; descripcion?: string | null }) | null;
+  comercios?:
+    | (Comercio & {
+        whatsapp?: string | null;
+        telefono?: string | null;
+        horarios?: Record<string, string> | null;
+        lat?: number | null;
+        lng?: number | null;
+        descripcion?: string | null;
+        recogida_disponible?: boolean | null;
+        recogida_notas?: string | null;
+        domicilio_disponible?: boolean | null;
+        domicilio_notas?: string | null;
+        disponibilidad_notas?: string | null;
+        confianza_notas?: string | null;
+      })
+    | null;
 };
 
 export function productoByIdQuery(id: string) {
@@ -210,14 +289,14 @@ export function productoByIdQuery(id: string) {
     queryFn: async (): Promise<ProductoFull | null> => {
       const { data, error } = await supabase
         .from("productos")
-        .select(`
+        .select(
+          `
           id, nombre, slug, descripcion, marca, precio_base, precio_oferta,
           imagen_url, imagenes, comercio_id, categoria_id, destacado, disponible,
           stock, tags, atributos,
-          comercios(id, nombre, slug, logo_url, direccion, lat, lng, telefono,
-                    whatsapp, horarios, rating_avg, total_reviews, categoria_id, descripcion,
-                    categorias(nombre, slug))
-        `)
+          comercios(*, categorias(nombre, slug))
+        `,
+        )
         .eq("id", id)
         .is("deleted_at", null)
         .maybeSingle();
@@ -233,11 +312,11 @@ export function comercioBySlugQuery(slug: string) {
     queryFn: async (): Promise<ComercioFull | null> => {
       const { data, error } = await supabase
         .from("comercios")
-        .select(`
-          id, nombre, slug, descripcion, logo_url, banner_url, direccion, lat, lng,
-          telefono, whatsapp, email, horarios, rating_avg, total_reviews, categoria_id,
-          tour_360_url, categorias(nombre, slug)
-        `)
+        .select(
+          `
+          *, categorias(nombre, slug)
+        `,
+        )
         .eq("slug", slug)
         .eq("estado", "activo")
         .is("deleted_at", null)
@@ -248,14 +327,19 @@ export function comercioBySlugQuery(slug: string) {
   });
 }
 
-export function productosByComercioQuery(comercioId: string, opts?: { excludeId?: string; limit?: number }) {
+export function productosByComercioQuery(
+  comercioId: string,
+  opts?: { excludeId?: string; limit?: number },
+) {
   const key = ["productos", "by-comercio", comercioId, opts?.excludeId ?? null, opts?.limit ?? 200];
   return queryOptions({
     queryKey: key,
     queryFn: async (): Promise<Producto[]> => {
       let q = supabase
         .from("productos")
-        .select("id, nombre, slug, precio_base, precio_oferta, imagen_url, comercio_id, categoria_id, destacado, disponible")
+        .select(
+          "id, nombre, slug, precio_base, precio_oferta, imagen_url, comercio_id, categoria_id, destacado, disponible",
+        )
         .eq("comercio_id", comercioId)
         .eq("disponible", true)
         .is("deleted_at", null);
@@ -327,4 +411,3 @@ export function myReviewQuery(comercioId: string, userId: string | null | undefi
     },
   });
 }
-

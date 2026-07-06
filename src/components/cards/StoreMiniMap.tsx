@@ -40,7 +40,11 @@ export function StoreMiniMap({
           <MapPin className="mr-1 inline h-3.5 w-3.5" />
           {lat.toFixed(5)}, {lng.toFixed(5)}
         </p>
-        <Button asChild size="sm" className="rounded-full bg-accent text-accent-foreground hover:bg-accent/90">
+        <Button
+          asChild
+          size="sm"
+          className="rounded-full bg-accent text-accent-foreground hover:bg-accent/90"
+        >
           <a href={directions} target="_blank" rel="noopener noreferrer">
             <Navigation className="mr-1.5 h-3.5 w-3.5" /> Cómo llegar
           </a>

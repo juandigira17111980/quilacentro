@@ -15,9 +15,7 @@ export const Route = createFileRoute("/api/admin/users")({
           const role = url.searchParams.get("role");
           const q = url.searchParams.get("q");
 
-          const { supabaseAdmin } = await import(
-            "@/integrations/supabase/client.server"
-          );
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
           let query = supabaseAdmin
             .from("profiles")
             .select("id, full_name, phone, avatar_url, role, created_at")
@@ -42,9 +40,7 @@ export const Route = createFileRoute("/api/admin/users")({
             return errorResponse("id y role válido son requeridos", 400);
           }
 
-          const { supabaseAdmin } = await import(
-            "@/integrations/supabase/client.server"
-          );
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
           const { data, error } = await supabaseAdmin
             .from("profiles")
             .update({ role })

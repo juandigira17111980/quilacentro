@@ -17,9 +17,7 @@ export const Route = createFileRoute("/api/client/reviews")({
             return errorResponse("comercio_id y rating (1-5) son requeridos", 400);
           }
 
-          const { supabaseAdmin } = await import(
-            "@/integrations/supabase/client.server"
-          );
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
           // Upsert: una calificación por (cliente, comercio, producto)
           const { data, error } = await supabaseAdmin
@@ -44,10 +42,7 @@ export const Route = createFileRoute("/api/client/reviews")({
             .select("rating")
             .eq("comercio_id", comercio_id);
           const ratings = (stats || []).map((r: any) => r.rating);
-          const avg =
-            ratings.length > 0
-              ? ratings.reduce((a, b) => a + b, 0) / ratings.length
-              : 0;
+          const avg = ratings.length > 0 ? ratings.reduce((a, b) => a + b, 0) / ratings.length : 0;
           await supabaseAdmin
             .from("comercios")
             .update({

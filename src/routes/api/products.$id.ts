@@ -7,15 +7,11 @@ export const Route = createFileRoute("/api/products/$id")({
       OPTIONS: optionsHandler,
       GET: async ({ params }) => {
         try {
-          const { supabaseAdmin } = await import(
-            "@/integrations/supabase/client.server"
-          );
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
           const { data: producto, error } = await supabaseAdmin
             .from("productos")
-            .select(
-              "*, comercios(id, nombre, slug, descripcion, logo_url, banner_url, telefono, whatsapp, email, direccion, lat, lng, horarios, rating_avg, total_reviews, estado), categorias(id, nombre, slug)",
-            )
+            .select("*, comercios(*), categorias(id, nombre, slug)")
             .eq("id", params.id)
             .eq("disponible", true)
             .is("deleted_at", null)
