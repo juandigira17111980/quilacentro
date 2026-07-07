@@ -243,7 +243,6 @@ export type ComercioFull = {
   lng: number | null;
   telefono: string | null;
   whatsapp: string | null;
-  email: string | null;
   horarios: Record<string, string> | null;
   rating_avg: number | null;
   total_reviews: number | null;
@@ -294,7 +293,15 @@ export function productoByIdQuery(id: string) {
           id, nombre, slug, descripcion, marca, precio_base, precio_oferta,
           imagen_url, imagenes, comercio_id, categoria_id, destacado, disponible,
           stock, tags, atributos,
-          comercios(*, categorias(nombre, slug))
+          comercios(
+            id, nombre, slug, descripcion, logo_url, banner_url, direccion,
+            lat, lng, telefono, whatsapp, horarios, rating_avg, total_reviews,
+            categoria_id, tour_360_url,
+            recogida_disponible, recogida_notas,
+            domicilio_disponible, domicilio_notas,
+            disponibilidad_notas, confianza_notas,
+            categorias(nombre, slug)
+          )
         `,
         )
         .eq("id", id)
@@ -314,7 +321,13 @@ export function comercioBySlugQuery(slug: string) {
         .from("comercios")
         .select(
           `
-          *, categorias(nombre, slug)
+          id, nombre, slug, descripcion, logo_url, banner_url, direccion,
+          lat, lng, telefono, whatsapp, horarios, rating_avg, total_reviews,
+          categoria_id, tour_360_url,
+          recogida_disponible, recogida_notas,
+          domicilio_disponible, domicilio_notas,
+          disponibilidad_notas, confianza_notas,
+          categorias(nombre, slug)
         `,
         )
         .eq("slug", slug)

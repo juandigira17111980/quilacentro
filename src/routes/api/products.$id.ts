@@ -11,7 +11,22 @@ export const Route = createFileRoute("/api/products/$id")({
 
           const { data: producto, error } = await supabaseAdmin
             .from("productos")
-            .select("*, comercios(*), categorias(id, nombre, slug)")
+            .select(
+              `
+              id, nombre, slug, descripcion, marca, precio_base, precio_oferta,
+              imagen_url, imagenes, comercio_id, categoria_id, destacado, disponible,
+              stock, tags, atributos, vistas, created_at, updated_at,
+              comercios(
+                id, nombre, slug, descripcion, logo_url, banner_url, direccion,
+                lat, lng, telefono, whatsapp, horarios, rating_avg, total_reviews,
+                categoria_id, tour_360_url,
+                recogida_disponible, recogida_notas,
+                domicilio_disponible, domicilio_notas,
+                disponibilidad_notas, confianza_notas
+              ),
+              categorias(id, nombre, slug)
+            `,
+            )
             .eq("id", params.id)
             .eq("disponible", true)
             .is("deleted_at", null)
