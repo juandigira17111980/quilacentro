@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { optionsHandler, jsonResponse, errorResponse } from "@/lib/cors";
+import type { Json } from "@/integrations/supabase/types";
 
 const EVENT_TYPES = ["whatsapp_click", "directions_click", "availability_submit"] as const;
 const CHANNELS = ["web", "whatsapp", "maps", "platform"] as const;
@@ -18,9 +19,9 @@ function pickIp(request: Request) {
   return raw?.split(",")[0]?.trim() || null;
 }
 
-function cleanMetadata(value: unknown) {
+function cleanMetadata(value: unknown): Json {
   if (!value || typeof value !== "object" || Array.isArray(value)) return {};
-  return value as Record<string, unknown>;
+  return value as Json;
 }
 
 export const Route = createFileRoute("/api/lead-events")({
