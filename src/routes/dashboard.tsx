@@ -10,7 +10,7 @@ export const Route = createFileRoute("/dashboard")({
     await requireRole(["comercio", "admin", "super_admin"], location.href);
   },
   head: () => ({
-    meta: [{ title: "Panel Comercio — QuillacentrO" }],
+    meta: [{ title: "Panel Comercio — Mercanta" }],
   }),
   component: DashboardShell,
 });

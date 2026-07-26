@@ -9,7 +9,7 @@ export const Route = createFileRoute("/admin")({
     await requireRole(["admin", "super_admin"], location.href);
   },
   head: () => ({
-    meta: [{ title: "Admin — QuillacentrO" }],
+    meta: [{ title: "Admin — Mercanta" }],
   }),
   component: () => (
     <PagePlaceholder

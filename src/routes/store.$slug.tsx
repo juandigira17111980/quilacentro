@@ -48,7 +48,7 @@ import {
 } from "@/lib/queries";
 
 export const Route = createFileRoute("/store/$slug")({
-  head: () => ({ meta: [{ title: "Comercio — QuillacentrO" }] }),
+  head: () => ({ meta: [{ title: "Comercio — Mercanta" }] }),
   loader: async ({ params, context }) => {
     const data = await context.queryClient.ensureQueryData(comercioBySlugQuery(params.slug));
     if (!data) throw notFound();
@@ -255,7 +255,7 @@ function StorePage() {
               </p>
             </>
           ) : (
-            <div className="relative overflow-hidden rounded-2xl border-2 border-dashed border-white/15 bg-gradient-to-br from-blue-950 via-slate-900 to-blue-900 px-6 py-12 text-center">
+            <div className="relative overflow-hidden rounded-lg border-2 border-dashed border-white/15 bg-[#1B1124] px-6 py-12 text-center">
               <Camera className="mx-auto h-16 w-16 text-white/40" />
               <h2 className="mt-4 text-2xl font-bold">¿Quieres mostrar tu local en 360°?</h2>
               <p className="mx-auto mt-2 max-w-xl text-sm text-white/70">

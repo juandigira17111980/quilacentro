@@ -43,15 +43,15 @@ export function StatsBar() {
   ];
 
   return (
-    <section ref={ref} className="bg-slate-900 text-white">
+    <section ref={ref} className="bg-[#1B1124] text-white">
       <div className="container mx-auto grid grid-cols-2 gap-6 px-4 py-10 md:grid-cols-4 md:py-12">
         {items.map((it, i) => (
           <div key={i} className="flex flex-col items-center text-center">
-            <it.icon className="mb-2 h-6 w-6 text-orange-400" />
+            <it.icon className="mb-2 h-6 w-6 text-brand-gold" />
             <div className="text-3xl font-extrabold tracking-tight text-white md:text-4xl">
               {it.value}
             </div>
-            <div className="mt-1 text-xs text-slate-300 md:text-sm">{it.label}</div>
+            <div className="mt-1 text-xs text-white/60 md:text-sm">{it.label}</div>
           </div>
         ))}
       </div>

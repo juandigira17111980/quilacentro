@@ -1,21 +1,14 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Search, ChevronDown } from "lucide-react";
+import { ArrowRight, MapPin, Search, Sparkles } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-const POPULAR = ["Plancha para cabello", "Zapatos", "Celulares", "Perfumes", "Ropa"];
+const POPULAR = ["Ropa", "Celulares", "Perfumes", "Hogar", "Belleza"];
 
 export function HeroSection() {
   const navigate = useNavigate();
   const [q, setQ] = useState("");
-  const [offset, setOffset] = useState(0);
-
-  useEffect(() => {
-    const onScroll = () => setOffset(window.scrollY * 0.3);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   const go = (term: string) => {
     navigate({
@@ -32,99 +25,78 @@ export function HeroSection() {
     });
   };
 
-  const onSubmit = (e: FormEvent) => {
-    e.preventDefault();
+  const onSubmit = (event: FormEvent) => {
+    event.preventDefault();
     go(q);
   };
 
   return (
-    <section className="relative min-h-screen overflow-hidden">
-      {/* Parallax background */}
-      <div
-        className="absolute inset-0 -z-10 bg-cover bg-center will-change-transform"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1920&q=80')",
-          transform: `translateY(${offset}px) scale(1.1)`,
-        }}
+    <section className="relative isolate min-h-[680px] overflow-hidden bg-[#1B1124] md:min-h-[710px]">
+      <img
+        src="/images/mercanta-centro-hero.png"
+        alt="Comercio local en el Centro de Barranquilla"
+        className="absolute inset-0 -z-20 h-full w-full object-cover object-center"
+        fetchPriority="high"
       />
-      {/* Diagonal overlay: black 70% bottom-left → transparent top-right */}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-tr from-black/80 via-black/50 to-transparent" />
+      <div className="absolute inset-0 -z-10 bg-[#1B1124]/64" />
 
-      <div className="container relative mx-auto flex min-h-screen flex-col items-center justify-center px-4 py-24 text-center text-white">
-        {/* Badge */}
-        <span
-          className="inline-flex animate-in fade-in slide-in-from-top-4 items-center gap-2 rounded-full bg-orange-500 px-4 py-1.5 text-xs font-semibold text-white shadow-lg duration-700 md:text-sm"
-          style={{ animationDelay: "100ms", animationFillMode: "backwards" }}
-        >
-          🛍️ +500 productos · 20 comercios · Centro de Barranquilla
-        </span>
-
-        {/* Title */}
-        <h1
-          className="mt-6 max-w-5xl animate-in fade-in slide-in-from-bottom-6 text-4xl font-extrabold leading-[1.05] tracking-tight duration-700 sm:text-6xl md:text-7xl"
-          style={{ animationDelay: "250ms", animationFillMode: "backwards" }}
-        >
-          Todo el Centro de
-          <br />
-          <span className="text-orange-500">Barranquilla</span>
-          <br />
-          en un solo lugar
-        </h1>
-
-        {/* Subtitle */}
-        <p
-          className="mt-5 max-w-2xl animate-in fade-in text-base text-white/80 duration-700 md:text-lg"
-          style={{ animationDelay: "450ms", animationFillMode: "backwards" }}
-        >
-          Busca productos, compara precios y encuentra las mejores tiendas cerca de ti
-        </p>
-
-        {/* Search bar */}
-        <form
-          onSubmit={onSubmit}
-          className="mt-8 flex w-full max-w-2xl animate-in fade-in slide-in-from-bottom-4 items-center gap-2 rounded-2xl bg-white p-2 shadow-2xl duration-700"
-          style={{ animationDelay: "600ms", animationFillMode: "backwards" }}
-        >
-          <div className="flex flex-1 items-center gap-2 px-3">
-            <Search className="h-5 w-5 text-muted-foreground" />
-            <Input
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder="¿Qué producto estás buscando hoy?"
-              className="h-12 border-0 bg-transparent text-base text-foreground shadow-none focus-visible:ring-0"
-            />
+      <div className="container mx-auto flex min-h-[680px] items-end px-4 pb-14 pt-28 md:min-h-[710px] md:items-center md:pb-10 md:pt-20">
+        <div className="max-w-2xl text-white">
+          <div className="inline-flex items-center gap-2 border border-white/25 bg-white/10 px-3 py-2 text-xs font-semibold backdrop-blur-sm">
+            <MapPin className="h-4 w-4 text-brand-gold" />
+            Centro de Barranquilla, Colombia
           </div>
-          <Button
-            type="submit"
-            size="lg"
-            className="h-12 rounded-xl bg-orange-500 px-6 text-white hover:bg-orange-600"
+
+          <p className="mt-7 flex items-center gap-2 text-sm font-semibold text-brand-gold">
+            <Sparkles className="h-4 w-4" />
+            EL COMERCIO LOCAL, MÁS CERCA
+          </p>
+          <h1 className="mt-4 max-w-xl text-4xl font-bold leading-[1.06] sm:text-5xl md:text-6xl">
+            Busca menos.
+            <span className="block text-brand-gold">Encuentra más.</span>
+          </h1>
+          <p className="mt-5 max-w-lg text-base leading-7 text-white/80 md:text-lg">
+            Descubre lo que necesitas en comercios reales del Centro. Compara, consulta y elige cómo
+            recibirlo.
+          </p>
+
+          <form
+            onSubmit={onSubmit}
+            className="mt-8 flex w-full max-w-xl flex-col gap-2 bg-white p-2 shadow-[0_18px_54px_-18px_rgba(0,0,0,0.7)] sm:flex-row"
           >
-            Buscar
-          </Button>
-        </form>
-
-        {/* Popular chips */}
-        <div
-          className="mt-5 flex max-w-3xl flex-wrap justify-center gap-2 animate-in fade-in duration-700"
-          style={{ animationDelay: "800ms", animationFillMode: "backwards" }}
-        >
-          {POPULAR.map((p) => (
-            <button
-              key={p}
-              onClick={() => go(p)}
-              className="rounded-full border border-white/40 bg-white/20 px-3 py-1.5 text-xs text-white backdrop-blur-sm transition hover:bg-white/30 md:text-sm"
+            <div className="flex min-w-0 flex-1 items-center gap-3 px-3">
+              <Search className="h-5 w-5 shrink-0 text-brand-teal" />
+              <Input
+                value={q}
+                onChange={(event) => setQ(event.target.value)}
+                placeholder="¿Qué estás buscando?"
+                className="h-12 border-0 bg-transparent px-0 text-base text-foreground shadow-none focus-visible:ring-0"
+              />
+            </div>
+            <Button
+              type="submit"
+              size="lg"
+              className="h-12 rounded-md bg-primary px-6 text-primary-foreground hover:bg-primary/90"
             >
-              {p}
-            </button>
-          ))}
-        </div>
-      </div>
+              Buscar ahora
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </form>
 
-      {/* Scroll indicator */}
-      <div className="pointer-events-none absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-1 text-white/90">
-        <span className="text-xs font-medium">Descubre más</span>
-        <ChevronDown className="h-6 w-6 animate-bounce" />
+          <div className="mt-5 flex flex-wrap items-center gap-2 text-xs text-white/70">
+            <span>Popular:</span>
+            {POPULAR.map((term) => (
+              <button
+                key={term}
+                type="button"
+                onClick={() => go(term)}
+                className="border border-white/25 bg-white/10 px-3 py-1.5 font-medium text-white transition hover:border-brand-gold hover:bg-white/20"
+              >
+                {term}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

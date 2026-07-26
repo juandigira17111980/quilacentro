@@ -1,15 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import {
-  Search,
-  Menu,
-  User,
-  LogOut,
-  LayoutDashboard,
-  ShieldCheck,
-  MapPin,
-  Store,
-} from "lucide-react";
+import { Search, Menu, User, LogOut, LayoutDashboard, ShieldCheck, Store } from "lucide-react";
 import type { User as SupaUser } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -23,12 +14,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { BrandLogo } from "./BrandLogo";
 
 const nav = [
   { to: "/", label: "Inicio", exact: true },
-  { to: "/search", label: "Buscar" },
-  { to: "/map", label: "Mapa" },
-  { to: "/dashboard", label: "Comercios" },
+  { to: "/search", label: "Explorar" },
+  { to: "/map", label: "Cerca de ti" },
+  { to: "/dashboard", label: "Para comercios" },
 ];
 
 export function Header() {
@@ -91,18 +83,13 @@ export function Header() {
   return (
     <header
       className={`sticky top-0 z-40 w-full border-b bg-background/90 backdrop-blur transition-shadow ${
-        scrolled ? "shadow-[0_4px_16px_-4px_rgb(26_43_74_/_0.10)]" : ""
+        scrolled ? "shadow-[0_8px_28px_-16px_rgb(59_17_101_/_0.24)]" : ""
       }`}
     >
-      <div className="container mx-auto flex h-16 items-center gap-3 px-4 md:gap-6">
+      <div className="container mx-auto flex h-[68px] items-center gap-3 px-4 md:gap-6">
         {/* Logo */}
-        <Link to="/" className="flex shrink-0 items-center gap-2">
-          <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary text-primary-foreground">
-            <MapPin className="h-5 w-5" />
-          </span>
-          <span className="hidden text-lg font-bold tracking-tight sm:inline">
-            Quillacentr<span className="text-accent">O</span>
-          </span>
+        <Link to="/" className="flex shrink-0 items-center" aria-label="Mercanta, inicio">
+          <BrandLogo className="scale-95 sm:scale-100" />
         </Link>
 
         {/* Central search */}
@@ -112,7 +99,7 @@ export function Header() {
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Buscar productos, comercios o categorías…"
-            className="h-11 rounded-full border-2 bg-muted/40 pl-11 pr-4 text-sm shadow-none focus-visible:bg-card focus-visible:ring-accent"
+            className="h-11 rounded-xl border bg-muted/60 pl-11 pr-4 text-sm shadow-none focus-visible:bg-card focus-visible:ring-brand-teal"
           />
         </form>
 
@@ -123,9 +110,9 @@ export function Header() {
               key={item.to}
               to={item.to}
               activeOptions={item.exact ? { exact: true } : undefined}
-              className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-primary-soft hover:text-primary"
               activeProps={{
-                className: "rounded-md px-3 py-2 text-sm font-medium text-primary bg-primary-soft",
+                className: "rounded-lg bg-primary-soft px-3 py-2 text-sm font-medium text-primary",
               }}
             >
               {item.label}
@@ -177,7 +164,7 @@ export function Header() {
             <Button
               asChild
               size="sm"
-              className="hidden rounded-full bg-accent text-accent-foreground hover:bg-accent/90 sm:inline-flex"
+              className="hidden rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 sm:inline-flex"
             >
               <Link to="/auth">Ingresar</Link>
             </Button>
@@ -192,7 +179,7 @@ export function Header() {
             <SheetContent side="right" className="w-80">
               <SheetHeader>
                 <SheetTitle>
-                  Quillacentr<span className="text-accent">O</span>
+                  <BrandLogo />
                 </SheetTitle>
               </SheetHeader>
 
@@ -202,7 +189,7 @@ export function Header() {
                   value={q}
                   onChange={(e) => setQ(e.target.value)}
                   placeholder="Buscar…"
-                  className="h-10 rounded-full pl-9"
+                  className="h-10 rounded-lg pl-9"
                 />
               </form>
 
@@ -216,18 +203,20 @@ export function Header() {
                     {item.label}
                   </Link>
                 ))}
-                <Link
-                  to="/admin"
-                  className="rounded-md px-3 py-2 text-sm font-medium hover:bg-muted"
-                >
-                  <span className="inline-flex items-center gap-2">
-                    <ShieldCheck className="h-4 w-4" /> Admin
-                  </span>
-                </Link>
+                {isAdmin && (
+                  <Link
+                    to="/admin"
+                    className="rounded-lg px-3 py-2 text-sm font-medium hover:bg-muted"
+                  >
+                    <span className="inline-flex items-center gap-2">
+                      <ShieldCheck className="h-4 w-4" /> Admin
+                    </span>
+                  </Link>
+                )}
                 {!user && (
                   <Link
                     to="/auth"
-                    className="mt-2 rounded-full bg-accent px-3 py-2 text-center text-sm font-semibold text-accent-foreground"
+                    className="mt-2 rounded-lg bg-primary px-3 py-2 text-center text-sm font-semibold text-primary-foreground"
                   >
                     Ingresar
                   </Link>

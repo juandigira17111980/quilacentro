@@ -91,25 +91,25 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "QuillacentrO — Marketplace del Centro de Barranquilla" },
+      { title: "Mercanta — Comercio local del Centro de Barranquilla" },
       {
         name: "description",
         content:
-          "Encontrá productos y los comercios físicos del Centro de Barranquilla que los venden. Precios, distancias y contacto directo.",
+          "Busca menos. Encuentra más. Descubre comercios y productos reales del Centro de Barranquilla.",
       },
-      { property: "og:title", content: "QuillacentrO — Marketplace del Centro de Barranquilla" },
+      { property: "og:title", content: "Mercanta — Comercio local del Centro de Barranquilla" },
       {
         property: "og:description",
         content:
-          "Encontrá productos y los comercios físicos del Centro de Barranquilla que los venden. Precios, distancias y contacto directo.",
+          "Busca menos. Encuentra más. Descubre comercios y productos reales del Centro de Barranquilla.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "QuillacentrO — Marketplace del Centro de Barranquilla" },
+      { name: "twitter:title", content: "Mercanta — Comercio local del Centro de Barranquilla" },
       {
         name: "twitter:description",
         content:
-          "Encontrá productos y los comercios físicos del Centro de Barranquilla que los venden. Precios, distancias y contacto directo.",
+          "Busca menos. Encuentra más. Descubre comercios y productos reales del Centro de Barranquilla.",
       },
       {
         property: "og:image",
@@ -130,11 +130,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap",
       },
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
-      { rel: "apple-touch-icon", href: "/icon.svg" },
+      { rel: "icon", type: "image/png", href: "/brand/mercanta-icon.png" },
+      { rel: "apple-touch-icon", href: "/brand/mercanta-icon.png" },
       {
         rel: "stylesheet",
         href: "https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css",
@@ -150,7 +150,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="es-CO">
       <head>
         <HeadContent />
       </head>

@@ -9,7 +9,8 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { MapPin, Loader2, User, Store } from "lucide-react";
+import { Loader2, User, Store } from "lucide-react";
+import { BrandLogo } from "@/components/site/BrandLogo";
 import { getCurrentRole, landingForRole } from "@/lib/auth";
 
 const authSearch = z.object({
@@ -20,8 +21,8 @@ const authSearch = z.object({
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Ingresar — QuillacentrO" },
-      { name: "description", content: "Ingresá o creá tu cuenta en QuillacentrO." },
+      { title: "Ingresar — Mercanta" },
+      { name: "description", content: "Ingresa o crea tu cuenta en Mercanta." },
     ],
   }),
   validateSearch: zodValidator(authSearch),
@@ -94,20 +95,17 @@ function AuthPage() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-primary-soft via-background to-accent-soft">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--color-accent)_0%,_transparent_55%)] opacity-25" />
+    <div className="relative min-h-screen overflow-hidden bg-[#FFFCF7]">
+      <div className="absolute inset-x-0 top-0 h-2 bg-primary" />
       <div className="relative mx-auto flex min-h-screen max-w-md flex-col justify-center px-4 py-12">
-        <Link to="/" className="mx-auto mb-8 flex items-center gap-2 text-2xl font-bold">
-          <span className="grid h-10 w-10 place-items-center rounded-xl bg-primary text-primary-foreground">
-            <MapPin className="h-5 w-5" />
-          </span>
-          Quillacentr<span className="text-accent">O</span>
+        <Link to="/" className="mx-auto mb-8 flex items-center" aria-label="Mercanta, inicio">
+          <BrandLogo />
         </Link>
 
         <Card className="border-border/60 shadow-xl">
           <CardHeader>
-            <CardTitle className="text-2xl">Bienvenido</CardTitle>
-            <CardDescription>Ingresá o creá tu cuenta para empezar.</CardDescription>
+            <CardTitle className="text-2xl">Bienvenido a Mercanta</CardTitle>
+            <CardDescription>Encuentra comercios reales, más cerca de ti.</CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs
