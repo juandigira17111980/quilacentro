@@ -38,7 +38,7 @@ type MapStore = {
 export const Route = createFileRoute("/map")({
   head: () => ({
     meta: [
-      { title: "Mapa - QuillacentrO" },
+      { title: "Mapa - Mercanta" },
       { name: "description", content: "Mapa interactivo de comercios del Centro de Barranquilla." },
     ],
   }),
@@ -190,7 +190,7 @@ function MapPage() {
         <section className="container mx-auto grid gap-4 px-4 py-4 lg:grid-cols-[1fr_380px]">
           <div className="overflow-hidden rounded-lg border bg-card shadow-[var(--shadow-soft)]">
             <iframe
-              title="Mapa de comercios QuillacentrO"
+              title="Mapa de comercios Mercanta"
               src={mapSrc}
               className="h-[420px] w-full border-0 md:h-[620px]"
               loading="lazy"

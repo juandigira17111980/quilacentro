@@ -1,13 +1,18 @@
 {
-  "name": "QuillacentrO — Marketplace del Centro de Barranquilla",
-  "short_name": "QuillacentrO",
-  "description": "Encontrá productos y comercios físicos del Centro de Barranquilla.",
+  "name": "Mercanta — Comercio local del Centro de Barranquilla",
+  "short_name": "Mercanta",
+  "description": "Busca menos. Encuentra más en comercios reales del Centro de Barranquilla.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0b1e3f",
-  "theme_color": "#0b1e3f",
+  "background_color": "#fffcf7",
+  "theme_color": "#3b1165",
   "lang": "es-CO",
   "icons": [
-    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+    {
+      "src": "/brand/mercanta-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
   ]
 }

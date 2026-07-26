@@ -31,11 +31,11 @@ const homeSearch = z.object({
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "QuillacentrO — Marketplace del Centro de Barranquilla" },
+      { title: "Mercanta — Comercio local del Centro de Barranquilla" },
       {
         name: "description",
         content:
-          "Descubrí productos y los comercios físicos del Centro de Barranquilla que los venden. Precios, distancia y contacto directo.",
+          "Busca menos. Encuentra más. Descubre productos y comercios reales del Centro de Barranquilla.",
       },
     ],
   }),
@@ -63,7 +63,10 @@ function HomePage() {
       {/* CATEGORÍAS */}
       <section className="container mx-auto px-4 py-14 md:py-20">
         <Reveal>
-          <SectionTitle title="Explorá por categoría" />
+          <SectionTitle
+            title="Explora lo que necesitas"
+            subtitle="Encuentra comercios reales por categoría, cerca de ti."
+          />
         </Reveal>
         <Reveal delay={100}>
           <CategoriasSection />
@@ -82,8 +85,8 @@ function HomePage() {
         <div className="container mx-auto px-4 py-14 md:py-20">
           <Reveal>
             <SectionTitle
-              title="Promociones destacadas"
-              subtitle="Aprovechá las ofertas vigentes en los comercios del Centro."
+              title="Ofertas que vale la pena mirar"
+              subtitle="Promociones activas directamente desde los comercios del Centro."
             />
           </Reveal>
           <Reveal delay={100}>
@@ -95,7 +98,7 @@ function HomePage() {
       {/* PRODUCTOS DESTACADOS */}
       <section className="container mx-auto px-4 py-14 md:py-20">
         <Reveal>
-          <SectionTitle title="✨ Productos Destacados" decorated />
+          <SectionTitle title="Productos que están buscando" decorated />
         </Reveal>
         <Reveal delay={100}>
           <ProductosSection />
@@ -106,7 +109,7 @@ function HomePage() {
       <section className="border-t bg-muted/40">
         <div className="container mx-auto px-4 py-14 md:py-20">
           <Reveal>
-            <SectionTitle title="🏆 Mejores Comercios" decorated />
+            <SectionTitle title="Comercios para descubrir hoy" decorated />
           </Reveal>
           <Reveal delay={100}>
             <ComerciosSection />
@@ -131,7 +134,7 @@ function SectionTitle({
   return (
     <div className="mb-8">
       <h2 className="text-2xl font-extrabold tracking-tight md:text-4xl">{title}</h2>
-      {decorated && <div className="mt-2 h-1 w-16 rounded-full bg-orange-500" />}
+      {decorated && <div className="mt-3 h-1 w-14 bg-brand-gold" />}
       {subtitle && <p className="mt-2 text-sm text-muted-foreground md:text-base">{subtitle}</p>}
     </div>
   );

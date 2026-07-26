@@ -43,7 +43,7 @@ const fmt = (n: number) =>
   }).format(n);
 
 export const Route = createFileRoute("/product/$id")({
-  head: () => ({ meta: [{ title: "Producto — QuillacentrO" }] }),
+  head: () => ({ meta: [{ title: "Producto — Mercanta" }] }),
   loader: async ({ params, context }) => {
     const data = await context.queryClient.ensureQueryData(productoByIdQuery(params.id));
     if (!data) throw notFound();

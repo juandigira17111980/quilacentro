@@ -52,7 +52,7 @@ type SearchParams = z.infer<typeof searchSchema>;
 export const Route = createFileRoute("/search")({
   head: () => ({
     meta: [
-      { title: "Buscar — QuillacentrO" },
+      { title: "Buscar — Mercanta" },
       {
         name: "description",
         content: "Buscá productos en los comercios físicos del Centro de Barranquilla.",

@@ -32,7 +32,7 @@ export function AIAssistant() {
   const [messages, setMessages] = useState<Msg[]>([
     {
       role: "assistant",
-      text: '¡Hola! Soy el asistente de QuillacentrO. Contame qué buscás (por ejemplo: "una plancha para cabello que no cueste más de 80 mil") y te muestro opciones del Centro.',
+      text: "¡Hola! Soy el asistente de Mercanta. Cuéntame qué buscas y te muestro opciones reales del Centro de Barranquilla.",
     },
   ]);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -91,7 +91,7 @@ export function AIAssistant() {
         <SheetContent side="right" className="flex w-full flex-col p-0 sm:max-w-md">
           <SheetHeader className="border-b px-4 py-3">
             <SheetTitle className="flex items-center gap-2 text-base">
-              <Bot className="h-5 w-5 text-accent" /> Asistente QuillacentrO
+              <Bot className="h-5 w-5 text-accent" /> Asistente Mercanta
             </SheetTitle>
           </SheetHeader>
 

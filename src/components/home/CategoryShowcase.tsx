@@ -33,18 +33,12 @@ const iconMap: Record<string, LucideIcon> = {
 };
 
 const colorPalette = [
-  "from-rose-500 to-pink-600",
-  "from-blue-500 to-indigo-600",
-  "from-amber-500 to-orange-600",
-  "from-fuchsia-500 to-purple-600",
-  "from-emerald-500 to-teal-600",
-  "from-sky-500 to-cyan-600",
-  "from-yellow-500 to-amber-600",
-  "from-violet-500 to-indigo-600",
-  "from-red-500 to-rose-600",
-  "from-lime-500 to-green-600",
-  "from-cyan-500 to-blue-600",
-  "from-orange-500 to-red-600",
+  "bg-primary",
+  "bg-brand-teal",
+  "bg-brand-coral",
+  "bg-[#6E3C91]",
+  "bg-[#2F706C]",
+  "bg-[#8E531D]",
 ];
 
 export function CategoryShowcase({ categorias }: { categorias: Categoria[] }) {
@@ -52,7 +46,7 @@ export function CategoryShowcase({ categorias }: { categorias: Categoria[] }) {
     <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-2 md:mx-0 md:grid md:grid-cols-4 md:overflow-visible md:px-0 lg:grid-cols-6">
       {categorias.map((c, i) => {
         const Icon = iconMap[c.slug] ?? Tag;
-        const gradient = colorPalette[i % colorPalette.length];
+        const color = colorPalette[i % colorPalette.length];
         return (
           <Link
             key={c.id}
@@ -67,7 +61,7 @@ export function CategoryShowcase({ categorias }: { categorias: Categoria[] }) {
               tab: "productos",
             }}
             style={{ animationDelay: `${i * 50}ms`, animationFillMode: "backwards" }}
-            className={`group flex min-w-[7rem] shrink-0 animate-in fade-in slide-in-from-bottom-3 flex-col items-center justify-center gap-2 rounded-2xl bg-gradient-to-br ${gradient} p-5 text-white shadow-md duration-500 transition-all hover:scale-105 hover:shadow-2xl md:min-w-0`}
+            className={`group flex min-w-[7rem] shrink-0 animate-in fade-in slide-in-from-bottom-3 flex-col items-center justify-center gap-2 border border-white/20 ${color} p-5 text-white shadow-[var(--shadow-soft)] duration-300 transition-transform hover:-translate-y-1 hover:shadow-[var(--shadow-elevated)] md:min-w-0`}
           >
             <Icon className="h-8 w-8 text-white drop-shadow" />
             <span className="line-clamp-2 text-center text-xs font-semibold leading-tight">

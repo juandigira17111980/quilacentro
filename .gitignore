@@ -21,6 +21,10 @@ dist-ssr
 .nitro
 *.local
 
+# Local review deliverables and generators. Source assets belong in public/.
+output/
+tmp/
+
 # Wrangler / Cloudflare
 .wrangler/
 .dev.vars

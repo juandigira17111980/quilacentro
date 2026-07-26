@@ -15,7 +15,7 @@ export function FeaturedProductCard({ p }: { p: Producto }) {
     <Link
       to="/product/$id"
       params={{ id: p.id }}
-      className="group relative flex flex-col overflow-hidden rounded-2xl border bg-card shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
+      className="group relative flex flex-col overflow-hidden rounded-lg border bg-card shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-elevated)]"
     >
       <div className="relative aspect-square overflow-hidden bg-muted">
         {p.imagen_url ? (
@@ -31,18 +31,18 @@ export function FeaturedProductCard({ p }: { p: Producto }) {
           </div>
         )}
         {hasOferta && (
-          <span className="absolute left-2 top-2 rounded-md bg-red-600 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-white shadow">
+          <span className="absolute left-2 top-2 rounded-md bg-brand-coral px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-white shadow">
             Oferta
           </span>
         )}
         {p.destacado && (
-          <span className="absolute right-2 top-2 rounded-md bg-yellow-400 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-yellow-950 shadow">
+          <span className="absolute right-2 top-2 rounded-md bg-brand-gold px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-[#1B1124] shadow">
             ⭐ Destacado
           </span>
         )}
         {/* Slide-up CTA */}
         <div className="absolute inset-x-2 bottom-2 translate-y-[120%] transition-transform duration-300 group-hover:translate-y-0">
-          <div className="rounded-lg bg-orange-500 py-2 text-center text-xs font-semibold text-white shadow-lg">
+          <div className="rounded-md bg-primary py-2 text-center text-xs font-semibold text-white shadow-lg">
             Ver producto
           </div>
         </div>
@@ -58,9 +58,7 @@ export function FeaturedProductCard({ p }: { p: Producto }) {
         <div className="mt-auto flex items-baseline gap-2 pt-2">
           {hasOferta ? (
             <>
-              <span className="text-lg font-extrabold text-orange-600">
-                {fmt(p.precio_oferta!)}
-              </span>
+              <span className="text-lg font-extrabold text-primary">{fmt(p.precio_oferta!)}</span>
               <span className="text-xs text-muted-foreground line-through">
                 {fmt(p.precio_base)}
               </span>
