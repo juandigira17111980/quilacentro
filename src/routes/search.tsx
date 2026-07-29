@@ -67,6 +67,7 @@ export const Route = createFileRoute("/search")({
 function SearchPage() {
   const search = useSearch({ from: "/search" });
   const navigate = useNavigate({ from: "/search" });
+  const { data: categorias } = useSuspenseQuery(categoriasQuery);
 
   // Debounced text input
   const [qLocal, setQLocal] = useState(search.q);
@@ -187,6 +188,33 @@ function SearchPage() {
           </Sheet>
         </div>
 
+        <div className="mb-6">
+          <p className="mb-2 text-sm font-semibold text-foreground">Filtra por tipo de producto</p>
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            <Button
+              type="button"
+              variant={search.categoria ? "outline" : "default"}
+              size="sm"
+              onClick={() => setFilter("categoria", undefined)}
+              className="shrink-0"
+            >
+              Todos
+            </Button>
+            {categorias.map((categoria) => (
+              <Button
+                key={categoria.id}
+                type="button"
+                variant={search.categoria === categoria.id ? "default" : "outline"}
+                size="sm"
+                onClick={() => setFilter("categoria", categoria.id as never)}
+                className="shrink-0"
+              >
+                {categoria.nombre}
+              </Button>
+            ))}
+          </div>
+        </div>
+
         <div className="grid gap-6 md:grid-cols-[260px_1fr]">
           {/* Desktop filters */}
           <aside className="hidden md:block">
@@ -286,7 +314,9 @@ function FiltersPanel({
       </div>
 
       <div>
-        <Label className="text-xs font-medium uppercase text-muted-foreground">Categoría</Label>
+        <Label className="text-xs font-medium uppercase text-muted-foreground">
+          Tipo de producto
+        </Label>
         <Select
           value={search.categoria ? String(search.categoria) : "all"}
           onValueChange={(v) =>
