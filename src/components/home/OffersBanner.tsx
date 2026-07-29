@@ -35,7 +35,7 @@ export function OffersBanner() {
           </Button>
         </div>
         <img
-          src="/images/mercanta-centro-hero.png"
+          src="/images/mercanta-centro-barranquilla.png"
           alt="Comercio del Centro de Barranquilla"
           className="h-40 w-full max-w-sm object-cover object-right shadow-xl md:h-48"
           loading="lazy"

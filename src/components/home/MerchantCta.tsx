@@ -43,7 +43,7 @@ export function MerchantCta() {
         </div>
         <div className="relative">
           <img
-            src="/images/mercanta-centro-hero.png"
+            src="/images/mercanta-centro-barranquilla.png"
             alt="Comercio local de Mercanta"
             loading="lazy"
             className="w-full object-cover shadow-2xl"
