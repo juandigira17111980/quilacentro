@@ -47,11 +47,11 @@ export function HeroSection() {
             Centro de Barranquilla, Colombia
           </div>
 
-          <p className="mt-7 flex items-center gap-2 text-sm font-semibold text-brand-gold">
+          <p className="mt-7 flex items-center gap-2 text-xs font-semibold text-brand-gold sm:text-sm">
             <Sparkles className="h-4 w-4" />
-            EL COMERCIO LOCAL, MÁS CERCA
+            TODO EL CENTRO DE BARRANQUILLA, A UN CLIC
           </p>
-          <h1 className="mt-4 max-w-xl text-4xl font-bold leading-[1.06] sm:text-5xl md:text-6xl">
+          <h1 className="mt-4 max-w-2xl text-4xl font-extrabold leading-[1.02] sm:text-5xl md:text-[4rem]">
             Busca menos.
             <span className="block text-brand-gold">Encuentra más.</span>
           </h1>
@@ -69,7 +69,7 @@ export function HeroSection() {
               <Input
                 value={q}
                 onChange={(event) => setQ(event.target.value)}
-                placeholder="¿Qué estás buscando?"
+                placeholder="Encuentra cerca lo que necesitas..."
                 className="h-12 border-0 bg-transparent px-0 text-base text-foreground shadow-none focus-visible:ring-0"
               />
             </div>

@@ -118,6 +118,13 @@ export function Header() {
               {item.label}
             </Link>
           ))}
+          <Link
+            to="/search"
+            search={{ tab: "comercios" }}
+            className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-primary-soft hover:text-primary"
+          >
+            Comercios
+          </Link>
         </nav>
 
         {/* Right */}
@@ -172,7 +179,7 @@ export function Header() {
 
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="lg:hidden">
+              <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Abrir menú">
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
@@ -203,6 +210,13 @@ export function Header() {
                     {item.label}
                   </Link>
                 ))}
+                <Link
+                  to="/search"
+                  search={{ tab: "comercios" }}
+                  className="rounded-md px-3 py-2 text-sm font-medium hover:bg-muted"
+                >
+                  Todos los comercios
+                </Link>
                 {isAdmin && (
                   <Link
                     to="/admin"

@@ -20,6 +20,11 @@ export function Footer() {
               </Link>
             </li>
             <li>
+              <Link to="/search" search={{ tab: "comercios" }} className="hover:text-white">
+                Todos los comercios
+              </Link>
+            </li>
+            <li>
               <Link to="/map" className="hover:text-white">
                 Mapa de comercios
               </Link>
