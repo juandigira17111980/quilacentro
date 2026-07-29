@@ -33,7 +33,7 @@ export function HeroSection() {
   return (
     <section className="relative isolate min-h-[680px] overflow-hidden bg-[#1B1124] md:min-h-[710px]">
       <img
-        src="/images/mercanta-centro-hero.png"
+        src="/images/mercanta-centro-barranquilla.png"
         alt="Comercio local en el Centro de Barranquilla"
         className="absolute inset-0 -z-20 h-full w-full object-cover object-center"
         fetchPriority="high"
