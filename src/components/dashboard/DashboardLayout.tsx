@@ -5,6 +5,7 @@ import {
   Package,
   Tag,
   MessageSquare,
+  ClipboardList,
   Home,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -16,6 +17,7 @@ const items: NavItem[] = [
   { to: "/dashboard/products", label: "Productos", icon: Package },
   { to: "/dashboard/promotions", label: "Promociones", icon: Tag },
   { to: "/dashboard/queries", label: "Consultas", icon: MessageSquare },
+  { to: "/dashboard/orders", label: "Pedidos", icon: ClipboardList },
 ];
 
 export function DashboardLayout() {
