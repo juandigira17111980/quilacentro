@@ -227,15 +227,16 @@ function ProductsPage() {
             <AlertDialogAction
               onClick={async () => {
                 if (!deleting) return;
-                const { error } = await supabase
-                  .from("productos")
-                  .update({ deleted_at: new Date().toISOString() } as never)
-                  .eq("id", deleting.id);
-                if (error) {
-                  toast.error(error.message);
-                } else {
+                try {
+                  await callStoreProductApi(`/api/store/products/${deleting.id}`, {
+                    method: "DELETE",
+                  });
                   toast.success("Producto eliminado");
                   qc.invalidateQueries({ queryKey: ["my-products"] });
+                } catch (error) {
+                  toast.error(
+                    error instanceof Error ? error.message : "No se pudo eliminar el producto",
+                  );
                 }
                 setDeleting(null);
               }}
@@ -347,16 +348,17 @@ function ProductFormDialog({
         atributos: f.atributos,
       };
       if (producto) {
-        const { error } = await supabase
-          .from("productos")
-          .update(payload as never)
-          .eq("id", producto.id);
-        if (error) throw error;
+        await callStoreProductApi(`/api/store/products/${producto.id}`, {
+          method: "PUT",
+          body: JSON.stringify(payload),
+        });
         toast.success("Producto actualizado");
       } else {
         const slug = `${slugify(f.nombre)}-${Math.random().toString(36).slice(2, 6)}`;
-        const { error } = await supabase.from("productos").insert({ ...payload, slug } as never);
-        if (error) throw error;
+        await callStoreProductApi("/api/store/products", {
+          method: "POST",
+          body: JSON.stringify({ ...payload, slug }),
+        });
         toast.success("Producto creado");
       }
       onSaved();
@@ -513,6 +515,23 @@ function ProductFormDialog({
       </DialogContent>
     </Dialog>
   );
+}
+
+async function callStoreProductApi(path: string, init: RequestInit) {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  if (!session?.access_token) throw new Error("Tu sesión expiró");
+  const response = await fetch(path, {
+    ...init,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${session.access_token}`,
+    },
+  });
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(body.error ?? "No fue posible guardar el producto");
+  return body;
 }
 
 async function callAIEndpoint<T>(path: string, body: Record<string, unknown>): Promise<T> {

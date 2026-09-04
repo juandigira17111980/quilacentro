@@ -12,6 +12,7 @@ import {
   Phone,
   PackageCheck,
   ShieldCheck,
+  ShoppingBag,
   Store as StoreIcon,
   Truck,
   X,
@@ -227,6 +228,7 @@ function ProductPage() {
 
             {/* Botones de acción */}
             <div className="mt-6 flex flex-wrap gap-2">
+              {producto.disponible && <PedidoInline producto={producto} comercio={com} />}
               {waHref ? (
                 <Button
                   asChild
@@ -473,20 +475,29 @@ function ConsultaInline({
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const { data: sess } = await supabase.auth.getUser();
-    const cliente_id = sess.user?.id ?? null;
-    const finalMsg = cliente_id ? mensaje : `[${nombre || "Anónimo"}] ${mensaje}`;
-    const { error } = await supabase.from("consultas").insert({
-      comercio_id: producto.comercio_id,
-      producto_id: producto.id,
-      cliente_id,
-      mensaje: finalMsg,
-      canal: "chat",
-      estado: "nuevo",
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    const finalMsg = session ? mensaje : `[${nombre || "Anónimo"}] ${mensaje}`;
+    const response = await fetch("/api/client/queries", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(session ? { Authorization: `Bearer ${session.access_token}` } : {}),
+      },
+      body: JSON.stringify({
+        comercio_id: producto.comercio_id,
+        producto_id: producto.id,
+        mensaje: finalMsg,
+        canal: "plataforma",
+      }),
     });
     setLoading(false);
-    if (error) {
-      toast.error("No pudimos enviar la consulta", { description: error.message });
+    if (!response.ok) {
+      const payload = await response.json().catch(() => ({}));
+      toast.error("No pudimos enviar la consulta", {
+        description: payload.error ?? "Intenta de nuevo",
+      });
       return;
     }
     toast.success("Consulta enviada al comercio");
@@ -535,6 +546,133 @@ function ConsultaInline({
           className="rounded-full bg-accent text-accent-foreground hover:bg-accent/90"
         >
           {loading ? "Enviando…" : "Enviar consulta"}
+        </Button>
+      </div>
+    </form>
+  );
+}
+
+function PedidoInline({
+  producto,
+  comercio,
+}: {
+  producto: { id: string; nombre: string; comercio_id: string };
+  comercio: {
+    nombre: string;
+    recogida_disponible?: boolean | null;
+    domicilio_disponible?: boolean | null;
+  };
+}) {
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [modalidad, setModalidad] = useState<"recoger" | "domicilio">(
+    comercio.recogida_disponible === false ? "domicilio" : "recoger",
+  );
+  const [nombre, setNombre] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [direccion, setDireccion] = useState("");
+
+  const submit = async (event: FormEvent) => {
+    event.preventDefault();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (!session) {
+      toast.error("Inicia sesión como cliente para crear un pedido");
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await fetch("/api/client/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          comercio_id: producto.comercio_id,
+          modalidad,
+          contacto_nombre: nombre,
+          contacto_telefono: telefono,
+          direccion_entrega: modalidad === "domicilio" ? { direccion } : null,
+          items: [{ producto_id: producto.id, cantidad: 1 }],
+        }),
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload.error ?? "No fue posible crear el pedido");
+      toast.success("Solicitud enviada al comercio", {
+        description: "Te confirmarán disponibilidad y entrega.",
+        action: { label: "Ver pedidos", onClick: () => window.location.assign("/orders") },
+      });
+      setOpen(false);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "No fue posible crear el pedido");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!open) {
+    return (
+      <Button size="lg" className="flex-1 rounded-full" onClick={() => setOpen(true)}>
+        <ShoppingBag className="mr-2 h-4 w-4" /> Solicitar pedido
+      </Button>
+    );
+  }
+  return (
+    <form onSubmit={submit} className="mt-2 w-full space-y-3 rounded-2xl border bg-muted/40 p-4">
+      <h3 className="font-semibold">Solicitar a {comercio.nombre}</h3>
+      <div className="flex flex-wrap gap-2">
+        {comercio.recogida_disponible !== false && (
+          <Button
+            type="button"
+            size="sm"
+            variant={modalidad === "recoger" ? "default" : "outline"}
+            onClick={() => setModalidad("recoger")}
+          >
+            Recoger
+          </Button>
+        )}
+        {comercio.domicilio_disponible !== false && (
+          <Button
+            type="button"
+            size="sm"
+            variant={modalidad === "domicilio" ? "default" : "outline"}
+            onClick={() => setModalidad("domicilio")}
+          >
+            Domicilio
+          </Button>
+        )}
+      </div>
+      <Input
+        value={nombre}
+        onChange={(event) => setNombre(event.target.value)}
+        placeholder="Nombre de contacto"
+        minLength={3}
+        required
+      />
+      <Input
+        value={telefono}
+        onChange={(event) => setTelefono(event.target.value)}
+        placeholder="Teléfono de contacto"
+        minLength={7}
+        required
+      />
+      {modalidad === "domicilio" && (
+        <Input
+          value={direccion}
+          onChange={(event) => setDireccion(event.target.value)}
+          placeholder="Dirección de entrega"
+          minLength={5}
+          required
+        />
+      )}
+      <div className="flex justify-end gap-2">
+        <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
+          Cancelar
+        </Button>
+        <Button type="submit" disabled={loading}>
+          {loading ? "Enviando..." : "Enviar solicitud"}
         </Button>
       </div>
     </form>

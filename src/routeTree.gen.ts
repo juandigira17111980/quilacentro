@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as MapRouteImport } from './routes/map'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -22,10 +23,12 @@ import { Route as DashboardQueriesRouteImport } from './routes/dashboard.queries
 import { Route as DashboardPromotionsRouteImport } from './routes/dashboard.promotions'
 import { Route as DashboardProfileRouteImport } from './routes/dashboard.profile'
 import { Route as DashboardProductsRouteImport } from './routes/dashboard.products'
+import { Route as DashboardOrdersRouteImport } from './routes/dashboard.orders'
 import { Route as ApiStoresRouteImport } from './routes/api/stores'
 import { Route as ApiSearchRouteImport } from './routes/api/search'
 import { Route as ApiPromotionsRouteImport } from './routes/api/promotions'
 import { Route as ApiLeadEventsRouteImport } from './routes/api/lead-events'
+import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as ApiCategoriesRouteImport } from './routes/api/categories'
 import { Route as ApiStoresSlugRouteImport } from './routes/api/stores.$slug'
 import { Route as ApiStoreStatsRouteImport } from './routes/api/store.stats'
@@ -33,9 +36,11 @@ import { Route as ApiStoreQueriesRouteImport } from './routes/api/store.queries'
 import { Route as ApiStorePromotionsRouteImport } from './routes/api/store.promotions'
 import { Route as ApiStoreProfileRouteImport } from './routes/api/store.profile'
 import { Route as ApiStoreProductsRouteImport } from './routes/api/store.products'
+import { Route as ApiStoreOrdersRouteImport } from './routes/api/store/orders'
 import { Route as ApiProductsIdRouteImport } from './routes/api/products.$id'
 import { Route as ApiClientReviewsRouteImport } from './routes/api/client.reviews'
 import { Route as ApiClientQueriesRouteImport } from './routes/api/client.queries'
+import { Route as ApiClientOrdersRouteImport } from './routes/api/client/orders'
 import { Route as ApiClientFavoritesRouteImport } from './routes/api/client.favorites'
 import { Route as ApiAiSearchRouteImport } from './routes/api/ai.search'
 import { Route as ApiAiPromotionCopyRouteImport } from './routes/api/ai.promotion-copy'
@@ -46,10 +51,13 @@ import { Route as ApiAdminStoresRouteImport } from './routes/api/admin.stores'
 import { Route as ApiAdminReportsRouteImport } from './routes/api/admin.reports'
 import { Route as ApiAdminDashboardRouteImport } from './routes/api/admin.dashboard'
 import { Route as ApiAdminCategoriesRouteImport } from './routes/api/admin.categories'
+import { Route as ApiAdminAuditEventsRouteImport } from './routes/api/admin.audit-events'
 import { Route as ApiStoreQueriesIdRouteImport } from './routes/api/store.queries.$id'
 import { Route as ApiStorePromotionsIdRouteImport } from './routes/api/store.promotions.$id'
 import { Route as ApiStoreProductsIdRouteImport } from './routes/api/store.products.$id'
 import { Route as ApiClientFavoritesIdRouteImport } from './routes/api/client.favorites.$id'
+import { Route as ApiStoreOrdersIdStatusRouteImport } from './routes/api/store/orders/$id/status'
+import { Route as ApiClientOrdersIdCancelRouteImport } from './routes/api/client/orders/$id/cancel'
 import { Route as ApiAdminUsersIdStatusRouteImport } from './routes/api/admin.users.$id.status'
 import { Route as ApiAdminUsersIdRecoveryRouteImport } from './routes/api/admin.users.$id.recovery'
 import { Route as ApiAdminStoresIdStatusRouteImport } from './routes/api/admin.stores.$id.status'
@@ -57,6 +65,11 @@ import { Route as ApiAdminStoresIdStatusRouteImport } from './routes/api/admin.s
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrdersRoute = OrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MapRoute = MapRouteImport.update({
@@ -119,6 +132,11 @@ const DashboardProductsRoute = DashboardProductsRouteImport.update({
   path: '/products',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardOrdersRoute = DashboardOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const ApiStoresRoute = ApiStoresRouteImport.update({
   id: '/api/stores',
   path: '/api/stores',
@@ -137,6 +155,11 @@ const ApiPromotionsRoute = ApiPromotionsRouteImport.update({
 const ApiLeadEventsRoute = ApiLeadEventsRouteImport.update({
   id: '/api/lead-events',
   path: '/api/lead-events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiHealthRoute = ApiHealthRouteImport.update({
+  id: '/api/health',
+  path: '/api/health',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiCategoriesRoute = ApiCategoriesRouteImport.update({
@@ -174,6 +197,11 @@ const ApiStoreProductsRoute = ApiStoreProductsRouteImport.update({
   path: '/api/store/products',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiStoreOrdersRoute = ApiStoreOrdersRouteImport.update({
+  id: '/api/store/orders',
+  path: '/api/store/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiProductsIdRoute = ApiProductsIdRouteImport.update({
   id: '/api/products/$id',
   path: '/api/products/$id',
@@ -187,6 +215,11 @@ const ApiClientReviewsRoute = ApiClientReviewsRouteImport.update({
 const ApiClientQueriesRoute = ApiClientQueriesRouteImport.update({
   id: '/api/client/queries',
   path: '/api/client/queries',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiClientOrdersRoute = ApiClientOrdersRouteImport.update({
+  id: '/api/client/orders',
+  path: '/api/client/orders',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiClientFavoritesRoute = ApiClientFavoritesRouteImport.update({
@@ -239,6 +272,11 @@ const ApiAdminCategoriesRoute = ApiAdminCategoriesRouteImport.update({
   path: '/api/admin/categories',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAdminAuditEventsRoute = ApiAdminAuditEventsRouteImport.update({
+  id: '/api/admin/audit-events',
+  path: '/api/admin/audit-events',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiStoreQueriesIdRoute = ApiStoreQueriesIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -258,6 +296,16 @@ const ApiClientFavoritesIdRoute = ApiClientFavoritesIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => ApiClientFavoritesRoute,
+} as any)
+const ApiStoreOrdersIdStatusRoute = ApiStoreOrdersIdStatusRouteImport.update({
+  id: '/$id/status',
+  path: '/$id/status',
+  getParentRoute: () => ApiStoreOrdersRoute,
+} as any)
+const ApiClientOrdersIdCancelRoute = ApiClientOrdersIdCancelRouteImport.update({
+  id: '/$id/cancel',
+  path: '/$id/cancel',
+  getParentRoute: () => ApiClientOrdersRoute,
 } as any)
 const ApiAdminUsersIdStatusRoute = ApiAdminUsersIdStatusRouteImport.update({
   id: '/$id/status',
@@ -281,12 +329,15 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/map': typeof MapRoute
+  '/orders': typeof OrdersRoute
   '/search': typeof SearchRoute
   '/api/categories': typeof ApiCategoriesRoute
+  '/api/health': typeof ApiHealthRoute
   '/api/lead-events': typeof ApiLeadEventsRoute
   '/api/promotions': typeof ApiPromotionsRoute
   '/api/search': typeof ApiSearchRoute
   '/api/stores': typeof ApiStoresRouteWithChildren
+  '/dashboard/orders': typeof DashboardOrdersRoute
   '/dashboard/products': typeof DashboardProductsRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/promotions': typeof DashboardPromotionsRoute
@@ -294,6 +345,7 @@ export interface FileRoutesByFullPath {
   '/product/$id': typeof ProductIdRoute
   '/store/$slug': typeof StoreSlugRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/api/admin/audit-events': typeof ApiAdminAuditEventsRoute
   '/api/admin/categories': typeof ApiAdminCategoriesRoute
   '/api/admin/dashboard': typeof ApiAdminDashboardRoute
   '/api/admin/reports': typeof ApiAdminReportsRoute
@@ -304,9 +356,11 @@ export interface FileRoutesByFullPath {
   '/api/ai/promotion-copy': typeof ApiAiPromotionCopyRoute
   '/api/ai/search': typeof ApiAiSearchRoute
   '/api/client/favorites': typeof ApiClientFavoritesRouteWithChildren
+  '/api/client/orders': typeof ApiClientOrdersRouteWithChildren
   '/api/client/queries': typeof ApiClientQueriesRoute
   '/api/client/reviews': typeof ApiClientReviewsRoute
   '/api/products/$id': typeof ApiProductsIdRoute
+  '/api/store/orders': typeof ApiStoreOrdersRouteWithChildren
   '/api/store/products': typeof ApiStoreProductsRouteWithChildren
   '/api/store/profile': typeof ApiStoreProfileRoute
   '/api/store/promotions': typeof ApiStorePromotionsRouteWithChildren
@@ -320,18 +374,23 @@ export interface FileRoutesByFullPath {
   '/api/admin/stores/$id/status': typeof ApiAdminStoresIdStatusRoute
   '/api/admin/users/$id/recovery': typeof ApiAdminUsersIdRecoveryRoute
   '/api/admin/users/$id/status': typeof ApiAdminUsersIdStatusRoute
+  '/api/client/orders/$id/cancel': typeof ApiClientOrdersIdCancelRoute
+  '/api/store/orders/$id/status': typeof ApiStoreOrdersIdStatusRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/map': typeof MapRoute
+  '/orders': typeof OrdersRoute
   '/search': typeof SearchRoute
   '/api/categories': typeof ApiCategoriesRoute
+  '/api/health': typeof ApiHealthRoute
   '/api/lead-events': typeof ApiLeadEventsRoute
   '/api/promotions': typeof ApiPromotionsRoute
   '/api/search': typeof ApiSearchRoute
   '/api/stores': typeof ApiStoresRouteWithChildren
+  '/dashboard/orders': typeof DashboardOrdersRoute
   '/dashboard/products': typeof DashboardProductsRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/promotions': typeof DashboardPromotionsRoute
@@ -339,6 +398,7 @@ export interface FileRoutesByTo {
   '/product/$id': typeof ProductIdRoute
   '/store/$slug': typeof StoreSlugRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/api/admin/audit-events': typeof ApiAdminAuditEventsRoute
   '/api/admin/categories': typeof ApiAdminCategoriesRoute
   '/api/admin/dashboard': typeof ApiAdminDashboardRoute
   '/api/admin/reports': typeof ApiAdminReportsRoute
@@ -349,9 +409,11 @@ export interface FileRoutesByTo {
   '/api/ai/promotion-copy': typeof ApiAiPromotionCopyRoute
   '/api/ai/search': typeof ApiAiSearchRoute
   '/api/client/favorites': typeof ApiClientFavoritesRouteWithChildren
+  '/api/client/orders': typeof ApiClientOrdersRouteWithChildren
   '/api/client/queries': typeof ApiClientQueriesRoute
   '/api/client/reviews': typeof ApiClientReviewsRoute
   '/api/products/$id': typeof ApiProductsIdRoute
+  '/api/store/orders': typeof ApiStoreOrdersRouteWithChildren
   '/api/store/products': typeof ApiStoreProductsRouteWithChildren
   '/api/store/profile': typeof ApiStoreProfileRoute
   '/api/store/promotions': typeof ApiStorePromotionsRouteWithChildren
@@ -365,6 +427,8 @@ export interface FileRoutesByTo {
   '/api/admin/stores/$id/status': typeof ApiAdminStoresIdStatusRoute
   '/api/admin/users/$id/recovery': typeof ApiAdminUsersIdRecoveryRoute
   '/api/admin/users/$id/status': typeof ApiAdminUsersIdStatusRoute
+  '/api/client/orders/$id/cancel': typeof ApiClientOrdersIdCancelRoute
+  '/api/store/orders/$id/status': typeof ApiStoreOrdersIdStatusRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -373,12 +437,15 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/map': typeof MapRoute
+  '/orders': typeof OrdersRoute
   '/search': typeof SearchRoute
   '/api/categories': typeof ApiCategoriesRoute
+  '/api/health': typeof ApiHealthRoute
   '/api/lead-events': typeof ApiLeadEventsRoute
   '/api/promotions': typeof ApiPromotionsRoute
   '/api/search': typeof ApiSearchRoute
   '/api/stores': typeof ApiStoresRouteWithChildren
+  '/dashboard/orders': typeof DashboardOrdersRoute
   '/dashboard/products': typeof DashboardProductsRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/promotions': typeof DashboardPromotionsRoute
@@ -386,6 +453,7 @@ export interface FileRoutesById {
   '/product/$id': typeof ProductIdRoute
   '/store/$slug': typeof StoreSlugRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/api/admin/audit-events': typeof ApiAdminAuditEventsRoute
   '/api/admin/categories': typeof ApiAdminCategoriesRoute
   '/api/admin/dashboard': typeof ApiAdminDashboardRoute
   '/api/admin/reports': typeof ApiAdminReportsRoute
@@ -396,9 +464,11 @@ export interface FileRoutesById {
   '/api/ai/promotion-copy': typeof ApiAiPromotionCopyRoute
   '/api/ai/search': typeof ApiAiSearchRoute
   '/api/client/favorites': typeof ApiClientFavoritesRouteWithChildren
+  '/api/client/orders': typeof ApiClientOrdersRouteWithChildren
   '/api/client/queries': typeof ApiClientQueriesRoute
   '/api/client/reviews': typeof ApiClientReviewsRoute
   '/api/products/$id': typeof ApiProductsIdRoute
+  '/api/store/orders': typeof ApiStoreOrdersRouteWithChildren
   '/api/store/products': typeof ApiStoreProductsRouteWithChildren
   '/api/store/profile': typeof ApiStoreProfileRoute
   '/api/store/promotions': typeof ApiStorePromotionsRouteWithChildren
@@ -412,6 +482,8 @@ export interface FileRoutesById {
   '/api/admin/stores/$id/status': typeof ApiAdminStoresIdStatusRoute
   '/api/admin/users/$id/recovery': typeof ApiAdminUsersIdRecoveryRoute
   '/api/admin/users/$id/status': typeof ApiAdminUsersIdStatusRoute
+  '/api/client/orders/$id/cancel': typeof ApiClientOrdersIdCancelRoute
+  '/api/store/orders/$id/status': typeof ApiStoreOrdersIdStatusRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -421,12 +493,15 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/map'
+    | '/orders'
     | '/search'
     | '/api/categories'
+    | '/api/health'
     | '/api/lead-events'
     | '/api/promotions'
     | '/api/search'
     | '/api/stores'
+    | '/dashboard/orders'
     | '/dashboard/products'
     | '/dashboard/profile'
     | '/dashboard/promotions'
@@ -434,6 +509,7 @@ export interface FileRouteTypes {
     | '/product/$id'
     | '/store/$slug'
     | '/dashboard/'
+    | '/api/admin/audit-events'
     | '/api/admin/categories'
     | '/api/admin/dashboard'
     | '/api/admin/reports'
@@ -444,9 +520,11 @@ export interface FileRouteTypes {
     | '/api/ai/promotion-copy'
     | '/api/ai/search'
     | '/api/client/favorites'
+    | '/api/client/orders'
     | '/api/client/queries'
     | '/api/client/reviews'
     | '/api/products/$id'
+    | '/api/store/orders'
     | '/api/store/products'
     | '/api/store/profile'
     | '/api/store/promotions'
@@ -460,18 +538,23 @@ export interface FileRouteTypes {
     | '/api/admin/stores/$id/status'
     | '/api/admin/users/$id/recovery'
     | '/api/admin/users/$id/status'
+    | '/api/client/orders/$id/cancel'
+    | '/api/store/orders/$id/status'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/admin'
     | '/auth'
     | '/map'
+    | '/orders'
     | '/search'
     | '/api/categories'
+    | '/api/health'
     | '/api/lead-events'
     | '/api/promotions'
     | '/api/search'
     | '/api/stores'
+    | '/dashboard/orders'
     | '/dashboard/products'
     | '/dashboard/profile'
     | '/dashboard/promotions'
@@ -479,6 +562,7 @@ export interface FileRouteTypes {
     | '/product/$id'
     | '/store/$slug'
     | '/dashboard'
+    | '/api/admin/audit-events'
     | '/api/admin/categories'
     | '/api/admin/dashboard'
     | '/api/admin/reports'
@@ -489,9 +573,11 @@ export interface FileRouteTypes {
     | '/api/ai/promotion-copy'
     | '/api/ai/search'
     | '/api/client/favorites'
+    | '/api/client/orders'
     | '/api/client/queries'
     | '/api/client/reviews'
     | '/api/products/$id'
+    | '/api/store/orders'
     | '/api/store/products'
     | '/api/store/profile'
     | '/api/store/promotions'
@@ -505,6 +591,8 @@ export interface FileRouteTypes {
     | '/api/admin/stores/$id/status'
     | '/api/admin/users/$id/recovery'
     | '/api/admin/users/$id/status'
+    | '/api/client/orders/$id/cancel'
+    | '/api/store/orders/$id/status'
   id:
     | '__root__'
     | '/'
@@ -512,12 +600,15 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/map'
+    | '/orders'
     | '/search'
     | '/api/categories'
+    | '/api/health'
     | '/api/lead-events'
     | '/api/promotions'
     | '/api/search'
     | '/api/stores'
+    | '/dashboard/orders'
     | '/dashboard/products'
     | '/dashboard/profile'
     | '/dashboard/promotions'
@@ -525,6 +616,7 @@ export interface FileRouteTypes {
     | '/product/$id'
     | '/store/$slug'
     | '/dashboard/'
+    | '/api/admin/audit-events'
     | '/api/admin/categories'
     | '/api/admin/dashboard'
     | '/api/admin/reports'
@@ -535,9 +627,11 @@ export interface FileRouteTypes {
     | '/api/ai/promotion-copy'
     | '/api/ai/search'
     | '/api/client/favorites'
+    | '/api/client/orders'
     | '/api/client/queries'
     | '/api/client/reviews'
     | '/api/products/$id'
+    | '/api/store/orders'
     | '/api/store/products'
     | '/api/store/profile'
     | '/api/store/promotions'
@@ -551,6 +645,8 @@ export interface FileRouteTypes {
     | '/api/admin/stores/$id/status'
     | '/api/admin/users/$id/recovery'
     | '/api/admin/users/$id/status'
+    | '/api/client/orders/$id/cancel'
+    | '/api/store/orders/$id/status'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -559,14 +655,17 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   DashboardRoute: typeof DashboardRouteWithChildren
   MapRoute: typeof MapRoute
+  OrdersRoute: typeof OrdersRoute
   SearchRoute: typeof SearchRoute
   ApiCategoriesRoute: typeof ApiCategoriesRoute
+  ApiHealthRoute: typeof ApiHealthRoute
   ApiLeadEventsRoute: typeof ApiLeadEventsRoute
   ApiPromotionsRoute: typeof ApiPromotionsRoute
   ApiSearchRoute: typeof ApiSearchRoute
   ApiStoresRoute: typeof ApiStoresRouteWithChildren
   ProductIdRoute: typeof ProductIdRoute
   StoreSlugRoute: typeof StoreSlugRoute
+  ApiAdminAuditEventsRoute: typeof ApiAdminAuditEventsRoute
   ApiAdminCategoriesRoute: typeof ApiAdminCategoriesRoute
   ApiAdminDashboardRoute: typeof ApiAdminDashboardRoute
   ApiAdminReportsRoute: typeof ApiAdminReportsRoute
@@ -577,9 +676,11 @@ export interface RootRouteChildren {
   ApiAiPromotionCopyRoute: typeof ApiAiPromotionCopyRoute
   ApiAiSearchRoute: typeof ApiAiSearchRoute
   ApiClientFavoritesRoute: typeof ApiClientFavoritesRouteWithChildren
+  ApiClientOrdersRoute: typeof ApiClientOrdersRouteWithChildren
   ApiClientQueriesRoute: typeof ApiClientQueriesRoute
   ApiClientReviewsRoute: typeof ApiClientReviewsRoute
   ApiProductsIdRoute: typeof ApiProductsIdRoute
+  ApiStoreOrdersRoute: typeof ApiStoreOrdersRouteWithChildren
   ApiStoreProductsRoute: typeof ApiStoreProductsRouteWithChildren
   ApiStoreProfileRoute: typeof ApiStoreProfileRoute
   ApiStorePromotionsRoute: typeof ApiStorePromotionsRouteWithChildren
@@ -594,6 +695,13 @@ declare module '@tanstack/react-router' {
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/orders': {
+      id: '/orders'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof OrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/map': {
@@ -680,6 +788,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardProductsRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/orders': {
+      id: '/dashboard/orders'
+      path: '/orders'
+      fullPath: '/dashboard/orders'
+      preLoaderRoute: typeof DashboardOrdersRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/api/stores': {
       id: '/api/stores'
       path: '/api/stores'
@@ -706,6 +821,13 @@ declare module '@tanstack/react-router' {
       path: '/api/lead-events'
       fullPath: '/api/lead-events'
       preLoaderRoute: typeof ApiLeadEventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/health': {
+      id: '/api/health'
+      path: '/api/health'
+      fullPath: '/api/health'
+      preLoaderRoute: typeof ApiHealthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/categories': {
@@ -757,6 +879,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiStoreProductsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/store/orders': {
+      id: '/api/store/orders'
+      path: '/api/store/orders'
+      fullPath: '/api/store/orders'
+      preLoaderRoute: typeof ApiStoreOrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/products/$id': {
       id: '/api/products/$id'
       path: '/api/products/$id'
@@ -776,6 +905,13 @@ declare module '@tanstack/react-router' {
       path: '/api/client/queries'
       fullPath: '/api/client/queries'
       preLoaderRoute: typeof ApiClientQueriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/client/orders': {
+      id: '/api/client/orders'
+      path: '/api/client/orders'
+      fullPath: '/api/client/orders'
+      preLoaderRoute: typeof ApiClientOrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/client/favorites': {
@@ -848,6 +984,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAdminCategoriesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/admin/audit-events': {
+      id: '/api/admin/audit-events'
+      path: '/api/admin/audit-events'
+      fullPath: '/api/admin/audit-events'
+      preLoaderRoute: typeof ApiAdminAuditEventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/store/queries/$id': {
       id: '/api/store/queries/$id'
       path: '/$id'
@@ -876,6 +1019,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiClientFavoritesIdRouteImport
       parentRoute: typeof ApiClientFavoritesRoute
     }
+    '/api/store/orders/$id/status': {
+      id: '/api/store/orders/$id/status'
+      path: '/$id/status'
+      fullPath: '/api/store/orders/$id/status'
+      preLoaderRoute: typeof ApiStoreOrdersIdStatusRouteImport
+      parentRoute: typeof ApiStoreOrdersRoute
+    }
+    '/api/client/orders/$id/cancel': {
+      id: '/api/client/orders/$id/cancel'
+      path: '/$id/cancel'
+      fullPath: '/api/client/orders/$id/cancel'
+      preLoaderRoute: typeof ApiClientOrdersIdCancelRouteImport
+      parentRoute: typeof ApiClientOrdersRoute
+    }
     '/api/admin/users/$id/status': {
       id: '/api/admin/users/$id/status'
       path: '/$id/status'
@@ -901,6 +1058,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface DashboardRouteChildren {
+  DashboardOrdersRoute: typeof DashboardOrdersRoute
   DashboardProductsRoute: typeof DashboardProductsRoute
   DashboardProfileRoute: typeof DashboardProfileRoute
   DashboardPromotionsRoute: typeof DashboardPromotionsRoute
@@ -909,6 +1067,7 @@ interface DashboardRouteChildren {
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardOrdersRoute: DashboardOrdersRoute,
   DashboardProductsRoute: DashboardProductsRoute,
   DashboardProfileRoute: DashboardProfileRoute,
   DashboardPromotionsRoute: DashboardPromotionsRoute,
@@ -969,6 +1128,30 @@ const ApiClientFavoritesRouteChildren: ApiClientFavoritesRouteChildren = {
 const ApiClientFavoritesRouteWithChildren =
   ApiClientFavoritesRoute._addFileChildren(ApiClientFavoritesRouteChildren)
 
+interface ApiClientOrdersRouteChildren {
+  ApiClientOrdersIdCancelRoute: typeof ApiClientOrdersIdCancelRoute
+}
+
+const ApiClientOrdersRouteChildren: ApiClientOrdersRouteChildren = {
+  ApiClientOrdersIdCancelRoute: ApiClientOrdersIdCancelRoute,
+}
+
+const ApiClientOrdersRouteWithChildren = ApiClientOrdersRoute._addFileChildren(
+  ApiClientOrdersRouteChildren,
+)
+
+interface ApiStoreOrdersRouteChildren {
+  ApiStoreOrdersIdStatusRoute: typeof ApiStoreOrdersIdStatusRoute
+}
+
+const ApiStoreOrdersRouteChildren: ApiStoreOrdersRouteChildren = {
+  ApiStoreOrdersIdStatusRoute: ApiStoreOrdersIdStatusRoute,
+}
+
+const ApiStoreOrdersRouteWithChildren = ApiStoreOrdersRoute._addFileChildren(
+  ApiStoreOrdersRouteChildren,
+)
+
 interface ApiStoreProductsRouteChildren {
   ApiStoreProductsIdRoute: typeof ApiStoreProductsIdRoute
 }
@@ -1009,14 +1192,17 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   DashboardRoute: DashboardRouteWithChildren,
   MapRoute: MapRoute,
+  OrdersRoute: OrdersRoute,
   SearchRoute: SearchRoute,
   ApiCategoriesRoute: ApiCategoriesRoute,
+  ApiHealthRoute: ApiHealthRoute,
   ApiLeadEventsRoute: ApiLeadEventsRoute,
   ApiPromotionsRoute: ApiPromotionsRoute,
   ApiSearchRoute: ApiSearchRoute,
   ApiStoresRoute: ApiStoresRouteWithChildren,
   ProductIdRoute: ProductIdRoute,
   StoreSlugRoute: StoreSlugRoute,
+  ApiAdminAuditEventsRoute: ApiAdminAuditEventsRoute,
   ApiAdminCategoriesRoute: ApiAdminCategoriesRoute,
   ApiAdminDashboardRoute: ApiAdminDashboardRoute,
   ApiAdminReportsRoute: ApiAdminReportsRoute,
@@ -1027,9 +1213,11 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAiPromotionCopyRoute: ApiAiPromotionCopyRoute,
   ApiAiSearchRoute: ApiAiSearchRoute,
   ApiClientFavoritesRoute: ApiClientFavoritesRouteWithChildren,
+  ApiClientOrdersRoute: ApiClientOrdersRouteWithChildren,
   ApiClientQueriesRoute: ApiClientQueriesRoute,
   ApiClientReviewsRoute: ApiClientReviewsRoute,
   ApiProductsIdRoute: ApiProductsIdRoute,
+  ApiStoreOrdersRoute: ApiStoreOrdersRouteWithChildren,
   ApiStoreProductsRoute: ApiStoreProductsRouteWithChildren,
   ApiStoreProfileRoute: ApiStoreProfileRoute,
   ApiStorePromotionsRoute: ApiStorePromotionsRouteWithChildren,
