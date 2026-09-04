@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import type { Json } from "@/integrations/supabase/types";
 
 type AuditEventInput = {
   actorId: string;
@@ -31,8 +32,8 @@ export async function recordAdminAuditEvent(input: AuditEventInput) {
     p_resource_type: input.resourceType,
     p_resource_id: input.resourceId,
     p_reason: input.reason ?? null,
-    p_before_data: input.beforeData ?? {},
-    p_after_data: input.afterData ?? {},
+    p_before_data: (input.beforeData ?? {}) as Json,
+    p_after_data: (input.afterData ?? {}) as Json,
     p_request_id: context.requestId,
     p_ip_address: context.ipAddress,
     p_user_agent: context.userAgent,

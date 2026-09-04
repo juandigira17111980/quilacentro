@@ -60,6 +60,7 @@ export async function authenticate(request: Request): Promise<AuthedContext | Re
 export async function getOwnedComercio(
   ctx: AuthedContext,
   comercioId?: string | null,
+  memberRoles?: string[],
 ): Promise<{ id: string } | Response> {
   if (ctx.role !== "comercio") {
     return errorResponse("Acceso exclusivo para comercios", 403);
@@ -73,8 +74,21 @@ export async function getOwnedComercio(
   if (comercioId) query = query.eq("id", comercioId);
   const { data, error } = await query.limit(1).maybeSingle();
   if (error) return errorResponse(error.message);
-  if (!data) return errorResponse("Comercio no encontrado", 404);
-  return data as { id: string };
+  if (data) return data as { id: string };
+
+  // The owner path remains backwards-compatible. Active staff access is an
+  // additive capability introduced for pilot stores.
+  const membershipQuery = supabaseAdmin
+    .from("comercio_miembros")
+    .select("comercio_id")
+    .eq("profile_id", ctx.userId)
+    .eq("activo", true);
+  if (comercioId) membershipQuery.eq("comercio_id", comercioId);
+  if (memberRoles?.length) membershipQuery.in("rol", memberRoles);
+  const { data: membership, error: membershipError } = await membershipQuery.limit(1).maybeSingle();
+  if (membershipError) return errorResponse("No se pudo validar el acceso al comercio");
+  if (!membership) return errorResponse("Comercio no encontrado", 404);
+  return { id: membership.comercio_id };
 }
 
 /**
