@@ -8,6 +8,51 @@ export type Database = {
   };
   public: {
     Tables: {
+      audit_events: {
+        Row: {
+          action: string;
+          actor_id: string | null;
+          after_data: Json;
+          before_data: Json;
+          created_at: string;
+          id: string;
+          ip_address: string | null;
+          reason: string | null;
+          request_id: string | null;
+          resource_id: string;
+          resource_type: string;
+          user_agent: string | null;
+        };
+        Insert: {
+          action: string;
+          actor_id?: string | null;
+          after_data?: Json;
+          before_data?: Json;
+          created_at?: string;
+          id?: string;
+          ip_address?: string | null;
+          reason?: string | null;
+          request_id?: string | null;
+          resource_id: string;
+          resource_type: string;
+          user_agent?: string | null;
+        };
+        Update: {
+          action?: string;
+          actor_id?: string | null;
+          after_data?: Json;
+          before_data?: Json;
+          created_at?: string;
+          id?: string;
+          ip_address?: string | null;
+          reason?: string | null;
+          request_id?: string | null;
+          resource_id?: string;
+          resource_type?: string;
+          user_agent?: string | null;
+        };
+        Relationships: [];
+      };
       calificaciones: {
         Row: {
           cliente_id: string;
@@ -241,6 +286,120 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
+      };
+      comercio_miembros: {
+        Row: {
+          activo: boolean;
+          comercio_id: string;
+          created_at: string;
+          id: string;
+          profile_id: string;
+          rol: string;
+          updated_at: string;
+        };
+        Insert: {
+          activo?: boolean;
+          comercio_id: string;
+          created_at?: string;
+          id?: string;
+          profile_id: string;
+          rol: string;
+          updated_at?: string;
+        };
+        Update: {
+          activo?: boolean;
+          comercio_id?: string;
+          created_at?: string;
+          id?: string;
+          profile_id?: string;
+          rol?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      comercio_suscripciones: {
+        Row: {
+          cancelada_at: string | null;
+          comercio_id: string;
+          creada_por: string | null;
+          created_at: string;
+          estado: string;
+          id: string;
+          inicia_at: string;
+          notas: string | null;
+          plan_id: number;
+          updated_at: string;
+          vence_at: string | null;
+        };
+        Insert: {
+          cancelada_at?: string | null;
+          comercio_id: string;
+          creada_por?: string | null;
+          created_at?: string;
+          estado: string;
+          id?: string;
+          inicia_at?: string;
+          notas?: string | null;
+          plan_id: number;
+          updated_at?: string;
+          vence_at?: string | null;
+        };
+        Update: {
+          cancelada_at?: string | null;
+          comercio_id?: string;
+          creada_por?: string | null;
+          created_at?: string;
+          estado?: string;
+          id?: string;
+          inicia_at?: string;
+          notas?: string | null;
+          plan_id?: number;
+          updated_at?: string;
+          vence_at?: string | null;
+        };
+        Relationships: [];
+      };
+      ciudades: {
+        Row: {
+          activa: boolean;
+          created_at: string;
+          departamento: string;
+          id: number;
+          lat: number | null;
+          lng: number | null;
+          moneda_codigo: string;
+          nombre: string;
+          pais_codigo: string;
+          slug: string;
+          updated_at: string;
+        };
+        Insert: {
+          activa?: boolean;
+          created_at?: string;
+          departamento: string;
+          id?: number;
+          lat?: number | null;
+          lng?: number | null;
+          moneda_codigo?: string;
+          nombre: string;
+          pais_codigo?: string;
+          slug: string;
+          updated_at?: string;
+        };
+        Update: {
+          activa?: boolean;
+          created_at?: string;
+          departamento?: string;
+          id?: number;
+          lat?: number | null;
+          lng?: number | null;
+          moneda_codigo?: string;
+          nombre?: string;
+          pais_codigo?: string;
+          slug?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
       };
       consultas: {
         Row: {
@@ -577,30 +736,42 @@ export type Database = {
       };
       profiles: {
         Row: {
+          account_status: string;
           avatar_url: string | null;
           created_at: string;
           full_name: string;
           id: string;
           phone: string | null;
           role: string;
+          suspended_at: string | null;
+          suspended_by: string | null;
+          suspension_reason: string | null;
           updated_at: string;
         };
         Insert: {
+          account_status?: string;
           avatar_url?: string | null;
           created_at?: string;
           full_name: string;
           id: string;
           phone?: string | null;
           role?: string;
+          suspended_at?: string | null;
+          suspended_by?: string | null;
+          suspension_reason?: string | null;
           updated_at?: string;
         };
         Update: {
+          account_status?: string;
           avatar_url?: string | null;
           created_at?: string;
           full_name?: string;
           id?: string;
           phone?: string | null;
           role?: string;
+          suspended_at?: string | null;
+          suspended_by?: string | null;
+          suspension_reason?: string | null;
           updated_at?: string;
         };
         Relationships: [];
@@ -755,11 +926,224 @@ export type Database = {
         };
         Relationships: [];
       };
+      pedido_eventos: {
+        Row: {
+          actor_id: string | null;
+          actor_tipo: string;
+          created_at: string;
+          detalle: Json;
+          estado_anterior: string | null;
+          estado_nuevo: string | null;
+          evento: string;
+          id: string;
+          pedido_id: string;
+        };
+        Insert: {
+          actor_id?: string | null;
+          actor_tipo: string;
+          created_at?: string;
+          detalle?: Json;
+          estado_anterior?: string | null;
+          estado_nuevo?: string | null;
+          evento: string;
+          id?: string;
+          pedido_id: string;
+        };
+        Update: {
+          actor_id?: string | null;
+          actor_tipo?: string;
+          created_at?: string;
+          detalle?: Json;
+          estado_anterior?: string | null;
+          estado_nuevo?: string | null;
+          evento?: string;
+          id?: string;
+          pedido_id?: string;
+        };
+        Relationships: [];
+      };
+      pedido_items: {
+        Row: {
+          cantidad: number;
+          created_at: string;
+          id: string;
+          imagen_url: string | null;
+          nombre_producto: string;
+          pedido_id: string;
+          precio_unitario: number;
+          producto_id: string | null;
+          sku: string | null;
+          total_linea: number;
+        };
+        Insert: {
+          cantidad: number;
+          created_at?: string;
+          id?: string;
+          imagen_url?: string | null;
+          nombre_producto: string;
+          pedido_id: string;
+          precio_unitario: number;
+          producto_id?: string | null;
+          sku?: string | null;
+          total_linea: number;
+        };
+        Update: {
+          cantidad?: number;
+          created_at?: string;
+          id?: string;
+          imagen_url?: string | null;
+          nombre_producto?: string;
+          pedido_id?: string;
+          precio_unitario?: number;
+          producto_id?: string | null;
+          sku?: string | null;
+          total_linea?: number;
+        };
+        Relationships: [];
+      };
+      pedidos: {
+        Row: {
+          aceptado_at: string | null;
+          cancelado_at: string | null;
+          cancelado_por: string | null;
+          cliente_id: string;
+          comercio_id: string;
+          completado_at: string | null;
+          contacto_nombre: string;
+          contacto_telefono: string;
+          costo_domicilio: number;
+          created_at: string;
+          direccion_entrega: Json | null;
+          estado: string;
+          id: string;
+          modalidad: string;
+          motivo_cancelacion: string | null;
+          notas_cliente: string | null;
+          numero: number;
+          solicitado_at: string;
+          subtotal: number;
+          total: number;
+          updated_at: string;
+        };
+        Insert: {
+          aceptado_at?: string | null;
+          cancelado_at?: string | null;
+          cancelado_por?: string | null;
+          cliente_id: string;
+          comercio_id: string;
+          completado_at?: string | null;
+          contacto_nombre: string;
+          contacto_telefono: string;
+          costo_domicilio?: number;
+          created_at?: string;
+          direccion_entrega?: Json | null;
+          estado?: string;
+          id?: string;
+          modalidad: string;
+          motivo_cancelacion?: string | null;
+          notas_cliente?: string | null;
+          numero?: number;
+          solicitado_at?: string;
+          subtotal: number;
+          total: number;
+          updated_at?: string;
+        };
+        Update: {
+          aceptado_at?: string | null;
+          cancelado_at?: string | null;
+          cancelado_por?: string | null;
+          cliente_id?: string;
+          comercio_id?: string;
+          completado_at?: string | null;
+          contacto_nombre?: string;
+          contacto_telefono?: string;
+          costo_domicilio?: number;
+          created_at?: string;
+          direccion_entrega?: Json | null;
+          estado?: string;
+          id?: string;
+          modalidad?: string;
+          motivo_cancelacion?: string | null;
+          notas_cliente?: string | null;
+          numero?: number;
+          solicitado_at?: string;
+          subtotal?: number;
+          total?: number;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;
     };
     Functions: {
+      admin_change_profile_role: {
+        Args: {
+          p_actor_id: string;
+          p_ip_address?: string | null;
+          p_new_role: string;
+          p_reason?: string | null;
+          p_request_id?: string | null;
+          p_target_id: string;
+          p_user_agent?: string | null;
+        };
+        Returns: Database["public"]["Tables"]["profiles"]["Row"];
+      };
+      admin_change_store_status: {
+        Args: {
+          p_actor_id: string;
+          p_estado: string;
+          p_ip_address?: string | null;
+          p_reason?: string | null;
+          p_request_id?: string | null;
+          p_store_id: string;
+          p_user_agent?: string | null;
+        };
+        Returns: Database["public"]["Tables"]["comercios"]["Row"];
+      };
+      admin_set_account_status: {
+        Args: {
+          p_account_status: string;
+          p_actor_id: string;
+          p_ip_address?: string | null;
+          p_reason: string;
+          p_request_id?: string | null;
+          p_target_id: string;
+          p_user_agent?: string | null;
+        };
+        Returns: Database["public"]["Tables"]["profiles"]["Row"];
+      };
+      consume_rate_limit: {
+        Args: { p_key_hash: string; p_limit: number; p_window_seconds: number };
+        Returns: boolean;
+      };
+      create_pedido: {
+        Args: {
+          p_cliente_id: string;
+          p_comercio_id: string;
+          p_contacto_nombre: string;
+          p_contacto_telefono: string;
+          p_direccion_entrega: Json | null;
+          p_items: Json;
+          p_modalidad: string;
+          p_notas_cliente: string | null;
+        };
+        Returns: string;
+      };
+      actualizar_estado_pedido: {
+        Args: {
+          p_actor_id: string;
+          p_estado: string;
+          p_motivo?: string | null;
+          p_pedido_id: string;
+        };
+        Returns: Database["public"]["Tables"]["pedidos"]["Row"];
+      };
+      is_comercio_member: {
+        Args: { p_comercio_id: string; p_roles?: string[] | null; p_user_id: string };
+        Returns: boolean;
+      };
       get_my_profile: {
         Args: never;
         Returns: {
@@ -772,10 +1156,32 @@ export type Database = {
           updated_at: string;
         }[];
       };
+      get_current_identity: {
+        Args: never;
+        Returns: {
+          account_status: string;
+          role: string;
+        }[];
+      };
       is_admin: { Args: { _user_id: string }; Returns: boolean };
       is_comercio_owner: {
         Args: { _comercio_id: string; _user_id: string };
         Returns: boolean;
+      };
+      record_admin_audit_event: {
+        Args: {
+          p_action: string;
+          p_actor_id: string;
+          p_after_data?: Json;
+          p_before_data?: Json;
+          p_ip_address?: string | null;
+          p_reason?: string | null;
+          p_request_id?: string | null;
+          p_resource_id: string;
+          p_resource_type: string;
+          p_user_agent?: string | null;
+        };
+        Returns: string;
       };
     };
     Enums: {

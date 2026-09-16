@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { optionsHandler, jsonResponse, errorResponse } from "@/lib/cors";
-import { authenticate } from "@/lib/api-auth";
+import { authenticate, getOwnedComercio } from "@/lib/api-auth";
 
 export const Route = createFileRoute("/api/store/products/$id")({
   server: {
@@ -15,12 +15,16 @@ export const Route = createFileRoute("/api/store/products/$id")({
 
           const { data: existing } = await supabaseAdmin
             .from("productos")
-            .select("id, comercios!inner(owner_id)")
+            .select("id, comercio_id")
             .eq("id", params.id)
             .maybeSingle();
-          if (!existing || (existing as any).comercios?.owner_id !== ctx.userId) {
-            return errorResponse("No autorizado", 403);
-          }
+          if (!existing) return errorResponse("Producto no encontrado", 404);
+          const comercio = await getOwnedComercio(ctx, existing.comercio_id, [
+            "owner",
+            "manager",
+            "catalogo",
+          ]);
+          if (comercio instanceof Response) return comercio;
 
           const body = await request.json().catch(() => ({}));
           const allowed = [
@@ -64,12 +68,16 @@ export const Route = createFileRoute("/api/store/products/$id")({
 
           const { data: existing } = await supabaseAdmin
             .from("productos")
-            .select("id, comercios!inner(owner_id)")
+            .select("id, comercio_id")
             .eq("id", params.id)
             .maybeSingle();
-          if (!existing || (existing as any).comercios?.owner_id !== ctx.userId) {
-            return errorResponse("No autorizado", 403);
-          }
+          if (!existing) return errorResponse("Producto no encontrado", 404);
+          const comercio = await getOwnedComercio(ctx, existing.comercio_id, [
+            "owner",
+            "manager",
+            "catalogo",
+          ]);
+          if (comercio instanceof Response) return comercio;
 
           const { error } = await supabaseAdmin
             .from("productos")

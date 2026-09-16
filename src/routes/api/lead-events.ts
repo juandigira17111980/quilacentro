@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { optionsHandler, jsonResponse, errorResponse } from "@/lib/cors";
 import type { Json } from "@/integrations/supabase/types";
+import { enforceRateLimit } from "@/lib/rate-limit.server";
 
 const EVENT_TYPES = ["whatsapp_click", "directions_click", "availability_submit"] as const;
 const CHANNELS = ["web", "whatsapp", "maps", "platform"] as const;
@@ -30,6 +31,15 @@ export const Route = createFileRoute("/api/lead-events")({
       OPTIONS: optionsHandler,
       POST: async ({ request }) => {
         try {
+          if (
+            !(await enforceRateLimit(request, {
+              scope: "lead-events",
+              limit: 30,
+              windowSeconds: 60,
+            }))
+          ) {
+            return errorResponse("Demasiadas solicitudes. Intenta de nuevo en un minuto.", 429);
+          }
           const body = await request.json().catch(() => null);
           if (!body || typeof body !== "object") {
             return errorResponse("Body inválido", 400);

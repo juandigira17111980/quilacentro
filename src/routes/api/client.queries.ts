@@ -1,5 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { z } from "zod";
 import { optionsHandler, jsonResponse, errorResponse } from "@/lib/cors";
+import { enforceRateLimit } from "@/lib/rate-limit.server";
+
+const uuidSchema = z.string().uuid();
+const querySchema = z.object({
+  comercio_id: uuidSchema,
+  producto_id: uuidSchema.nullish(),
+  mensaje: z.string().trim().min(5).max(1200),
+  canal: z.enum(["plataforma", "whatsapp", "telefono"]).optional(),
+});
 
 export const Route = createFileRoute("/api/client/queries")({
   server: {
@@ -7,11 +17,18 @@ export const Route = createFileRoute("/api/client/queries")({
       OPTIONS: optionsHandler,
       POST: async ({ request }) => {
         try {
-          const body = await request.json().catch(() => ({}));
-          const { comercio_id, producto_id, mensaje, canal } = body || {};
-          if (!comercio_id || !mensaje) {
-            return errorResponse("comercio_id y mensaje son requeridos", 400);
+          if (
+            !(await enforceRateLimit(request, {
+              scope: "client-queries",
+              limit: 8,
+              windowSeconds: 600,
+            }))
+          ) {
+            return errorResponse("Demasiadas consultas. Intenta de nuevo más tarde.", 429);
           }
+          const parsed = querySchema.safeParse(await request.json().catch(() => null));
+          if (!parsed.success) return errorResponse("Datos de consulta inválidos", 400);
+          const { comercio_id, producto_id, mensaje, canal } = parsed.data;
 
           // Auth opcional: si trae bearer, se asocia al cliente
           let clienteId: string | null = null;
@@ -43,7 +60,7 @@ export const Route = createFileRoute("/api/client/queries")({
             .single();
           if (error) throw error;
           return jsonResponse({ consulta: data }, 201);
-        } catch (e: any) {
+        } catch {
           return errorResponse("Error al enviar consulta");
         }
       },
