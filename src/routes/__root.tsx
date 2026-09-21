@@ -10,7 +10,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
+import { reportClientError } from "../lib/client-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
@@ -52,7 +52,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
+    reportClientError(error, { boundary: "tanstack_root_error_component" });
   }, [error]);
 
   return (
@@ -113,13 +113,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         property: "og:image",
-        content:
-          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/dcb4458b-f64e-4ef6-bc40-af5c51c0d6b2/id-preview-6a3e1378--70a805e1-1ca8-4970-8acc-1c7861fdd07d.lovable.app-1781572378973.png",
+        content: "/brand/mercanta-logo.png",
       },
       {
         name: "twitter:image",
-        content:
-          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/dcb4458b-f64e-4ef6-bc40-af5c51c0d6b2/id-preview-6a3e1378--70a805e1-1ca8-4970-8acc-1c7861fdd07d.lovable.app-1781572378973.png",
+        content: "/brand/mercanta-logo.png",
       },
     ],
     scripts: [
