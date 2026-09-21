@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily Mercanta Supabase backup schedule
+
+[Timer]
+OnCalendar=*-*-* 02:45:00 America/Bogota
+Persistent=true
+RandomizedDelaySec=10m
+
+[Install]
+WantedBy=timers.target

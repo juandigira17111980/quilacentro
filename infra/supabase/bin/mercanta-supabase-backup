@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+readonly STACK_DIR="${MERCANTA_SUPABASE_DIR:-/opt/mercanta-supabase}"
+readonly BACKUP_ROOT="${MERCANTA_SUPABASE_BACKUP_DIR:-/var/backups/mercanta-supabase}"
+readonly RETENTION_DAYS="${MERCANTA_SUPABASE_BACKUP_RETENTION_DAYS:-7}"
+readonly STAMP="$(date -u +%Y%m%dT%H%M%SZ)"
+readonly TARGET="$BACKUP_ROOT/$STAMP"
+
+umask 077
+install -d -m 0700 "$TARGET"
+
+cd "$STACK_DIR"
+docker compose exec -T db sh -lc \
+  'PGPASSWORD="$POSTGRES_PASSWORD" pg_dump -U postgres -h 127.0.0.1 -d postgres --format=custom' \
+  > "$TARGET/postgres.dump"
+
+tar -C "$STACK_DIR" -czf "$TARGET/storage.tar.gz" volumes/storage
+tar -C "$STACK_DIR" -czf "$TARGET/config.tar.gz" \
+  docker-compose.yml docker-compose.override.yml \
+  volumes/db/_supabase.sql volumes/db/jwt.sql volumes/db/logs.sql \
+  volumes/db/pooler.sql volumes/db/realtime.sql volumes/db/roles.sql \
+  volumes/db/webhooks.sql
+
+sha256sum "$TARGET"/* > "$TARGET/SHA256SUMS"
+find "$BACKUP_ROOT" -mindepth 1 -maxdepth 1 -type d -mtime "+$RETENTION_DAYS" -exec rm -rf -- {} +
+
+printf 'Mercanta Supabase backup completed: %s\n' "$TARGET"
