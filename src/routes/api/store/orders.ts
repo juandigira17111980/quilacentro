@@ -18,7 +18,9 @@ export const Route = createFileRoute("/api/store/orders")({
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data, error } = await supabaseAdmin
           .from("pedidos")
-          .select("*, items:pedido_items(*), cliente:profiles(id, full_name, phone)")
+          .select(
+            "*, items:pedido_items(*), cliente:profiles!pedidos_cliente_id_fkey(id, full_name, phone)",
+          )
           .eq("comercio_id", comercio.id)
           .order("created_at", { ascending: false })
           .limit(200);
