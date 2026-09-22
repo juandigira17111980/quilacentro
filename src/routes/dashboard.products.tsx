@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Plus, Pencil, Trash2, Loader2, Sparkles } from "lucide-react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
+import { useDashboardStore } from "@/components/dashboard/dashboard-store";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,7 +47,6 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import {
-  myComercioQuery,
   myProductsQuery,
   myPlanQuery,
   categoriasAllQuery,
@@ -63,16 +63,14 @@ export const Route = createFileRoute("/dashboard/products")({
 
 function ProductsPage() {
   const qc = useQueryClient();
-  const [userId, setUserId] = useState<string | null>(null);
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setUserId(data.user?.id ?? null));
-  }, []);
-
-  const { data: comercio } = useQuery({
-    ...myComercioQuery(userId ?? ""),
-    enabled: !!userId,
-  });
-  const { data: productos = [], isLoading } = useQuery(myProductsQuery(comercio?.id));
+  const { userId, comercio } = useDashboardStore();
+  const {
+    data: productos = [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery(myProductsQuery(comercio?.id));
   const { data: plan } = useQuery(myPlanQuery(comercio?.plan_id));
   const { data: categorias = [] } = useQuery(categoriasAllQuery);
 
@@ -120,6 +118,13 @@ function ProductsPage() {
 
       {isLoading ? (
         <Skeleton className="h-64" />
+      ) : isError ? (
+        <div role="alert" className="space-y-3 py-8">
+          <p>No pudimos cargar los productos: {error.message}</p>
+          <Button variant="outline" onClick={() => void refetch()}>
+            Reintentar
+          </Button>
+        </div>
       ) : productos.length === 0 ? (
         <Card>
           <CardContent className="py-10 text-center text-sm text-muted-foreground">

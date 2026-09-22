@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { CalendarIcon, Loader2, Pencil, Plus, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useDashboardStore } from "@/components/dashboard/dashboard-store";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,12 +30,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import {
-  myComercioQuery,
-  myPromotionsQuery,
-  myProductsQuery,
-  type MyPromocion,
-} from "@/lib/dashboardQueries";
+import { myPromotionsQuery, myProductsQuery, type MyPromocion } from "@/lib/dashboardQueries";
 import { ImageUploader } from "@/components/dashboard/ImageUploader";
 import { cn } from "@/lib/utils";
 
@@ -54,12 +50,14 @@ function estadoPromo(p: MyPromocion): "futura" | "activa" | "expirada" | "inacti
 
 function PromotionsPage() {
   const qc = useQueryClient();
-  const [userId, setUserId] = useState<string | null>(null);
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setUserId(data.user?.id ?? null));
-  }, []);
-  const { data: comercio } = useQuery({ ...myComercioQuery(userId ?? ""), enabled: !!userId });
-  const { data: promos = [], isLoading } = useQuery(myPromotionsQuery(comercio?.id));
+  const { userId, comercio } = useDashboardStore();
+  const {
+    data: promos = [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery(myPromotionsQuery(comercio?.id));
   const { data: products = [] } = useQuery(myProductsQuery(comercio?.id));
 
   const [editing, setEditing] = useState<MyPromocion | null>(null);
@@ -92,6 +90,13 @@ function PromotionsPage() {
 
       {isLoading ? (
         <Skeleton className="h-48" />
+      ) : isError ? (
+        <div role="alert" className="space-y-3 py-8">
+          <p>No pudimos cargar las promociones: {error.message}</p>
+          <Button variant="outline" onClick={() => void refetch()}>
+            Reintentar
+          </Button>
+        </div>
       ) : promos.length === 0 ? (
         <Card>
           <CardContent className="py-10 text-center text-sm text-muted-foreground">

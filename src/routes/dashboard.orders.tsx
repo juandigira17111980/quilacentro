@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
 import { ClipboardList } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useDashboardStore } from "@/components/dashboard/dashboard-store";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -45,19 +45,8 @@ export const Route = createFileRoute("/dashboard/orders")({ component: OrdersPag
 
 function OrdersPage() {
   const client = useQueryClient();
-  const [commerceId, setCommerceId] = useState<string | null>(null);
-  useEffect(() => {
-    supabase.auth.getUser().then(async ({ data }) => {
-      if (!data.user) return;
-      const { data: commerce } = await supabase
-        .from("comercios")
-        .select("id")
-        .eq("owner_id", data.user.id)
-        .is("deleted_at", null)
-        .maybeSingle();
-      setCommerceId(commerce?.id ?? null);
-    });
-  }, []);
+  const { comercio } = useDashboardStore();
+  const commerceId = comercio?.id ?? null;
   const orders = useQuery({
     queryKey: ["store-orders", commerceId],
     enabled: Boolean(commerceId),
@@ -104,6 +93,13 @@ function OrdersPage() {
       </div>
       {orders.isLoading ? (
         <Skeleton className="h-64" />
+      ) : orders.isError ? (
+        <div role="alert" className="space-y-3 py-8">
+          <p>No pudimos cargar los pedidos: {orders.error.message}</p>
+          <Button variant="outline" onClick={() => void orders.refetch()}>
+            Reintentar
+          </Button>
+        </div>
       ) : orders.data?.length === 0 ? (
         <Card>
           <CardContent className="py-10 text-center text-sm text-muted-foreground">

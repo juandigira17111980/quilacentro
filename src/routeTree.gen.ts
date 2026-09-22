@@ -37,6 +37,7 @@ import { Route as ApiStorePromotionsRouteImport } from './routes/api/store.promo
 import { Route as ApiStoreProfileRouteImport } from './routes/api/store.profile'
 import { Route as ApiStoreProductsRouteImport } from './routes/api/store.products'
 import { Route as ApiStoreOrdersRouteImport } from './routes/api/store/orders'
+import { Route as ApiStoreMineRouteImport } from './routes/api/store/mine'
 import { Route as ApiProductsIdRouteImport } from './routes/api/products.$id'
 import { Route as ApiClientReviewsRouteImport } from './routes/api/client.reviews'
 import { Route as ApiClientQueriesRouteImport } from './routes/api/client.queries'
@@ -203,6 +204,11 @@ const ApiStoreProductsRoute = ApiStoreProductsRouteImport.update({
 const ApiStoreOrdersRoute = ApiStoreOrdersRouteImport.update({
   id: '/api/store/orders',
   path: '/api/store/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiStoreMineRoute = ApiStoreMineRouteImport.update({
+  id: '/api/store/mine',
+  path: '/api/store/mine',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiProductsIdRoute = ApiProductsIdRouteImport.update({
@@ -378,6 +384,7 @@ export interface FileRoutesByFullPath {
   '/api/client/queries': typeof ApiClientQueriesRoute
   '/api/client/reviews': typeof ApiClientReviewsRoute
   '/api/products/$id': typeof ApiProductsIdRoute
+  '/api/store/mine': typeof ApiStoreMineRoute
   '/api/store/orders': typeof ApiStoreOrdersRouteWithChildren
   '/api/store/products': typeof ApiStoreProductsRouteWithChildren
   '/api/store/profile': typeof ApiStoreProfileRoute
@@ -434,6 +441,7 @@ export interface FileRoutesByTo {
   '/api/client/queries': typeof ApiClientQueriesRoute
   '/api/client/reviews': typeof ApiClientReviewsRoute
   '/api/products/$id': typeof ApiProductsIdRoute
+  '/api/store/mine': typeof ApiStoreMineRoute
   '/api/store/orders': typeof ApiStoreOrdersRouteWithChildren
   '/api/store/products': typeof ApiStoreProductsRouteWithChildren
   '/api/store/profile': typeof ApiStoreProfileRoute
@@ -492,6 +500,7 @@ export interface FileRoutesById {
   '/api/client/queries': typeof ApiClientQueriesRoute
   '/api/client/reviews': typeof ApiClientReviewsRoute
   '/api/products/$id': typeof ApiProductsIdRoute
+  '/api/store/mine': typeof ApiStoreMineRoute
   '/api/store/orders': typeof ApiStoreOrdersRouteWithChildren
   '/api/store/products': typeof ApiStoreProductsRouteWithChildren
   '/api/store/profile': typeof ApiStoreProfileRoute
@@ -551,6 +560,7 @@ export interface FileRouteTypes {
     | '/api/client/queries'
     | '/api/client/reviews'
     | '/api/products/$id'
+    | '/api/store/mine'
     | '/api/store/orders'
     | '/api/store/products'
     | '/api/store/profile'
@@ -607,6 +617,7 @@ export interface FileRouteTypes {
     | '/api/client/queries'
     | '/api/client/reviews'
     | '/api/products/$id'
+    | '/api/store/mine'
     | '/api/store/orders'
     | '/api/store/products'
     | '/api/store/profile'
@@ -664,6 +675,7 @@ export interface FileRouteTypes {
     | '/api/client/queries'
     | '/api/client/reviews'
     | '/api/products/$id'
+    | '/api/store/mine'
     | '/api/store/orders'
     | '/api/store/products'
     | '/api/store/profile'
@@ -716,6 +728,7 @@ export interface RootRouteChildren {
   ApiClientQueriesRoute: typeof ApiClientQueriesRoute
   ApiClientReviewsRoute: typeof ApiClientReviewsRoute
   ApiProductsIdRoute: typeof ApiProductsIdRoute
+  ApiStoreMineRoute: typeof ApiStoreMineRoute
   ApiStoreOrdersRoute: typeof ApiStoreOrdersRouteWithChildren
   ApiStoreProductsRoute: typeof ApiStoreProductsRouteWithChildren
   ApiStoreProfileRoute: typeof ApiStoreProfileRoute
@@ -920,6 +933,13 @@ declare module '@tanstack/react-router' {
       path: '/api/store/orders'
       fullPath: '/api/store/orders'
       preLoaderRoute: typeof ApiStoreOrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/store/mine': {
+      id: '/api/store/mine'
+      path: '/api/store/mine'
+      fullPath: '/api/store/mine'
+      preLoaderRoute: typeof ApiStoreMineRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/products/$id': {
@@ -1290,6 +1310,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiClientQueriesRoute: ApiClientQueriesRoute,
   ApiClientReviewsRoute: ApiClientReviewsRoute,
   ApiProductsIdRoute: ApiProductsIdRoute,
+  ApiStoreMineRoute: ApiStoreMineRoute,
   ApiStoreOrdersRoute: ApiStoreOrdersRouteWithChildren,
   ApiStoreProductsRoute: ApiStoreProductsRouteWithChildren,
   ApiStoreProfileRoute: ApiStoreProfileRoute,
