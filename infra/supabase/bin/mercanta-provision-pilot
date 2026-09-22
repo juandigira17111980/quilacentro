@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+readonly SOURCE_REF="${MERCANTA_SOURCE_REF:-codex/selfhosted-supabase-infra}"
+readonly SOURCE_REPOSITORY="${MERCANTA_SOURCE_REPOSITORY:-https://github.com/juandigira17111980/quilacentro.git}"
+readonly WORKDIR="$(mktemp -d /tmp/mercanta-pilot.XXXXXX)"
+
+cleanup() {
+  rm -rf "$WORKDIR"
+}
+trap cleanup EXIT
+
+for required in \
+  SUPABASE_URL \
+  SUPABASE_SERVICE_ROLE_KEY \
+  PILOT_SUPERADMIN_EMAIL \
+  PILOT_SUPERADMIN_PASSWORD \
+  PILOT_MERCHANT_EMAIL \
+  PILOT_MERCHANT_PASSWORD; do
+  [ -n "${!required:-}" ] || {
+    printf 'Missing required environment variable: %s\n' "$required" >&2
+    exit 1
+  }
+done
+
+git clone --depth 1 --branch "$SOURCE_REF" "$SOURCE_REPOSITORY" "$WORKDIR" >/dev/null 2>&1
+
+docker run --rm \
+  -e SUPABASE_URL \
+  -e SUPABASE_SERVICE_ROLE_KEY \
+  -e PILOT_SUPERADMIN_EMAIL \
+  -e PILOT_SUPERADMIN_PASSWORD \
+  -e PILOT_MERCHANT_EMAIL \
+  -e PILOT_MERCHANT_PASSWORD \
+  -v "$WORKDIR:/app" \
+  -w /app \
+  node:22-alpine \
+  sh -lc 'npm ci --ignore-scripts --no-audit --no-fund >/dev/null && node scripts/provision-pilot.mjs'
