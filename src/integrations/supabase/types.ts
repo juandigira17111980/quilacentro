@@ -1114,6 +1114,19 @@ export type Database = {
         };
         Returns: Database["public"]["Tables"]["profiles"]["Row"];
       };
+      admin_update_profile_details: {
+        Args: {
+          p_actor_id: string;
+          p_target_id: string;
+          p_full_name: string;
+          p_phone: string | null;
+          p_reason: string;
+          p_request_id?: string | null;
+          p_ip_address?: string | null;
+          p_user_agent?: string | null;
+        };
+        Returns: Database["public"]["Tables"]["profiles"]["Row"];
+      };
       consume_rate_limit: {
         Args: { p_key_hash: string; p_limit: number; p_window_seconds: number };
         Returns: boolean;
