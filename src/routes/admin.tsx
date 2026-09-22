@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
 import { Building2, RefreshCw, ShieldCheck, Users } from "lucide-react";
 import { toast } from "sonner";
+import { UserManagementDialog, type ManagedUser } from "@/components/admin/UserManagementDialog";
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
 import { Badge } from "@/components/ui/badge";
@@ -25,13 +26,7 @@ type DashboardData = {
   productos: number;
   consultas_nuevas: number;
 };
-type PlatformUser = {
-  id: string;
-  full_name: string;
-  phone: string | null;
-  role: AppRole;
-  account_status: "activo" | "suspendido";
-};
+type PlatformUser = ManagedUser;
 type PlatformStore = {
   id: string;
   nombre: string;
@@ -69,6 +64,8 @@ function AdminPage() {
   const [role, setRole] = useState<AppRole | null>(null);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
+  const [selectedUser, setSelectedUser] = useState<PlatformUser | null>(null);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   const adminFetch = useCallback(async <T,>(path: string, init?: RequestInit): Promise<T> => {
     const { data: sessionData } = await supabase.auth.getSession();
@@ -90,12 +87,13 @@ function AdminPage() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const [summary, users, stores, events, identity] = await Promise.all([
+      const [summary, users, stores, events, identity, authUser] = await Promise.all([
         adminFetch<{ dashboard: DashboardData }>("/api/admin/dashboard"),
         adminFetch<{ usuarios: PlatformUser[] }>("/api/admin/users"),
         adminFetch<{ comercios: PlatformStore[] }>("/api/admin/stores"),
         adminFetch<{ eventos: AuditEvent[] }>("/api/admin/audit-events?limit=30"),
         supabase.rpc("get_current_identity"),
+        supabase.auth.getUser(),
       ]);
       setData({
         dashboard: summary.dashboard,
@@ -104,6 +102,7 @@ function AdminPage() {
         events: events.eventos,
       });
       setRole((identity.data?.[0]?.role as AppRole | undefined) ?? null);
+      setCurrentUserId(authUser.data.user?.id ?? null);
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : "No fue posible cargar la administración",
@@ -124,56 +123,6 @@ function AdminPage() {
       return null;
     }
     return reason.trim();
-  };
-
-  const changeUserRole = async (user: PlatformUser, nextRole: AppRole) => {
-    if (nextRole === user.role) return;
-    const reason = requireReason(`cambiar el rol de ${user.full_name}`);
-    if (!reason) return;
-    try {
-      await adminFetch("/api/admin/users", {
-        method: "PUT",
-        body: JSON.stringify({ id: user.id, role: nextRole, reason }),
-      });
-      toast.success("Rol actualizado y registrado en la bitácora");
-      await load();
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "No se pudo actualizar el rol");
-    }
-  };
-
-  const changeUserStatus = async (user: PlatformUser, accountStatus: "activo" | "suspendido") => {
-    const action =
-      accountStatus === "suspendido"
-        ? `suspender a ${user.full_name}`
-        : `reactivar a ${user.full_name}`;
-    const reason = requireReason(action);
-    if (!reason) return;
-    try {
-      await adminFetch(`/api/admin/users/${user.id}/status`, {
-        method: "PUT",
-        body: JSON.stringify({ account_status: accountStatus, reason }),
-      });
-      toast.success("Estado de cuenta actualizado");
-      await load();
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "No se pudo actualizar la cuenta");
-    }
-  };
-
-  const requestRecovery = async (user: PlatformUser) => {
-    const reason = requireReason(`solicitar recuperación para ${user.full_name}`);
-    if (!reason) return;
-    try {
-      await adminFetch(`/api/admin/users/${user.id}/recovery`, {
-        method: "POST",
-        body: JSON.stringify({ reason }),
-      });
-      toast.success("Solicitud de recuperación enviada y auditada");
-      await load();
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "No se pudo solicitar la recuperación");
-    }
   };
 
   const changeStoreStatus = async (store: PlatformStore, estado: PlatformStore["estado"]) => {
@@ -326,51 +275,15 @@ function AdminPage() {
                         </p>
                       </TableCell>
                       <TableCell>
-                        {role === "super_admin" ? (
-                          <select
-                            aria-label={`Rol de ${user.full_name}`}
-                            className="h-9 rounded-md border bg-background px-2 text-sm"
-                            value={user.role}
-                            onChange={(event) =>
-                              void changeUserRole(user, event.target.value as AppRole)
-                            }
-                          >
-                            <option value="cliente">Cliente</option>
-                            <option value="comercio">Comercio</option>
-                            <option value="admin">Admin</option>
-                            <option value="super_admin">Super admin</option>
-                          </select>
-                        ) : (
-                          <StatusBadge value={user.role} />
-                        )}
+                        <StatusBadge value={user.role} />
                       </TableCell>
                       <TableCell>
                         <StatusBadge value={user.account_status} />
                       </TableCell>
-                      <TableCell className="space-x-2 text-right">
-                        {role === "super_admin" && user.account_status === "activo" && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => void changeUserStatus(user, "suspendido")}
-                          >
-                            Suspender
-                          </Button>
-                        )}
-                        {role === "super_admin" && user.account_status === "suspendido" && (
-                          <Button size="sm" onClick={() => void changeUserStatus(user, "activo")}>
-                            Reactivar
-                          </Button>
-                        )}
-                        {role === "super_admin" && (
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => void requestRecovery(user)}
-                          >
-                            Recuperación
-                          </Button>
-                        )}
+                      <TableCell className="text-right">
+                        <Button size="sm" variant="outline" onClick={() => setSelectedUser(user)}>
+                          {role === "super_admin" ? "Gestionar" : "Ver"}
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -409,6 +322,17 @@ function AdminPage() {
             </section>
           </TabsContent>
         </Tabs>
+        <UserManagementDialog
+          user={selectedUser}
+          currentRole={role}
+          currentUserId={currentUserId}
+          open={selectedUser !== null}
+          onOpenChange={(open) => {
+            if (!open) setSelectedUser(null);
+          }}
+          adminFetch={adminFetch}
+          onChanged={load}
+        />
       </main>
       <Footer />
     </div>

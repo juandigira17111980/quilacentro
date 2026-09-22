@@ -56,10 +56,13 @@ import { Route as ApiStoreQueriesIdRouteImport } from './routes/api/store.querie
 import { Route as ApiStorePromotionsIdRouteImport } from './routes/api/store.promotions.$id'
 import { Route as ApiStoreProductsIdRouteImport } from './routes/api/store.products.$id'
 import { Route as ApiClientFavoritesIdRouteImport } from './routes/api/client.favorites.$id'
+import { Route as ApiAdminUsersIdRouteImport } from './routes/api/admin.users.$id'
 import { Route as ApiStoreOrdersIdStatusRouteImport } from './routes/api/store/orders/$id/status'
 import { Route as ApiClientOrdersIdCancelRouteImport } from './routes/api/client/orders/$id/cancel'
 import { Route as ApiAdminUsersIdStatusRouteImport } from './routes/api/admin.users.$id.status'
 import { Route as ApiAdminUsersIdRecoveryRouteImport } from './routes/api/admin.users.$id.recovery'
+import { Route as ApiAdminUsersIdPasswordRouteImport } from './routes/api/admin.users.$id.password'
+import { Route as ApiAdminUsersIdEmailRouteImport } from './routes/api/admin.users.$id.email'
 import { Route as ApiAdminStoresIdStatusRouteImport } from './routes/api/admin.stores.$id.status'
 
 const SearchRoute = SearchRouteImport.update({
@@ -297,6 +300,11 @@ const ApiClientFavoritesIdRoute = ApiClientFavoritesIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => ApiClientFavoritesRoute,
 } as any)
+const ApiAdminUsersIdRoute = ApiAdminUsersIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ApiAdminUsersRoute,
+} as any)
 const ApiStoreOrdersIdStatusRoute = ApiStoreOrdersIdStatusRouteImport.update({
   id: '/$id/status',
   path: '/$id/status',
@@ -308,14 +316,24 @@ const ApiClientOrdersIdCancelRoute = ApiClientOrdersIdCancelRouteImport.update({
   getParentRoute: () => ApiClientOrdersRoute,
 } as any)
 const ApiAdminUsersIdStatusRoute = ApiAdminUsersIdStatusRouteImport.update({
-  id: '/$id/status',
-  path: '/$id/status',
-  getParentRoute: () => ApiAdminUsersRoute,
+  id: '/status',
+  path: '/status',
+  getParentRoute: () => ApiAdminUsersIdRoute,
 } as any)
 const ApiAdminUsersIdRecoveryRoute = ApiAdminUsersIdRecoveryRouteImport.update({
-  id: '/$id/recovery',
-  path: '/$id/recovery',
-  getParentRoute: () => ApiAdminUsersRoute,
+  id: '/recovery',
+  path: '/recovery',
+  getParentRoute: () => ApiAdminUsersIdRoute,
+} as any)
+const ApiAdminUsersIdPasswordRoute = ApiAdminUsersIdPasswordRouteImport.update({
+  id: '/password',
+  path: '/password',
+  getParentRoute: () => ApiAdminUsersIdRoute,
+} as any)
+const ApiAdminUsersIdEmailRoute = ApiAdminUsersIdEmailRouteImport.update({
+  id: '/email',
+  path: '/email',
+  getParentRoute: () => ApiAdminUsersIdRoute,
 } as any)
 const ApiAdminStoresIdStatusRoute = ApiAdminStoresIdStatusRouteImport.update({
   id: '/$id/status',
@@ -367,11 +385,14 @@ export interface FileRoutesByFullPath {
   '/api/store/queries': typeof ApiStoreQueriesRouteWithChildren
   '/api/store/stats': typeof ApiStoreStatsRoute
   '/api/stores/$slug': typeof ApiStoresSlugRoute
+  '/api/admin/users/$id': typeof ApiAdminUsersIdRouteWithChildren
   '/api/client/favorites/$id': typeof ApiClientFavoritesIdRoute
   '/api/store/products/$id': typeof ApiStoreProductsIdRoute
   '/api/store/promotions/$id': typeof ApiStorePromotionsIdRoute
   '/api/store/queries/$id': typeof ApiStoreQueriesIdRoute
   '/api/admin/stores/$id/status': typeof ApiAdminStoresIdStatusRoute
+  '/api/admin/users/$id/email': typeof ApiAdminUsersIdEmailRoute
+  '/api/admin/users/$id/password': typeof ApiAdminUsersIdPasswordRoute
   '/api/admin/users/$id/recovery': typeof ApiAdminUsersIdRecoveryRoute
   '/api/admin/users/$id/status': typeof ApiAdminUsersIdStatusRoute
   '/api/client/orders/$id/cancel': typeof ApiClientOrdersIdCancelRoute
@@ -420,11 +441,14 @@ export interface FileRoutesByTo {
   '/api/store/queries': typeof ApiStoreQueriesRouteWithChildren
   '/api/store/stats': typeof ApiStoreStatsRoute
   '/api/stores/$slug': typeof ApiStoresSlugRoute
+  '/api/admin/users/$id': typeof ApiAdminUsersIdRouteWithChildren
   '/api/client/favorites/$id': typeof ApiClientFavoritesIdRoute
   '/api/store/products/$id': typeof ApiStoreProductsIdRoute
   '/api/store/promotions/$id': typeof ApiStorePromotionsIdRoute
   '/api/store/queries/$id': typeof ApiStoreQueriesIdRoute
   '/api/admin/stores/$id/status': typeof ApiAdminStoresIdStatusRoute
+  '/api/admin/users/$id/email': typeof ApiAdminUsersIdEmailRoute
+  '/api/admin/users/$id/password': typeof ApiAdminUsersIdPasswordRoute
   '/api/admin/users/$id/recovery': typeof ApiAdminUsersIdRecoveryRoute
   '/api/admin/users/$id/status': typeof ApiAdminUsersIdStatusRoute
   '/api/client/orders/$id/cancel': typeof ApiClientOrdersIdCancelRoute
@@ -475,11 +499,14 @@ export interface FileRoutesById {
   '/api/store/queries': typeof ApiStoreQueriesRouteWithChildren
   '/api/store/stats': typeof ApiStoreStatsRoute
   '/api/stores/$slug': typeof ApiStoresSlugRoute
+  '/api/admin/users/$id': typeof ApiAdminUsersIdRouteWithChildren
   '/api/client/favorites/$id': typeof ApiClientFavoritesIdRoute
   '/api/store/products/$id': typeof ApiStoreProductsIdRoute
   '/api/store/promotions/$id': typeof ApiStorePromotionsIdRoute
   '/api/store/queries/$id': typeof ApiStoreQueriesIdRoute
   '/api/admin/stores/$id/status': typeof ApiAdminStoresIdStatusRoute
+  '/api/admin/users/$id/email': typeof ApiAdminUsersIdEmailRoute
+  '/api/admin/users/$id/password': typeof ApiAdminUsersIdPasswordRoute
   '/api/admin/users/$id/recovery': typeof ApiAdminUsersIdRecoveryRoute
   '/api/admin/users/$id/status': typeof ApiAdminUsersIdStatusRoute
   '/api/client/orders/$id/cancel': typeof ApiClientOrdersIdCancelRoute
@@ -531,11 +558,14 @@ export interface FileRouteTypes {
     | '/api/store/queries'
     | '/api/store/stats'
     | '/api/stores/$slug'
+    | '/api/admin/users/$id'
     | '/api/client/favorites/$id'
     | '/api/store/products/$id'
     | '/api/store/promotions/$id'
     | '/api/store/queries/$id'
     | '/api/admin/stores/$id/status'
+    | '/api/admin/users/$id/email'
+    | '/api/admin/users/$id/password'
     | '/api/admin/users/$id/recovery'
     | '/api/admin/users/$id/status'
     | '/api/client/orders/$id/cancel'
@@ -584,11 +614,14 @@ export interface FileRouteTypes {
     | '/api/store/queries'
     | '/api/store/stats'
     | '/api/stores/$slug'
+    | '/api/admin/users/$id'
     | '/api/client/favorites/$id'
     | '/api/store/products/$id'
     | '/api/store/promotions/$id'
     | '/api/store/queries/$id'
     | '/api/admin/stores/$id/status'
+    | '/api/admin/users/$id/email'
+    | '/api/admin/users/$id/password'
     | '/api/admin/users/$id/recovery'
     | '/api/admin/users/$id/status'
     | '/api/client/orders/$id/cancel'
@@ -638,11 +671,14 @@ export interface FileRouteTypes {
     | '/api/store/queries'
     | '/api/store/stats'
     | '/api/stores/$slug'
+    | '/api/admin/users/$id'
     | '/api/client/favorites/$id'
     | '/api/store/products/$id'
     | '/api/store/promotions/$id'
     | '/api/store/queries/$id'
     | '/api/admin/stores/$id/status'
+    | '/api/admin/users/$id/email'
+    | '/api/admin/users/$id/password'
     | '/api/admin/users/$id/recovery'
     | '/api/admin/users/$id/status'
     | '/api/client/orders/$id/cancel'
@@ -1019,6 +1055,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiClientFavoritesIdRouteImport
       parentRoute: typeof ApiClientFavoritesRoute
     }
+    '/api/admin/users/$id': {
+      id: '/api/admin/users/$id'
+      path: '/$id'
+      fullPath: '/api/admin/users/$id'
+      preLoaderRoute: typeof ApiAdminUsersIdRouteImport
+      parentRoute: typeof ApiAdminUsersRoute
+    }
     '/api/store/orders/$id/status': {
       id: '/api/store/orders/$id/status'
       path: '/$id/status'
@@ -1035,17 +1078,31 @@ declare module '@tanstack/react-router' {
     }
     '/api/admin/users/$id/status': {
       id: '/api/admin/users/$id/status'
-      path: '/$id/status'
+      path: '/status'
       fullPath: '/api/admin/users/$id/status'
       preLoaderRoute: typeof ApiAdminUsersIdStatusRouteImport
-      parentRoute: typeof ApiAdminUsersRoute
+      parentRoute: typeof ApiAdminUsersIdRoute
     }
     '/api/admin/users/$id/recovery': {
       id: '/api/admin/users/$id/recovery'
-      path: '/$id/recovery'
+      path: '/recovery'
       fullPath: '/api/admin/users/$id/recovery'
       preLoaderRoute: typeof ApiAdminUsersIdRecoveryRouteImport
-      parentRoute: typeof ApiAdminUsersRoute
+      parentRoute: typeof ApiAdminUsersIdRoute
+    }
+    '/api/admin/users/$id/password': {
+      id: '/api/admin/users/$id/password'
+      path: '/password'
+      fullPath: '/api/admin/users/$id/password'
+      preLoaderRoute: typeof ApiAdminUsersIdPasswordRouteImport
+      parentRoute: typeof ApiAdminUsersIdRoute
+    }
+    '/api/admin/users/$id/email': {
+      id: '/api/admin/users/$id/email'
+      path: '/email'
+      fullPath: '/api/admin/users/$id/email'
+      preLoaderRoute: typeof ApiAdminUsersIdEmailRouteImport
+      parentRoute: typeof ApiAdminUsersIdRoute
     }
     '/api/admin/stores/$id/status': {
       id: '/api/admin/stores/$id/status'
@@ -1103,14 +1160,30 @@ const ApiAdminStoresRouteWithChildren = ApiAdminStoresRoute._addFileChildren(
   ApiAdminStoresRouteChildren,
 )
 
-interface ApiAdminUsersRouteChildren {
+interface ApiAdminUsersIdRouteChildren {
+  ApiAdminUsersIdEmailRoute: typeof ApiAdminUsersIdEmailRoute
+  ApiAdminUsersIdPasswordRoute: typeof ApiAdminUsersIdPasswordRoute
   ApiAdminUsersIdRecoveryRoute: typeof ApiAdminUsersIdRecoveryRoute
   ApiAdminUsersIdStatusRoute: typeof ApiAdminUsersIdStatusRoute
 }
 
-const ApiAdminUsersRouteChildren: ApiAdminUsersRouteChildren = {
+const ApiAdminUsersIdRouteChildren: ApiAdminUsersIdRouteChildren = {
+  ApiAdminUsersIdEmailRoute: ApiAdminUsersIdEmailRoute,
+  ApiAdminUsersIdPasswordRoute: ApiAdminUsersIdPasswordRoute,
   ApiAdminUsersIdRecoveryRoute: ApiAdminUsersIdRecoveryRoute,
   ApiAdminUsersIdStatusRoute: ApiAdminUsersIdStatusRoute,
+}
+
+const ApiAdminUsersIdRouteWithChildren = ApiAdminUsersIdRoute._addFileChildren(
+  ApiAdminUsersIdRouteChildren,
+)
+
+interface ApiAdminUsersRouteChildren {
+  ApiAdminUsersIdRoute: typeof ApiAdminUsersIdRouteWithChildren
+}
+
+const ApiAdminUsersRouteChildren: ApiAdminUsersRouteChildren = {
+  ApiAdminUsersIdRoute: ApiAdminUsersIdRouteWithChildren,
 }
 
 const ApiAdminUsersRouteWithChildren = ApiAdminUsersRoute._addFileChildren(
