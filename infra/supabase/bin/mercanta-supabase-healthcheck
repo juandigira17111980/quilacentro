@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+readonly STACK_DIR="${MERCANTA_SUPABASE_DIR:-/opt/mercanta-supabase}"
+readonly PUBLIC_URL="${MERCANTA_SUPABASE_PUBLIC_URL:-https://supabase.quilacentro.lab.nexostack.app}"
+failures=()
+
+for service in db auth rest realtime storage api-gw supavisor; do
+  container="$(docker ps -aq --filter "label=com.docker.compose.service=$service" | head -n 1)"
+  status="$(docker inspect --format='{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' "$container" 2>/dev/null || true)"
+  [ "$status" = 'healthy' ] || failures+=("${service}:${status:-missing}")
+done
+
+status="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 15 "$PUBLIC_URL/rest/v1/" || true)"
+[ "$status" = '401' ] || failures+=("public_api:${status:-unreachable}")
+
+disk_used="$(df -P / | awk 'NR==2 {gsub("%", "", $5); print $5}')"
+[ "$disk_used" -lt 80 ] || failures+=("disk:${disk_used}%")
+
+if [ "${#failures[@]}" -gt 0 ]; then
+  message="Mercanta Supabase health failed: ${failures[*]}"
+  logger -p daemon.err -t mercanta-supabase-health "$message"
+  printf '%s\n' "$message" >&2
+  exit 1
+fi
+
+printf 'Mercanta Supabase health OK: public_api=%s disk=%s%%\n' "$status" "$disk_used"

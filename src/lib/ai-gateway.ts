@@ -1,26 +1,28 @@
-// Helper para llamar Lovable AI Gateway (server-side only)
+// Server-side OpenAI-compatible AI client. The provider is selected by runtime
+// configuration so Mercanta remains independent from its original builder.
 type Msg = { role: "system" | "user" | "assistant"; content: string };
 
 export async function callAI(
   messages: Msg[],
   opts: { model?: string; json?: boolean } = {},
 ): Promise<string> {
-  const key = process.env.LOVABLE_API_KEY;
-  if (!key) throw new Error("LOVABLE_API_KEY no configurada");
+  const baseUrl = process.env.AI_API_BASE_URL?.replace(/\/$/, "");
+  const key = process.env.AI_API_KEY;
+  if (!baseUrl || !key) throw new Error("La asistencia de IA no está configurada");
 
   const body: Record<string, unknown> = {
-    model: opts.model ?? "google/gemini-3-flash-preview",
+    model: opts.model ?? process.env.AI_MODEL ?? "gpt-5-mini",
     messages,
   };
   if (opts.json) {
     body.response_format = { type: "json_object" };
   }
 
-  const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+  const res = await fetch(`${baseUrl}/chat/completions`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Lovable-API-Key": key,
+      Authorization: `Bearer ${key}`,
     },
     body: JSON.stringify(body),
   });
@@ -29,7 +31,7 @@ export async function callAI(
     const text = await res.text().catch(() => "");
     if (res.status === 429) throw new Error("Límite de uso alcanzado. Intenta más tarde.");
     if (res.status === 402) throw new Error("Créditos de IA agotados.");
-    throw new Error(`AI Gateway ${res.status}: ${text.slice(0, 200)}`);
+    throw new Error(`Servicio de IA ${res.status}: ${text.slice(0, 200)}`);
   }
 
   const data = await res.json();

@@ -1,0 +1,32 @@
+services:
+  api-gw:
+    # Coolify's Traefik proxy is the only public entry point. Do not publish
+    # Supabase ports directly on the VPS.
+    ports: !reset []
+    networks:
+      coolify: {}
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: coolify
+      traefik.http.middlewares.mercanta-supabase-gzip.compress: "true"
+      traefik.http.middlewares.mercanta-supabase-https.redirectscheme.scheme: https
+      traefik.http.routers.mercanta-supabase-http.entrypoints: http
+      traefik.http.routers.mercanta-supabase-http.rule: Host(`supabase.quilacentro.lab.nexostack.app`)
+      traefik.http.routers.mercanta-supabase-http.middlewares: mercanta-supabase-https
+      traefik.http.routers.mercanta-supabase-http.service: mercanta-supabase
+      traefik.http.routers.mercanta-supabase-https.entrypoints: https
+      traefik.http.routers.mercanta-supabase-https.rule: Host(`supabase.quilacentro.lab.nexostack.app`)
+      traefik.http.routers.mercanta-supabase-https.middlewares: mercanta-supabase-gzip
+      traefik.http.routers.mercanta-supabase-https.service: mercanta-supabase
+      traefik.http.routers.mercanta-supabase-https.tls: "true"
+      traefik.http.routers.mercanta-supabase-https.tls.certresolver: letsencrypt
+      traefik.http.services.mercanta-supabase.loadbalancer.server.port: "8000"
+
+  supavisor:
+    # Database and pooler access stay inside the Docker network. Administrative
+    # access is performed with docker exec, never through a host port.
+    ports: !reset []
+
+networks:
+  coolify:
+    external: true

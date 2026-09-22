@@ -1,0 +1,10 @@
+[Unit]
+Description=Mercanta Supabase health check
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/mercanta-supabase-healthcheck
+User=root
+Group=root
