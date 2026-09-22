@@ -29,7 +29,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { myComercioQuery, categoriasAllQuery, type MyComercio } from "@/lib/dashboardQueries";
+import { categoriasAllQuery, type MyComercio } from "@/lib/dashboardQueries";
+import { useDashboardStore } from "@/components/dashboard/dashboard-store";
 import { ImageUploader } from "@/components/dashboard/ImageUploader";
 import { HoursEditor, type HoursMap } from "@/components/dashboard/HoursEditor";
 import { slugify } from "@/lib/storage";
@@ -102,16 +103,7 @@ const emptyForm = (): FormState => ({
 
 function ProfilePage() {
   const qc = useQueryClient();
-  const [userId, setUserId] = useState<string | null>(null);
-
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setUserId(data.user?.id ?? null));
-  }, []);
-
-  const { data: comercio, isLoading } = useQuery({
-    ...myComercioQuery(userId ?? ""),
-    enabled: !!userId,
-  });
+  const { userId, comercio } = useDashboardStore();
   const { data: categorias = [] } = useQuery(categoriasAllQuery);
 
   const [step, setStep] = useState(1);
@@ -143,7 +135,7 @@ function ProfilePage() {
     }
   }, [comercio]);
 
-  if (isLoading || !userId) {
+  if (!userId) {
     return (
       <div className="space-y-3">
         <Skeleton className="h-8 w-48" />
@@ -229,7 +221,7 @@ function ProfilePage() {
         if (error) throw error;
         toast.success("Cambios guardados");
       }
-      await qc.invalidateQueries({ queryKey: ["my-comercio"] });
+      await qc.invalidateQueries({ queryKey: ["my-comercios"] });
     } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : "Error guardando");
     } finally {

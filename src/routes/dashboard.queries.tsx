@@ -1,16 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { format } from "date-fns";
 import { Check, Mail } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useDashboardStore } from "@/components/dashboard/dashboard-store";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { toast } from "sonner";
-import { myComercioQuery, myQueriesQuery, type MyConsulta } from "@/lib/dashboardQueries";
+import { myQueriesQuery, type MyConsulta } from "@/lib/dashboardQueries";
 
 export const Route = createFileRoute("/dashboard/queries")({
   component: QueriesPage,
@@ -18,12 +19,14 @@ export const Route = createFileRoute("/dashboard/queries")({
 
 function QueriesPage() {
   const qc = useQueryClient();
-  const [userId, setUserId] = useState<string | null>(null);
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setUserId(data.user?.id ?? null));
-  }, []);
-  const { data: comercio } = useQuery({ ...myComercioQuery(userId ?? ""), enabled: !!userId });
-  const { data: consultas = [], isLoading } = useQuery(myQueriesQuery(comercio?.id));
+  const { comercio } = useDashboardStore();
+  const {
+    data: consultas = [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery(myQueriesQuery(comercio?.id));
   const [selected, setSelected] = useState<MyConsulta | null>(null);
 
   const updateEstado = async (id: string, estado: "leido" | "respondido") => {
@@ -65,6 +68,13 @@ function QueriesPage() {
 
       {isLoading ? (
         <Skeleton className="h-64" />
+      ) : isError ? (
+        <div role="alert" className="space-y-3 py-8">
+          <p>No pudimos cargar las consultas: {error.message}</p>
+          <Button variant="outline" onClick={() => void refetch()}>
+            Reintentar
+          </Button>
+        </div>
       ) : consultas.length === 0 ? (
         <Card>
           <CardContent className="py-10 text-center text-sm text-muted-foreground">

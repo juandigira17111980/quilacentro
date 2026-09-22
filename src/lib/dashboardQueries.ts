@@ -103,18 +103,19 @@ export type MyStoreStats = {
   }[];
 };
 
-export function myComercioQuery(ownerId: string) {
+export function myComerciosQuery(userId: string) {
   return queryOptions({
-    queryKey: ["my-comercio", ownerId],
-    queryFn: async (): Promise<MyComercio | null> => {
-      const { data, error } = await supabase
-        .from("comercios")
-        .select("*")
-        .eq("owner_id", ownerId)
-        .is("deleted_at", null)
-        .maybeSingle();
-      if (error) throw error;
-      return (data ?? null) as unknown as MyComercio | null;
+    queryKey: ["my-comercios", userId],
+    queryFn: async (): Promise<MyComercio[]> => {
+      const { data } = await supabase.auth.getSession();
+      const token = data.session?.access_token;
+      if (!token) throw new Error("Tu sesión expiró");
+      const response = await fetch("/api/store/mine", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const body = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(body.error ?? "No se pudieron cargar tus comercios");
+      return body.comercios as MyComercio[];
     },
   });
 }

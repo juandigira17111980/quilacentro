@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
 import {
   Package,
   Eye,
@@ -14,56 +13,24 @@ import {
   Flame,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { useDashboardStore } from "@/components/dashboard/dashboard-store";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { KpiCard } from "@/components/dashboard/KpiCard";
 import { ViewsChart } from "@/components/dashboard/ViewsChart";
-import {
-  myComercioQuery,
-  myProductsQuery,
-  myQueriesQuery,
-  myStoreStatsQuery,
-} from "@/lib/dashboardQueries";
+import { myProductsQuery, myQueriesQuery, myStoreStatsQuery } from "@/lib/dashboardQueries";
 
 export const Route = createFileRoute("/dashboard/")({
   component: DashboardIndex,
 });
 
-function useUserId() {
-  const [id, setId] = useState<string | null>(null);
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setId(data.user?.id ?? null));
-  }, []);
-  return id;
-}
-
 function DashboardIndex() {
-  const userId = useUserId();
-  const { data: comercio, isLoading: cLoading } = useQuery({
-    ...myComercioQuery(userId ?? ""),
-    enabled: !!userId,
-  });
-  const { data: productos = [] } = useQuery(myProductsQuery(comercio?.id));
-  const { data: consultas = [] } = useQuery(myQueriesQuery(comercio?.id));
-  const { data: stats } = useQuery(myStoreStatsQuery(comercio?.id));
-
-  if (cLoading || !userId) {
-    return (
-      <div className="space-y-4">
-        <Skeleton className="h-8 w-48" />
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-24" />
-          ))}
-        </div>
-        <Skeleton className="h-64" />
-      </div>
-    );
-  }
+  const { comercio } = useDashboardStore();
+  const { data: productos = [], error: productsError } = useQuery(myProductsQuery(comercio?.id));
+  const { data: consultas = [], error: queriesError } = useQuery(myQueriesQuery(comercio?.id));
+  const { data: stats, error: statsError } = useQuery(myStoreStatsQuery(comercio?.id));
 
   if (!comercio) {
     return (
@@ -85,6 +52,14 @@ function DashboardIndex() {
 
   return (
     <div className="space-y-6">
+      {(productsError || queriesError || statsError) && (
+        <Alert variant="destructive" role="alert">
+          <AlertTitle>Algunos datos del resumen no cargaron</AlertTitle>
+          <AlertDescription>
+            {productsError?.message ?? queriesError?.message ?? statsError?.message}
+          </AlertDescription>
+        </Alert>
+      )}
       <div>
         <h1 className="text-2xl font-bold">Hola, {comercio.nombre}</h1>
         <p className="text-sm text-muted-foreground">Resumen de la actividad de tu comercio.</p>

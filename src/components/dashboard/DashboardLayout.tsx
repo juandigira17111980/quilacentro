@@ -9,6 +9,10 @@ import {
   Home,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { DashboardStoreProvider } from "@/components/dashboard/DashboardStoreContext";
+import { useDashboardStore } from "@/components/dashboard/dashboard-store";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean };
 const items: NavItem[] = [
@@ -21,7 +25,16 @@ const items: NavItem[] = [
 ];
 
 export function DashboardLayout() {
+  return (
+    <DashboardStoreProvider>
+      <DashboardLayoutContent />
+    </DashboardStoreProvider>
+  );
+}
+
+function DashboardLayoutContent() {
   const path = useRouterState({ select: (s) => s.location.pathname });
+  const { comercios, comercio, loading, error, selectComercio, retry } = useDashboardStore();
 
   return (
     <div className="container mx-auto grid gap-6 px-4 py-6 lg:grid-cols-[220px_1fr]">
@@ -56,7 +69,37 @@ export function DashboardLayout() {
         </nav>
       </aside>
       <main className="min-w-0">
-        <Outlet />
+        {comercios.length > 1 && (
+          <div className="mb-5 flex flex-wrap items-center gap-2">
+            <label htmlFor="dashboard-comercio" className="text-sm font-medium">
+              Comercio
+            </label>
+            <select
+              id="dashboard-comercio"
+              className="h-10 min-w-0 max-w-full rounded-md border bg-background px-3 text-sm"
+              value={comercio?.id ?? ""}
+              onChange={(event) => selectComercio(event.target.value)}
+            >
+              {comercios.map((store) => (
+                <option key={store.id} value={store.id}>
+                  {store.nombre}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+        {loading ? (
+          <Skeleton className="h-48 w-full" />
+        ) : error ? (
+          <div role="alert" className="space-y-3 py-8">
+            <p>No pudimos cargar tus comercios: {error}</p>
+            <Button variant="outline" onClick={retry}>
+              Reintentar
+            </Button>
+          </div>
+        ) : (
+          <Outlet key={comercio?.id ?? "sin-comercio"} />
+        )}
       </main>
     </div>
   );
