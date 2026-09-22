@@ -246,8 +246,8 @@ export function UserManagementDialog({
                   <div className="space-y-3">
                     <h3 className="text-sm font-semibold">Clave de acceso</h3>
                     <p className="text-sm text-muted-foreground">
-                      Se genera una clave temporal. La anterior dejará de funcionar; copia la nueva
-                      antes de cerrar esta ventana.
+                      La clave anterior dejará de funcionar. Copia la nueva antes de cerrar esta
+                      ventana y compártela de forma segura con el usuario.
                     </p>
                     <ReasonInput
                       id="password-reason"
@@ -271,7 +271,7 @@ export function UserManagementDialog({
                           setPasswordReason("");
                           if (result.audit_warning)
                             toast.error("Clave cambiada, pero revisa la bitácora");
-                        }, "Clave temporal generada")
+                        }, "Nueva clave generada")
                       }
                     >
                       <KeyRound className="mr-2 h-4 w-4" /> Generar nueva clave
@@ -279,7 +279,7 @@ export function UserManagementDialog({
                     {temporaryPassword && (
                       <div className="flex flex-wrap gap-2" role="status">
                         <Input
-                          aria-label="Clave temporal nueva"
+                          aria-label="Nueva clave de acceso"
                           readOnly
                           value={temporaryPassword}
                           className="min-w-0 flex-1 font-mono"
