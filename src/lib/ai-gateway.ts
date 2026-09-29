@@ -1,5 +1,5 @@
 // Server-side OpenAI-compatible AI client. The provider is selected by runtime
-// configuration so Mercanta remains independent from its original builder.
+// configuration so Merkanta remains independent from its original builder.
 type Msg = { role: "system" | "user" | "assistant"; content: string };
 
 export async function callAI(

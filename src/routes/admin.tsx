@@ -3,6 +3,8 @@ import { useCallback, useEffect, useState } from "react";
 import { Building2, RefreshCw, ShieldCheck, Users } from "lucide-react";
 import { toast } from "sonner";
 import { UserManagementDialog, type ManagedUser } from "@/components/admin/UserManagementDialog";
+import { WompiSettings } from "@/components/admin/WompiSettings";
+import { CrmSummary } from "@/components/admin/CrmSummary";
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
 import { Badge } from "@/components/ui/badge";
@@ -55,7 +57,7 @@ export const Route = createFileRoute("/admin")({
   beforeLoad: async ({ location }) => {
     await requireRole(["admin", "super_admin"], location.href);
   },
-  head: () => ({ meta: [{ title: "Administración — Mercanta" }] }),
+  head: () => ({ meta: [{ title: "Administración — Merkanta" }] }),
   component: AdminPage,
 });
 
@@ -156,7 +158,7 @@ function AdminPage() {
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-sm font-medium text-primary">Operación Mercanta</p>
+            <p className="text-sm font-medium text-primary">Operación Merkanta</p>
             <h1 className="mt-1 text-3xl font-bold">Administración de plataforma</h1>
             <p className="mt-2 text-sm text-muted-foreground">
               Control de cuentas, comercios y acciones sensibles.
@@ -204,6 +206,8 @@ function AdminPage() {
             <TabsTrigger value="stores">Comercios ({stores.length})</TabsTrigger>
             <TabsTrigger value="users">Usuarios ({users.length})</TabsTrigger>
             <TabsTrigger value="audit">Bitácora ({data.events.length})</TabsTrigger>
+            <TabsTrigger value="crm">Oportunidades</TabsTrigger>
+            {role === "super_admin" && <TabsTrigger value="wompi">Wompi</TabsTrigger>}
           </TabsList>
           <TabsContent value="stores" className="mt-4">
             <section className="border bg-background">
@@ -321,6 +325,16 @@ function AdminPage() {
               </Table>
             </section>
           </TabsContent>
+          <TabsContent value="crm" className="mt-4">
+            <CrmSummary
+              storeNames={new Map(data.stores.map((store) => [store.id, store.nombre]))}
+            />
+          </TabsContent>
+          {role === "super_admin" && (
+            <TabsContent value="wompi" className="mt-4">
+              <WompiSettings />
+            </TabsContent>
+          )}
         </Tabs>
         <UserManagementDialog
           user={selectedUser}

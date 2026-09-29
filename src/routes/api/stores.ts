@@ -21,9 +21,20 @@ export const Route = createFileRoute("/api/stores")({
           const url = new URL(request.url);
           const zona = url.searchParams.get("zona");
           const categoria = url.searchParams.get("categoria");
+          const term = url.searchParams.get("q")?.trim().slice(0, 80) ?? "";
+          const safeTerm = term.replace(/[^\p{L}\p{N}\s-]/gu, " ").trim();
           const lat = url.searchParams.get("lat");
           const lng = url.searchParams.get("lng");
           const radio = Number(url.searchParams.get("radio") || "10");
+          const categoryId = categoria ? Number(categoria) : null;
+          if (
+            (categoria && (!Number.isInteger(categoryId) || categoryId! <= 0)) ||
+            !Number.isFinite(radio) ||
+            radio < 1 ||
+            radio > 50
+          ) {
+            return errorResponse("Filtros inválidos", 400);
+          }
 
           const { supabasePublic } = await import("@/integrations/supabase/public.server");
 
@@ -36,7 +47,21 @@ export const Route = createFileRoute("/api/stores")({
             .is("deleted_at", null);
 
           if (zona) query = query.eq("zona_id", Number(zona));
-          if (categoria) query = query.eq("categoria_id", Number(categoria));
+          if (term && !safeTerm) return jsonResponse({ comercios: [] });
+          const matchingStoreIds = new Set<string>();
+          if (safeTerm || categoryId) {
+            let productsQuery = supabasePublic
+              .from("productos")
+              .select("comercio_id")
+              .eq("disponible", true)
+              .is("deleted_at", null);
+            if (safeTerm) productsQuery = productsQuery.ilike("nombre", `%${safeTerm}%`);
+            if (categoryId) productsQuery = productsQuery.eq("categoria_id", categoryId);
+            const { data: matchingProducts, error: productsError } =
+              await productsQuery.limit(1000);
+            if (productsError) throw productsError;
+            for (const product of matchingProducts ?? []) matchingStoreIds.add(product.comercio_id);
+          }
 
           const { data, error } = await query.limit(100);
           if (error) throw error;
@@ -45,15 +70,23 @@ export const Route = createFileRoute("/api/stores")({
           const lngN = lng ? Number(lng) : null;
 
           const comercios = (data || [])
-            .map((c: any) => {
+            .filter(
+              (store) =>
+                (!safeTerm && !categoryId) ||
+                ((!safeTerm ||
+                  store.nombre.toLocaleLowerCase().includes(safeTerm.toLocaleLowerCase())) &&
+                  (!categoryId || store.categoria_id === categoryId)) ||
+                matchingStoreIds.has(store.id),
+            )
+            .map((c) => {
               const dist =
                 latN !== null && lngN !== null && c.lat && c.lng
                   ? distanceKm(latN, lngN, Number(c.lat), Number(c.lng))
                   : null;
               return { ...c, distancia_km: dist };
             })
-            .filter((c: any) => latN === null || c.distancia_km === null || c.distancia_km <= radio)
-            .sort((a: any, b: any) => {
+            .filter((c) => latN === null || c.distancia_km === null || c.distancia_km <= radio)
+            .sort((a, b) => {
               if (a.distancia_km === null && b.distancia_km === null)
                 return (b.rating_avg || 0) - (a.rating_avg || 0);
               if (a.distancia_km === null) return 1;
@@ -62,7 +95,7 @@ export const Route = createFileRoute("/api/stores")({
             });
 
           return jsonResponse({ comercios });
-        } catch (e: any) {
+        } catch {
           return errorResponse("Error al listar comercios");
         }
       },

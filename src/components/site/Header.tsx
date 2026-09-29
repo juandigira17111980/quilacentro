@@ -88,7 +88,7 @@ export function Header() {
     >
       <div className="container mx-auto flex h-[68px] items-center gap-3 px-4 md:gap-6">
         {/* Logo */}
-        <Link to="/" className="flex shrink-0 items-center" aria-label="Mercanta, inicio">
+        <Link to="/" className="flex shrink-0 items-center" aria-label="Merkanta, inicio">
           <BrandLogo className="scale-95 sm:scale-100" />
         </Link>
 

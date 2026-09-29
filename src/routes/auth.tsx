@@ -21,8 +21,8 @@ const authSearch = z.object({
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Ingresar — Mercanta" },
-      { name: "description", content: "Ingresa o crea tu cuenta en Mercanta." },
+      { title: "Ingresar — Merkanta" },
+      { name: "description", content: "Ingresa o crea tu cuenta en Merkanta." },
     ],
   }),
   validateSearch: zodValidator(authSearch),
@@ -98,13 +98,13 @@ function AuthPage() {
     <div className="relative min-h-screen overflow-hidden bg-[#FFFCF7]">
       <div className="absolute inset-x-0 top-0 h-2 bg-primary" />
       <div className="relative mx-auto flex min-h-screen max-w-md flex-col justify-center px-4 py-12">
-        <Link to="/" className="mx-auto mb-8 flex items-center" aria-label="Mercanta, inicio">
+        <Link to="/" className="mx-auto mb-8 flex items-center" aria-label="Merkanta, inicio">
           <BrandLogo />
         </Link>
 
         <Card className="border-border/60 shadow-xl">
           <CardHeader>
-            <CardTitle className="text-2xl">Bienvenido a Mercanta</CardTitle>
+            <CardTitle className="text-2xl">Bienvenido a Merkanta</CardTitle>
             <CardDescription>Encuentra comercios reales, más cerca de ti.</CardDescription>
           </CardHeader>
           <CardContent>
