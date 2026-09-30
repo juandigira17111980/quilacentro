@@ -10,7 +10,7 @@ export function BrandLogo({ className, compact = false, tone = "default" }: Bran
   const suffix = tone === "light" ? "-light" : "";
 
   return (
-    <span className={cn("inline-flex items-center gap-2.5", className)} aria-label="Mercanta">
+    <span className={cn("inline-flex items-center gap-2.5", className)} aria-label="Merkanta">
       <img
         src={`/brand/mercanta-mark${suffix}.png`}
         alt=""
@@ -20,7 +20,7 @@ export function BrandLogo({ className, compact = false, tone = "default" }: Bran
       {!compact && (
         <img
           src={`/brand/mercanta-wordmark${suffix}.png`}
-          alt="Mercanta"
+          alt="Merkanta"
           className="h-5 w-[126px] object-contain object-left"
         />
       )}

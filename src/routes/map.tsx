@@ -1,5 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
+import { z } from "zod";
+import { zodValidator, fallback } from "@tanstack/zod-adapter";
+import { useDeferredValue, useMemo, useState } from "react";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { LocateFixed, MapPin, Navigation, Search, Star, Store, X } from "lucide-react";
 import { AppShell } from "@/components/site/AppShell";
@@ -15,8 +17,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { categoriasQuery } from "@/lib/queries";
+import { InteractiveStoreMap } from "@/components/map/InteractiveStoreMap";
 
-const BARRANQUILLA_CENTER = { lat: 10.9685, lng: -74.7813 };
+const mapSearchSchema = z.object({
+  q: fallback(z.string(), "").default(""),
+  categoria: fallback(z.coerce.number().int().positive().optional(), undefined),
+  lat: fallback(z.coerce.number().min(-90).max(90).optional(), undefined),
+  lng: fallback(z.coerce.number().min(-180).max(180).optional(), undefined),
+  radioKm: fallback(z.coerce.number().min(1).max(50), 10).default(10),
+});
 
 type MapStore = {
   id: string;
@@ -36,9 +45,10 @@ type MapStore = {
 };
 
 export const Route = createFileRoute("/map")({
+  validateSearch: zodValidator(mapSearchSchema),
   head: () => ({
     meta: [
-      { title: "Mapa - Mercanta" },
+      { title: "Mapa - Merkanta" },
       { name: "description", content: "Mapa interactivo de comercios del Centro de Barranquilla." },
     ],
   }),
@@ -48,17 +58,31 @@ export const Route = createFileRoute("/map")({
 
 function MapPage() {
   const { data: categorias } = useSuspenseQuery(categoriasQuery);
-  const [q, setQ] = useState("");
-  const [categoria, setCategoria] = useState<string>("all");
-  const [radioKm, setRadioKm] = useState(10);
-  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const search = useSearch({ from: "/map" });
+  const [q, setQ] = useState(search.q);
+  const searchTerm = useDeferredValue(q);
+  const [categoria, setCategoria] = useState<string>(
+    search.categoria ? String(search.categoria) : "all",
+  );
+  const [radioKm, setRadioKm] = useState(search.radioKm);
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(
+    search.lat != null && search.lng != null ? { lat: search.lat, lng: search.lng } : null,
+  );
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const storesQuery = useQuery({
-    queryKey: ["map-stores", categoria, radioKm, coords?.lat ?? null, coords?.lng ?? null],
+    queryKey: [
+      "map-stores",
+      searchTerm,
+      categoria,
+      radioKm,
+      coords?.lat ?? null,
+      coords?.lng ?? null,
+    ],
     queryFn: async (): Promise<MapStore[]> => {
       const params = new URLSearchParams();
       if (categoria !== "all") params.set("categoria", categoria);
+      if (searchTerm.trim()) params.set("q", searchTerm.trim());
       if (coords) {
         params.set("lat", String(coords.lat));
         params.set("lng", String(coords.lng));
@@ -72,23 +96,9 @@ function MapPage() {
     staleTime: 20_000,
   });
 
-  const stores = useMemo(() => {
-    const term = q.trim().toLowerCase();
-    const rows = storesQuery.data ?? [];
-    if (!term) return rows;
-    return rows.filter((store) =>
-      [store.nombre, store.descripcion, store.direccion]
-        .filter(Boolean)
-        .some((value) => value!.toLowerCase().includes(term)),
-    );
-  }, [q, storesQuery.data]);
+  const stores = useMemo(() => storesQuery.data ?? [], [storesQuery.data]);
 
-  const selected = stores.find((store) => store.id === selectedId) ?? stores[0] ?? null;
-  const mapLat = selected?.lat ?? coords?.lat ?? BARRANQUILLA_CENTER.lat;
-  const mapLng = selected?.lng ?? coords?.lng ?? BARRANQUILLA_CENTER.lng;
-  const bboxDelta = selected ? 0.004 : 0.02;
-  const bbox = `${mapLng - bboxDelta},${mapLat - bboxDelta},${mapLng + bboxDelta},${mapLat + bboxDelta}`;
-  const mapSrc = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${mapLat},${mapLng}`;
+  const selected = stores.find((store) => store.id === selectedId) ?? null;
   const resultText = storesQuery.isLoading
     ? "Cargando comercios..."
     : `${stores.length} resultado${stores.length === 1 ? "" : "s"}${
@@ -111,24 +121,46 @@ function MapPage() {
       <main className="min-h-[calc(100vh-4rem)] bg-muted/30">
         <section className="border-b bg-background">
           <div className="container mx-auto px-4 py-5">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-              <div>
-                <Badge variant="secondary" className="mb-2">
-                  Centro de Barranquilla
-                </Badge>
-                <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Mapa de comercios</h1>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Encuentra tiendas activas, compara cercania y abre rutas para llegar.
-                </p>
+            <div className="space-y-4">
+              <div className="flex flex-wrap items-end justify-between gap-3">
+                <div>
+                  <Badge variant="secondary" className="mb-2">
+                    Centro de Barranquilla
+                  </Badge>
+                  <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
+                    Explorar comercios
+                  </h1>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Encuentra tiendas activas, compara cercania y abre rutas para llegar.
+                  </p>
+                </div>
+                <div className="flex gap-1" aria-label="Vista de resultados">
+                  <Button asChild variant="outline">
+                    <Link
+                      to="/search"
+                      search={{
+                        q,
+                        categoria: categoria === "all" ? undefined : Number(categoria),
+                        lat: coords?.lat,
+                        lng: coords?.lng,
+                        radioKm,
+                        tab: "comercios",
+                      }}
+                    >
+                      Lista
+                    </Link>
+                  </Button>
+                  <Button aria-current="page">Mapa</Button>
+                </div>
               </div>
 
-              <div className="grid gap-2 sm:grid-cols-[1fr_180px_130px_auto] lg:w-[760px]">
-                <div className="relative">
+              <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-2 md:grid-cols-[minmax(220px,1fr)_180px_120px_auto]">
+                <div className="relative col-span-2 md:col-span-1">
                   <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     value={q}
                     onChange={(e) => setQ(e.target.value)}
-                    placeholder="Buscar comercio, producto o direccion"
+                    placeholder="Buscar comercio o producto"
                     className="h-11 pl-9"
                   />
                   {q && (
@@ -149,7 +181,7 @@ function MapPage() {
                     setSelectedId(null);
                   }}
                 >
-                  <SelectTrigger className="h-11">
+                  <SelectTrigger className="col-span-2 h-11 md:col-span-1">
                     <SelectValue placeholder="Categoria" />
                   </SelectTrigger>
                   <SelectContent>
@@ -162,7 +194,7 @@ function MapPage() {
                   </SelectContent>
                 </Select>
 
-                <div>
+                <div className="relative">
                   <Label htmlFor="mapRadio" className="sr-only">
                     Radio
                   </Label>
@@ -173,9 +205,12 @@ function MapPage() {
                     max={50}
                     value={radioKm}
                     onChange={(e) => setRadioKm(Number(e.target.value || 10))}
-                    className="h-11"
+                    className="h-11 pr-10"
                     aria-label="Radio en kilometros"
                   />
+                  <span className="pointer-events-none absolute right-3 top-3 text-sm text-muted-foreground">
+                    km
+                  </span>
                 </div>
 
                 <Button type="button" onClick={useMyLocation} className="h-11">
@@ -188,13 +223,32 @@ function MapPage() {
         </section>
 
         <section className="container mx-auto grid gap-4 px-4 py-4 lg:grid-cols-[1fr_380px]">
-          <div className="overflow-hidden rounded-lg border bg-card shadow-[var(--shadow-soft)]">
-            <iframe
-              title="Mapa de comercios Mercanta"
-              src={mapSrc}
-              className="h-[420px] w-full border-0 md:h-[620px]"
-              loading="lazy"
-            />
+          <div className="relative overflow-hidden rounded-lg border bg-card shadow-[var(--shadow-soft)]">
+            <InteractiveStoreMap stores={stores} selectedId={selectedId} onSelect={setSelectedId} />
+            {selected && (
+              <div className="absolute bottom-12 left-3 right-3 z-[500] rounded-md border bg-background p-3 shadow-md md:hidden">
+                <p className="truncate font-semibold">{selected.nombre}</p>
+                <p className="truncate text-xs text-muted-foreground">{selected.direccion}</p>
+                <div className="mt-2 flex gap-2">
+                  <Button size="sm" asChild variant="outline">
+                    <Link to="/store/$slug" params={{ slug: selected.slug }}>
+                      Ver tienda
+                    </Link>
+                  </Button>
+                  {selected.lat != null && selected.lng != null && (
+                    <Button size="sm" asChild>
+                      <a
+                        href={`https://www.google.com/maps/dir/?api=1&destination=${selected.lat},${selected.lng}&travelmode=walking`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Cómo llegar
+                      </a>
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )}
             <div className="flex flex-wrap items-center justify-between gap-2 border-t p-3 text-xs text-muted-foreground">
               <span className="inline-flex items-center gap-1">
                 <MapPin className="h-3.5 w-3.5" />

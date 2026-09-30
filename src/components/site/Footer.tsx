@@ -47,7 +47,7 @@ export function Footer() {
           </ul>
         </div>
         <div>
-          <h4 className="mb-3 text-sm font-semibold text-brand-gold">Mercanta</h4>
+          <h4 className="mb-3 text-sm font-semibold text-brand-gold">Merkanta</h4>
           <ul className="space-y-2 text-sm text-white/70">
             <li>Comercio local, cerca de ti</li>
             <li>Compra con confianza</li>
@@ -56,7 +56,7 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-white/10 py-4 text-center text-xs text-white/50">
-        © {new Date().getFullYear()} Mercanta · Barranquilla, Colombia
+        © {new Date().getFullYear()} Merkanta · Barranquilla, Colombia
       </div>
     </footer>
   );

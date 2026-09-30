@@ -120,7 +120,7 @@ function OrdersPage() {
                       <Badge variant="outline">{order.estado}</Badge>
                     </div>
                     <p className="mt-1 text-sm">
-                      {order.comercio?.nombre ?? "Comercio Mercanta"} · {order.modalidad}
+                      {order.comercio?.nombre ?? "Comercio Merkanta"} · {order.modalidad}
                     </p>
                     <p className="mt-1 text-sm text-muted-foreground">
                       {order.items

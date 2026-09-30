@@ -297,7 +297,7 @@ export function UserManagementDialog({
 
                 <TabsContent value="permissions" className="space-y-6 py-4">
                   <div className="space-y-3 border-b pb-5">
-                    <h3 className="text-sm font-semibold">Rol en Mercanta</h3>
+                    <h3 className="text-sm font-semibold">Rol en Merkanta</h3>
                     <select
                       aria-label="Rol del usuario"
                       className="h-10 w-full rounded-md border bg-background px-3 text-sm"

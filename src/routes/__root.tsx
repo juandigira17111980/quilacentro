@@ -91,13 +91,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Mercanta — Comercio local del Centro de Barranquilla" },
+      { title: "Merkanta — Comercio local del Centro de Barranquilla" },
       {
         name: "description",
         content:
           "Busca menos. Encuentra más. Descubre comercios y productos reales del Centro de Barranquilla.",
       },
-      { property: "og:title", content: "Mercanta — Comercio local del Centro de Barranquilla" },
+      { property: "og:title", content: "Merkanta — Comercio local del Centro de Barranquilla" },
       {
         property: "og:description",
         content:
@@ -105,7 +105,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Mercanta — Comercio local del Centro de Barranquilla" },
+      { name: "twitter:title", content: "Merkanta — Comercio local del Centro de Barranquilla" },
       {
         name: "twitter:description",
         content:

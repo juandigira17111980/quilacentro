@@ -26,7 +26,7 @@ const homeSearch = z.object({
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Mercanta — Comercio local del Centro de Barranquilla" },
+      { title: "Merkanta — Comercio local del Centro de Barranquilla" },
       {
         name: "description",
         content:

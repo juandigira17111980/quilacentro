@@ -48,7 +48,7 @@ import {
 } from "@/lib/queries";
 
 export const Route = createFileRoute("/store/$slug")({
-  head: () => ({ meta: [{ title: "Comercio — Mercanta" }] }),
+  head: () => ({ meta: [{ title: "Comercio — Merkanta" }] }),
   loader: async ({ params, context }) => {
     const data = await context.queryClient.ensureQueryData(comercioBySlugQuery(params.slug));
     if (!data) throw notFound();

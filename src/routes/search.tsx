@@ -1,10 +1,11 @@
-import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import {
   LocateFixed,
+  Map as MapIcon,
   MapPin,
   Search as SearchIcon,
   SlidersHorizontal,
@@ -52,7 +53,7 @@ type SearchParams = z.infer<typeof searchSchema>;
 export const Route = createFileRoute("/search")({
   head: () => ({
     meta: [
-      { title: "Buscar — Mercanta" },
+      { title: "Buscar — Merkanta" },
       {
         name: "description",
         content: "Buscá productos en los comercios físicos del Centro de Barranquilla.",
@@ -238,10 +239,29 @@ function SearchPage() {
                 })
               }
             >
-              <TabsList>
-                <TabsTrigger value="productos">Productos</TabsTrigger>
-                <TabsTrigger value="comercios">Comercios</TabsTrigger>
-              </TabsList>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <TabsList>
+                  <TabsTrigger value="productos">Productos</TabsTrigger>
+                  <TabsTrigger value="comercios">Comercios</TabsTrigger>
+                </TabsList>
+                {search.tab === "comercios" && (
+                  <Button asChild variant="outline" size="sm">
+                    <Link
+                      to="/map"
+                      search={{
+                        q: search.q,
+                        categoria: search.categoria,
+                        lat: search.lat,
+                        lng: search.lng,
+                        radioKm: search.radioKm,
+                      }}
+                    >
+                      <MapIcon className="mr-2 h-4 w-4" />
+                      Mapa
+                    </Link>
+                  </Button>
+                )}
+              </div>
               <TabsContent value="productos" className="mt-4">
                 <ProductosResults filters={filters} />
               </TabsContent>
