@@ -35,9 +35,9 @@ export function OffersBanner() {
           </Button>
         </div>
         <img
-          src="/images/mercanta-centro-barranquilla.png"
-          alt="Comercio del Centro de Barranquilla"
-          className="h-40 w-full max-w-sm object-cover object-right shadow-xl md:h-48"
+          src="/images/paseo-bolivar-barranquilla-real.jpg"
+          alt="Paseo Bolívar en el Centro de Barranquilla"
+          className="h-40 w-full max-w-sm object-cover object-center shadow-xl md:h-48"
           loading="lazy"
         />
       </div>
