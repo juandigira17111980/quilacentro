@@ -43,10 +43,10 @@ export function MerchantCta() {
         </div>
         <div className="relative">
           <img
-            src="/images/mercanta-centro-barranquilla.png"
-            alt="Comercio local de Merkanta"
+            src="/images/paseo-bolivar-barranquilla-real.jpg"
+            alt="Paseo Bolívar en el Centro de Barranquilla"
             loading="lazy"
-            className="w-full object-cover shadow-2xl"
+            className="aspect-video w-full object-cover object-center shadow-2xl"
           />
         </div>
       </div>

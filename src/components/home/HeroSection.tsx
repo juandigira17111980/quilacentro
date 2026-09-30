@@ -33,12 +33,12 @@ export function HeroSection() {
   return (
     <section className="relative isolate min-h-[680px] overflow-hidden bg-[#1B1124] md:min-h-[710px]">
       <img
-        src="/images/mercanta-centro-barranquilla.png"
-        alt="Comercio local en el Centro de Barranquilla"
-        className="absolute inset-0 -z-20 h-full w-full object-cover object-center"
+        src="/images/paseo-bolivar-barranquilla-real.jpg"
+        alt="Paseo Bolívar en el Centro de Barranquilla, Colombia"
+        className="absolute inset-0 -z-20 h-full w-full object-cover object-[55%_center] md:object-center"
         fetchPriority="high"
       />
-      <div className="absolute inset-0 -z-10 bg-[#1B1124]/64" />
+      <div className="absolute inset-0 -z-10 bg-[#1B1124]/65 md:bg-[linear-gradient(90deg,rgba(27,17,36,0.88)_0%,rgba(27,17,36,0.57)_47%,rgba(27,17,36,0.06)_100%)]" />
 
       <div className="container mx-auto flex min-h-[680px] items-end px-4 pb-14 pt-28 md:min-h-[710px] md:items-center md:pb-10 md:pt-20">
         <div className="max-w-2xl text-white">
@@ -98,6 +98,23 @@ export function HeroSection() {
           </div>
         </div>
       </div>
+      <p className="absolute bottom-3 left-4 right-4 text-[10px] text-white/80 md:left-auto md:text-xs">
+        Foto:{" "}
+        <a
+          className="underline hover:text-white"
+          href="https://commons.wikimedia.org/wiki/File:Paseo_Bolivar,_Barranquilla.JPG"
+        >
+          Fvengoechea / Wikimedia Commons
+        </a>
+        {" · "}
+        <a
+          className="underline hover:text-white"
+          href="https://creativecommons.org/licenses/by-sa/3.0/"
+        >
+          CC BY-SA 3.0
+        </a>
+        {" · Encuadre y contraste: Merkanta"}
+      </p>
     </section>
   );
 }
